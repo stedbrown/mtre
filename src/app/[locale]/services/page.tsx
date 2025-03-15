@@ -5,8 +5,6 @@ import { useTranslations } from 'next-intl';
 import MainLayout from '@/components/MainLayout';
 import ServiceCard from '@/components/ServiceCard';
 import HeroSection from '@/components/HeroSection';
-import { getTranslations } from 'next-intl/server';
-import type { Metadata } from 'next';
 
 // Definizione del tipo per i servizi
 type Service = {
@@ -18,237 +16,116 @@ type Service = {
   category: string[];
 };
 
-// Genera i metadata specifici per la pagina dei servizi
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'services' });
-  
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre-giardinaggio.it';
-  
-  return {
-    title: t('title'),
-    description: t('description'),
-    openGraph: {
-      images: [
-        {
-          url: `${baseUrl}/images/hero/services-new.jpg`,
-          width: 1200,
-          height: 630,
-          alt: t('title'),
-        },
-      ],
-    },
-  };
-}
-
 export default function ServicesPage() {
-  const t = useTranslations('services');
+  const t = useTranslations();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   
-  // Array dei servizi
+  // Definizione dei servizi
   const services: Service[] = [
     {
       id: 'garden-design',
-      titleKey: 'items.gardenDesign.title',
-      descriptionKey: 'items.gardenDesign.description',
-      image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae',
+      titleKey: 'services.items.gardenDesign.title',
+      descriptionKey: 'services.items.gardenDesign.description',
+      image: '/images/services/garden-design.jpg',
       featuresKeys: {
-        consultation: 'items.gardenDesign.features.consultation',
-        design3d: 'items.gardenDesign.features.design3d',
-        plantSelection: 'items.gardenDesign.features.plantSelection',
-        implementation: 'items.gardenDesign.features.implementation',
-        supervision: 'items.gardenDesign.features.supervision',
+        consultation: 'services.items.gardenDesign.features.consultation',
+        design3d: 'services.items.gardenDesign.features.design3d',
+        plantSelection: 'services.items.gardenDesign.features.plantSelection',
+        implementation: 'services.items.gardenDesign.features.implementation',
+        supervision: 'services.items.gardenDesign.features.supervision'
       },
-      category: ['residential', 'commercial'],
+      category: ['residential', 'commercial']
     },
     {
       id: 'maintenance',
-      titleKey: 'items.maintenance.title',
-      descriptionKey: 'items.maintenance.description',
-      image: 'https://images.unsplash.com/photo-1611843467160-25afb8df1074',
+      titleKey: 'services.items.maintenance.title',
+      descriptionKey: 'services.items.maintenance.description',
+      image: '/images/services/maintenance.jpg',
       featuresKeys: {
-        lawnCare: 'items.maintenance.features.lawnCare',
-        diseaseControl: 'items.maintenance.features.diseaseControl',
-        fertilization: 'items.maintenance.features.fertilization',
-        cleaning: 'items.maintenance.features.cleaning',
-        seasonal: 'items.maintenance.features.seasonal',
+        lawnCare: 'services.items.maintenance.features.lawnCare',
+        diseaseControl: 'services.items.maintenance.features.diseaseControl',
+        fertilization: 'services.items.maintenance.features.fertilization',
+        cleaning: 'services.items.maintenance.features.cleaning',
+        seasonal: 'services.items.maintenance.features.seasonal'
       },
-      category: ['residential', 'commercial', 'maintenance'],
+      category: ['residential', 'commercial', 'maintenance']
     },
     {
       id: 'irrigation',
-      titleKey: 'items.irrigation.title',
-      descriptionKey: 'items.irrigation.description',
-      image: 'https://images.unsplash.com/photo-1598902108854-10e335adac99',
+      titleKey: 'services.items.irrigation.title',
+      descriptionKey: 'services.items.irrigation.description',
+      image: '/images/services/irrigation.jpg',
       featuresKeys: {
-        design: 'items.irrigation.features.design',
-        installation: 'items.irrigation.features.installation',
-        smartControl: 'items.irrigation.features.smartControl',
-        maintenance: 'items.irrigation.features.maintenance',
-        waterSaving: 'items.irrigation.features.waterSaving',
+        design: 'services.items.irrigation.features.design',
+        installation: 'services.items.irrigation.features.installation',
+        smartControl: 'services.items.irrigation.features.smartControl',
+        maintenance: 'services.items.irrigation.features.maintenance',
+        waterSaving: 'services.items.irrigation.features.waterSaving'
       },
-      category: ['residential', 'commercial'],
+      category: ['residential', 'commercial']
     },
     {
       id: 'green-areas',
-      titleKey: 'items.greenAreas.title',
-      descriptionKey: 'items.greenAreas.description',
-      image: 'https://images.unsplash.com/photo-1626863905121-3b0c0ed7b94c',
+      titleKey: 'services.items.greenAreas.title',
+      descriptionKey: 'services.items.greenAreas.description',
+      image: '/images/services/green-areas.jpg',
       featuresKeys: {
-        groundPreparation: 'items.greenAreas.features.groundPreparation',
-        planting: 'items.greenAreas.features.planting',
-        flowerBeds: 'items.greenAreas.features.flowerBeds',
-        pathways: 'items.greenAreas.features.pathways',
-        sustainable: 'items.greenAreas.features.sustainable',
+        groundPreparation: 'services.items.greenAreas.features.groundPreparation',
+        planting: 'services.items.greenAreas.features.planting',
+        flowerBeds: 'services.items.greenAreas.features.flowerBeds',
+        pathways: 'services.items.greenAreas.features.pathways',
+        sustainable: 'services.items.greenAreas.features.sustainable'
       },
-      category: ['residential', 'commercial'],
+      category: ['residential', 'commercial']
     },
     {
       id: 'tree-care',
-      titleKey: 'items.treeCare.title',
-      descriptionKey: 'items.treeCare.description',
-      image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09',
+      titleKey: 'services.items.treeCare.title',
+      descriptionKey: 'services.items.treeCare.description',
+      image: '/images/services/tree-care.jpg',
       featuresKeys: {
-        pruning: 'items.treeCare.features.pruning',
-        treatment: 'items.treeCare.features.treatment',
-        stability: 'items.treeCare.features.stability',
-        removal: 'items.treeCare.features.removal',
-        consultation: 'items.treeCare.features.consultation',
+        pruning: 'services.items.treeCare.features.pruning',
+        treatment: 'services.items.treeCare.features.treatment',
+        stability: 'services.items.treeCare.features.stability',
+        removal: 'services.items.treeCare.features.removal',
+        consultation: 'services.items.treeCare.features.consultation'
       },
-      category: ['residential', 'commercial', 'maintenance'],
+      category: ['residential', 'commercial', 'maintenance']
     },
     {
-      id: 'landscape-lighting',
-      titleKey: 'items.lighting.title',
-      descriptionKey: 'items.lighting.description',
-      image: 'https://images.unsplash.com/photo-1558370781-d6196949e317',
+      id: 'lighting',
+      titleKey: 'services.items.lighting.title',
+      descriptionKey: 'services.items.lighting.description',
+      image: '/images/services/lighting.jpg',
       featuresKeys: {
-        design: 'items.lighting.features.design',
-        ledInstallation: 'items.lighting.features.ledInstallation',
-        automation: 'items.lighting.features.automation',
-        pathLighting: 'items.lighting.features.pathLighting',
-        decorative: 'items.lighting.features.decorative',
+        design: 'services.items.lighting.features.design',
+        ledInstallation: 'services.items.lighting.features.ledInstallation',
+        automation: 'services.items.lighting.features.automation',
+        pathLighting: 'services.items.lighting.features.pathLighting',
+        decorative: 'services.items.lighting.features.decorative'
       },
-      category: ['residential', 'commercial'],
-    },
-    {
-      id: 'excavation',
-      titleKey: 'items.excavation.title',
-      descriptionKey: 'items.excavation.description',
-      image: 'https://images.unsplash.com/photo-1581578017093-cd30fce4eeb7',
-      featuresKeys: {
-        sitePreparation: 'items.excavation.features.sitePreparation',
-        precisionExcavation: 'items.excavation.features.precisionExcavation',
-        soilManagement: 'items.excavation.features.soilManagement',
-        drainage: 'items.excavation.features.drainage',
-        landscapeModeling: 'items.excavation.features.landscapeModeling',
-      },
-      category: ['residential', 'commercial'],
-    },
-    {
-      id: 'winter-service',
-      titleKey: 'items.winterService.title',
-      descriptionKey: 'items.winterService.description',
-      image: 'https://images.unsplash.com/photo-1612709863934-3bf7e3e8a7e2',
-      featuresKeys: {
-        snowRemoval: 'items.winterService.features.snowRemoval',
-        saltSpreading: 'items.winterService.features.saltSpreading',
-        emergencyService: 'items.winterService.features.emergencyService',
-        contractPlans: 'items.winterService.features.contractPlans',
-        environmentalSafety: 'items.winterService.features.environmentalSafety',
-      },
-      category: ['residential', 'commercial', 'maintenance'],
-    },
-    {
-      id: 'garden-materials',
-      titleKey: 'items.gardenMaterials.title',
-      descriptionKey: 'items.gardenMaterials.description',
-      image: 'https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e',
-      featuresKeys: {
-        soilSubstrates: 'items.gardenMaterials.features.soilSubstrates',
-        plants: 'items.gardenMaterials.features.plants',
-        decorativeElements: 'items.gardenMaterials.features.decorativeElements',
-        gardenTools: 'items.gardenMaterials.features.gardenTools',
-        consultancy: 'items.gardenMaterials.features.consultancy',
-      },
-      category: ['residential', 'commercial'],
-    },
-    {
-      id: 'land-clearing',
-      titleKey: 'items.landClearing.title',
-      descriptionKey: 'items.landClearing.description',
-      image: 'https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6',
-      featuresKeys: {
-        vegetationRemoval: 'items.landClearing.features.vegetationRemoval',
-        recoveryPruning: 'items.landClearing.features.recoveryPruning',
-        phytosanitaryTreatments: 'items.landClearing.features.phytosanitaryTreatments',
-        wasteManagement: 'items.landClearing.features.wasteManagement',
-        landReclamation: 'items.landClearing.features.landReclamation',
-      },
-      category: ['residential', 'commercial', 'maintenance'],
-    },
-    {
-      id: 'fencing',
-      titleKey: 'items.fencing.title',
-      descriptionKey: 'items.fencing.description',
-      image: 'https://images.unsplash.com/photo-1621944190310-e3cca1564bd7',
-      featuresKeys: {
-        customFencing: 'items.fencing.features.customFencing',
-        naturalPaving: 'items.fencing.features.naturalPaving',
-        masonryWorks: 'items.fencing.features.masonryWorks',
-        outdoorStructures: 'items.fencing.features.outdoorStructures',
-        sustainableMaterials: 'items.fencing.features.sustainableMaterials',
-      },
-      category: ['residential', 'commercial'],
-    },
-    {
-      id: 'turf-installation',
-      titleKey: 'items.turfInstallation.title',
-      descriptionKey: 'items.turfInstallation.description',
-      image: 'https://images.unsplash.com/photo-1589923188900-85dae523342b',
-      featuresKeys: {
-        soilPreparation: 'items.turfInstallation.features.soilPreparation',
-        qualityTurf: 'items.turfInstallation.features.qualityTurf',
-        expertInstallation: 'items.turfInstallation.features.expertInstallation',
-        aftercareService: 'items.turfInstallation.features.aftercareService',
-        quickResults: 'items.turfInstallation.features.quickResults',
-      },
-      category: ['residential', 'commercial'],
-    },
-    {
-      id: 'synthetic-turf',
-      titleKey: 'items.syntheticTurf.title',
-      descriptionKey: 'items.syntheticTurf.description',
-      image: 'https://images.unsplash.com/photo-1599594004359-d5fa37a1e400',
-      featuresKeys: {
-        highQualitySynthetic: 'items.syntheticTurf.features.highQualitySynthetic',
-        professionalInstallation: 'items.syntheticTurf.features.professionalInstallation',
-        lowMaintenance: 'items.syntheticTurf.features.lowMaintenance',
-        allYearPerfection: 'items.syntheticTurf.features.allYearPerfection',
-        environmentalOptions: 'items.syntheticTurf.features.environmentalOptions',
-      },
-      category: ['residential', 'commercial'],
-    },
+      category: ['residential', 'commercial']
+    }
   ];
   
-  // Filtra i servizi in base alla categoria selezionata
+  // Filtra i servizi in base alla categoria attiva
   const filteredServices = activeCategory === 'all'
     ? services
     : services.filter(service => service.category.includes(activeCategory));
-
+  
   return (
     <MainLayout>
       {/* Hero Section */}
       <HeroSection
-        title={t('title')}
-        description={t('description')}
+        title={t('services.title')}
+        description={t('services.description')}
         backgroundImage="/images/hero/services-new.jpg"
       />
       
       {/* Filtri per categoria */}
       <section className="py-8 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-2">
             <button
               className={`px-4 py-2 rounded-full transition-colors ${
                 activeCategory === 'all'
@@ -257,7 +134,7 @@ export default function ServicesPage() {
               }`}
               onClick={() => setActiveCategory('all')}
             >
-              {t('filters.all')}
+              {t('services.filters.all')}
             </button>
             <button
               className={`px-4 py-2 rounded-full transition-colors ${
@@ -267,7 +144,7 @@ export default function ServicesPage() {
               }`}
               onClick={() => setActiveCategory('residential')}
             >
-              {t('filters.residential')}
+              {t('services.filters.residential')}
             </button>
             <button
               className={`px-4 py-2 rounded-full transition-colors ${
@@ -277,7 +154,7 @@ export default function ServicesPage() {
               }`}
               onClick={() => setActiveCategory('commercial')}
             >
-              {t('filters.commercial')}
+              {t('services.filters.commercial')}
             </button>
             <button
               className={`px-4 py-2 rounded-full transition-colors ${
@@ -287,7 +164,7 @@ export default function ServicesPage() {
               }`}
               onClick={() => setActiveCategory('maintenance')}
             >
-              {t('filters.maintenance')}
+              {t('services.filters.maintenance')}
             </button>
           </div>
         </div>
@@ -305,10 +182,10 @@ export default function ServicesPage() {
                 description={t(service.descriptionKey)}
                 image={service.image}
                 features={Object.values(service.featuresKeys).map(key => t(key))}
-                contactLabel={t('serviceDetails.contact')}
-                showMoreLabel={t('serviceDetails.showMore')}
-                showLessLabel={t('serviceDetails.showLess')}
-                featuresLabel={t('serviceDetails.features')}
+                contactLabel={t('services.serviceDetails.contact')}
+                showMoreLabel={t('services.serviceDetails.showMore')}
+                showLessLabel={t('services.serviceDetails.showLess')}
+                featuresLabel={t('services.serviceDetails.features')}
               />
             ))}
           </div>
@@ -316,4 +193,4 @@ export default function ServicesPage() {
       </section>
     </MainLayout>
   );
-} 
+}

@@ -85,14 +85,14 @@ export default function TestimonialsPage() {
     }
   ];
   
-  // Funzione per renderizzare le stelle di valutazione
+  // Funzione per renderizzare le stelle in base al rating
   const renderStars = (rating: number) => {
     const stars = [];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 0; i < 5; i++) {
       stars.push(
         <svg 
           key={i} 
-          className={`w-5 h-5 ${i <= rating ? 'text-yellow-400' : 'text-gray-300'}`} 
+          className={`w-5 h-5 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`} 
           fill="currentColor" 
           viewBox="0 0 20 20" 
           xmlns="http://www.w3.org/2000/svg"

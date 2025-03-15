@@ -4,6 +4,31 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import MainLayout from '@/components/MainLayout';
 import HeroSection from '@/components/HeroSection';
+import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
+
+// Genera i metadata specifici per la pagina dei contatti
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'contact' });
+  
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre-giardinaggio.it';
+  
+  return {
+    title: t('title'),
+    description: t('description'),
+    openGraph: {
+      images: [
+        {
+          url: `${baseUrl}/images/hero/contact-new.jpg`,
+          width: 1200,
+          height: 630,
+          alt: t('title'),
+        },
+      ],
+    },
+  };
+}
 
 export default function ContactPage() {
   const t = useTranslations();

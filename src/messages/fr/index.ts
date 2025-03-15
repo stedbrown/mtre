@@ -334,11 +334,11 @@ const messages = {
     title: 'Contactez-nous',
     description: 'Nous sommes là pour vous aider. Contactez-nous pour toute question ou demande.',
     info: {
-      title: 'Informations de Contact',
+      title: 'Informations de contact',
       address: {
         label: 'Adresse',
-        street: 'Via Roma 123',
-        city: '20100 Milan, Italie'
+        street: 'Via Croce 2, 6710 Biasca',
+        city: 'Suisse, Tessin'
       },
       phone: {
         label: 'Téléphone',
@@ -351,7 +351,7 @@ const messages = {
       hours: {
         label: 'Heures d\'ouverture',
         weekdays: 'Lundi - Vendredi: 8:00 - 18:00',
-        saturday: 'Samedi: 9:00 - 16:00',
+        saturday: 'Samedi: 9:00 - 13:00',
         sunday: 'Dimanche: Fermé'
       },
       map: 'Carte interactive à venir'

@@ -331,14 +331,14 @@ const messages = {
     }
   },
   contact: {
-    title: 'Kontaktieren Sie uns',
+    title: 'Kontakt',
     description: 'Wir sind für Sie da. Kontaktieren Sie uns für Fragen oder Anfragen.',
     info: {
       title: 'Kontaktinformationen',
       address: {
         label: 'Adresse',
-        street: 'Via Roma 123',
-        city: '20100 Mailand, Italien'
+        street: 'Via Croce 2, 6710 Biasca',
+        city: 'Schweiz, Tessin'
       },
       phone: {
         label: 'Telefon',
@@ -351,7 +351,7 @@ const messages = {
       hours: {
         label: 'Öffnungszeiten',
         weekdays: 'Montag - Freitag: 8:00 - 18:00',
-        saturday: 'Samstag: 9:00 - 16:00',
+        saturday: 'Samstag: 9:00 - 13:00',
         sunday: 'Sonntag: Geschlossen'
       },
       map: 'Interaktive Karte in Kürze verfügbar'

@@ -16,22 +16,22 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: 'M.T.R.E. Giardinaggio',
-    image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre-giardinaggio.it'}/images/hero/home-new.jpg`,
-    '@id': `${process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre-giardinaggio.it'}/#LocalBusiness`,
-    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre-giardinaggio.it',
-    telephone: '+39 123 456 7890',
+    image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch'}/images/hero/home-new.jpg`,
+    '@id': `${process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch'}/#LocalBusiness`,
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch',
+    telephone: '+41 76 742 67 36',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Via Roma 123',
-      addressLocality: 'Milano',
-      postalCode: '20100',
-      addressRegion: 'MI',
-      addressCountry: 'IT'
+      streetAddress: 'Via Croce 2',
+      addressLocality: 'Biasca',
+      postalCode: '6710',
+      addressRegion: 'Ticino',
+      addressCountry: 'CH'
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 45.4642,
-      longitude: 9.1900
+      latitude: 46.3602,
+      longitude: 8.9706
     },
     openingHoursSpecification: [
       {

@@ -334,11 +334,11 @@ const messages = {
     title: 'Contattaci',
     description: 'Siamo qui per aiutarti. Contattaci per qualsiasi domanda o richiesta.',
     info: {
-      title: 'Informazioni di Contatto',
+      title: 'Informazioni di contatto',
       address: {
         label: 'Indirizzo',
-        street: 'Via Roma 123',
-        city: '20100 Milano, Italia'
+        street: 'Via Croce 2, 6710 Biasca',
+        city: 'Svizzera, Ticino'
       },
       phone: {
         label: 'Telefono',
@@ -349,9 +349,9 @@ const messages = {
         address: 'emanuele.novara77@gmail.com'
       },
       hours: {
-        label: 'Orari di Apertura',
+        label: 'Orari di apertura',
         weekdays: 'Lunedì - Venerdì: 8:00 - 18:00',
-        saturday: 'Sabato: 9:00 - 16:00',
+        saturday: 'Sabato: 9:00 - 13:00',
         sunday: 'Domenica: Chiuso'
       },
       map: 'Mappa interattiva in arrivo'

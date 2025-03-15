@@ -21,27 +21,27 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   // In Next.js 15, params è una Promise che deve essere attesa
   const { locale } = await params;
   
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre-giardinaggio.it';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch';
   
   const titles = {
-    it: 'M.T.R.E. Giardinaggio - Servizi di giardinaggio professionali in Lombardia',
-    en: 'M.T.R.E. Gardening - Professional gardening services in Lombardy',
-    fr: 'M.T.R.E. Jardinage - Services de jardinage professionnels en Lombardie',
-    de: 'M.T.R.E. Gartenbau - Professionelle Gartenbauleistungen in der Lombardei'
+    it: 'M.T.R.E. Giardinaggio - Servizi di giardinaggio professionali in Ticino, Svizzera',
+    en: 'M.T.R.E. Gardening - Professional gardening services in Ticino, Switzerland',
+    fr: 'M.T.R.E. Jardinage - Services de jardinage professionnels au Tessin, Suisse',
+    de: 'M.T.R.E. Gartenbau - Professionelle Gartenbauleistungen im Tessin, Schweiz'
   };
   
   const descriptions = {
-    it: 'Servizi di giardinaggio professionali, manutenzione del verde, progettazione giardini e spazi verdi in Lombardia. Preventivi gratuiti e soluzioni personalizzate.',
-    en: 'Professional gardening services, green maintenance, garden design and green spaces in Lombardy. Free quotes and customized solutions.',
-    fr: 'Services de jardinage professionnels, entretien des espaces verts, conception de jardins en Lombardie. Devis gratuits et solutions personnalisées.',
-    de: 'Professionelle Gartenbauleistungen, Grünflächenpflege, Gartengestaltung in der Lombardei. Kostenlose Angebote und maßgeschneiderte Lösungen.'
+    it: 'Servizi di giardinaggio professionali, manutenzione del verde, progettazione giardini e spazi verdi in Ticino. Preventivi gratuiti e soluzioni personalizzate per la Svizzera italiana.',
+    en: 'Professional gardening services, green maintenance, garden design and green spaces in Ticino. Free quotes and customized solutions for Italian Switzerland.',
+    fr: 'Services de jardinage professionnels, entretien des espaces verts, conception de jardins au Tessin. Devis gratuits et solutions personnalisées pour la Suisse italienne.',
+    de: 'Professionelle Gartenbauleistungen, Grünflächenpflege, Gartengestaltung im Tessin. Kostenlose Angebote und maßgeschneiderte Lösungen für die italienische Schweiz.'
   };
   
   const keywords = {
-    it: 'giardinaggio, manutenzione verde, progettazione giardini, potatura, prato, irrigazione, Lombardia, Milano, Varese, Como',
-    en: 'gardening, green maintenance, garden design, pruning, lawn, irrigation, Lombardy, Milan, Varese, Como',
-    fr: 'jardinage, entretien des espaces verts, conception de jardins, taille, pelouse, irrigation, Lombardie, Milan, Varese, Côme',
-    de: 'Gartenbau, Grünflächenpflege, Gartengestaltung, Beschneidung, Rasen, Bewässerung, Lombardei, Mailand, Varese, Como'
+    it: 'giardinaggio, manutenzione verde, progettazione giardini, potatura, prato, irrigazione, Ticino, Svizzera, Biasca, Bellinzona, Lugano, Locarno',
+    en: 'gardening, green maintenance, garden design, pruning, lawn, irrigation, Ticino, Switzerland, Biasca, Bellinzona, Lugano, Locarno',
+    fr: 'jardinage, entretien des espaces verts, conception de jardins, taille, pelouse, irrigation, Tessin, Suisse, Biasca, Bellinzone, Lugano, Locarno',
+    de: 'Gartenbau, Grünflächenpflege, Gartengestaltung, Beschneidung, Rasen, Bewässerung, Tessin, Schweiz, Biasca, Bellinzona, Lugano, Locarno'
   };
   
   return {

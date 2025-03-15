@@ -117,8 +117,8 @@ export default function ContactPage() {
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-gray-900">{t('contact.info.address.label')}</h3>
                     <p className="mt-1 text-gray-600">
-                      {t('contact.info.address.street')}<br />
-                      {t('contact.info.address.city')}
+                      Via Croce 2, 6710 Biasca<br />
+                      Svizzera, Ticino
                     </p>
                   </div>
                 </div>
@@ -133,7 +133,7 @@ export default function ContactPage() {
                     <h3 className="text-lg font-medium text-gray-900">{t('contact.info.phone.label')}</h3>
                     <p className="mt-1 text-gray-600">
                       <a href="tel:+41767426736" className="hover:text-green-600 transition-colors">
-                        {t('contact.info.phone.number')}
+                        +41 76 742 67 36
                       </a>
                     </p>
                   </div>
@@ -149,7 +149,7 @@ export default function ContactPage() {
                     <h3 className="text-lg font-medium text-gray-900">{t('contact.info.email.label')}</h3>
                     <p className="mt-1 text-gray-600">
                       <a href="mailto:emanuele.novara77@gmail.com" className="hover:text-green-600 transition-colors">
-                        {t('contact.info.email.address')}
+                        emanuele.novara77@gmail.com
                       </a>
                     </p>
                   </div>

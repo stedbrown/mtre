@@ -4,31 +4,6 @@ import { useTranslations } from 'next-intl';
 import MainLayout from '@/components/MainLayout';
 import Image from 'next/image';
 import HeroSection from '@/components/HeroSection';
-import { getTranslations } from 'next-intl/server';
-import type { Metadata } from 'next';
-
-// Genera i metadata specifici per la pagina delle testimonianze
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'testimonials' });
-  
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre-giardinaggio.it';
-  
-  return {
-    title: t('title'),
-    description: 'Scopri cosa dicono i nostri clienti sui servizi di giardinaggio M.T.R.E.',
-    openGraph: {
-      images: [
-        {
-          url: `${baseUrl}/images/hero/testimonials-new.jpg`,
-          width: 1200,
-          height: 630,
-          alt: t('title'),
-        },
-      ],
-    },
-  };
-}
 
 export default function TestimonialsPage() {
   const t = useTranslations();

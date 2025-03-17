@@ -3,6 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --input-background: #ffffff;
+  --input-text: #333333;
+  --input-border: #d1d5db;
+  --input-focus-border: #3b82f6;
 }
 
 @theme inline {
@@ -16,6 +20,10 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --input-background: #1f2937;
+    --input-text: #f3f4f6;
+    --input-border: #4b5563;
+    --input-focus-border: #60a5fa;
   }
 }
 
@@ -23,4 +31,66 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Stili per l'area admin */
+.admin-area input,
+.admin-area textarea,
+.admin-area select {
+  background-color: var(--input-background);
+  color: var(--input-text);
+  border-color: var(--input-border);
+}
+
+.admin-area input:focus,
+.admin-area textarea:focus,
+.admin-area select:focus {
+  border-color: var(--input-focus-border);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Assicurarsi che il testo sia sempre visibile nell'area admin */
+.admin-area {
+  color: #333333;
+}
+
+.admin-area .bg-white {
+  color: #333333;
+}
+
+.admin-area table {
+  color: #333333;
+}
+
+.admin-area button {
+  color: inherit;
+}
+
+/* Fix per i form nell'area admin */
+.admin-area input,
+.admin-area textarea,
+.admin-area select {
+  color: #333333 !important;
+  background-color: #ffffff !important;
+}
+
+.admin-area input::placeholder,
+.admin-area textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+/* Assicurarsi che i form in modalità dark abbiano colori appropriati */
+@media (prefers-color-scheme: dark) {
+  .admin-area input,
+  .admin-area textarea,
+  .admin-area select {
+    color: #333333 !important;
+    background-color: #ffffff !important;
+  }
+  
+  .admin-area input::placeholder,
+  .admin-area textarea::placeholder {
+    color: #6b7280 !important;
+  }
 }

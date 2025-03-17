@@ -9,6 +9,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   // Configurazioni aggiuntive qui
+  serverExternalPackages: ["pdfkit"],
   images: {
     remotePatterns: [
       {

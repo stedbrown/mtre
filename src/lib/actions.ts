@@ -46,11 +46,9 @@ export async function login(formData: FormData) {
     return { error: error.message };
   }
   
-  if (redirectTo) {
-    redirect(redirectTo);
-  } else {
-    redirect('/it/admin/dashboard');
-  }
+  // Utilizziamo un approccio alternativo per il reindirizzamento
+  const redirectPath = redirectTo || '/it/admin/dashboard';
+  return { success: true, redirectUrl: redirectPath };
 }
 
 export async function logout() {

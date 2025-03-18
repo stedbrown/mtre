@@ -32,6 +32,9 @@ export default function LoginPage() {
       
       if (result?.error) {
         setError(result.error);
+      } else if (result?.success && result?.redirectUrl) {
+        // Gestire il reindirizzamento sul client
+        window.location.href = result.redirectUrl;
       }
     } catch (error: any) {
       setError(error.message || 'Si è verificato un errore durante il login');

@@ -47,12 +47,14 @@ export default async function DashboardPage({
             Devi effettuare l'accesso per visualizzare questa pagina.
           </p>
           <div className="flex justify-center">
-            <Link
-              href={`/${locale}/admin/login`}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Vai al login
-            </Link>
+            <form action={`/${locale}/admin/login`} method="get">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Vai al login
+              </button>
+            </form>
           </div>
         </div>
       </div>

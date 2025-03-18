@@ -41,12 +41,12 @@ export async function middleware(request: NextRequest) {
   // IMPORTANTE: bypass speciale per accesso diretto alla pagina di login
   // Questo permette di accedere alla pagina di login senza autenticazione
   // sia con /it/admin/login che con /en/admin/login che con /admin/login
-  if (
-    pathname === '/admin/login' || 
+  const isLoginPage = pathname === '/admin/login' || 
     pathname === '/it/admin/login' || 
     pathname === '/en/admin/login' ||
-    pathname.endsWith('/admin/login')
-  ) {
+    pathname.endsWith('/admin/login');
+  
+  if (isLoginPage) {
     console.log(`[Middleware] Login page directly accessed: ${pathname} - ALLOWING ACCESS`);
     return intlMiddleware(request);
   }
@@ -58,14 +58,14 @@ export async function middleware(request: NextRequest) {
   }
   
   // Gestisci altri percorsi /admin/* senza locale
-  if (pathname.startsWith('/admin/')) {
+  if (pathname.startsWith('/admin/') && !isLoginPage) {
     const subPath = pathname.slice(7); // rimuove '/admin/'
     console.log(`[Middleware] Redirecting from /admin/${subPath} to /${defaultLocale}/admin/${subPath}`);
     return NextResponse.redirect(new URL(`/${defaultLocale}/admin/${subPath}`, request.url));
   }
   
   // Verifica autenticazione solo per percorsi /{locale}/admin/* (ma non login)
-  if (pathname.includes('/admin/') && !pathname.endsWith('/admin/login')) {
+  if (pathname.includes('/admin/') && !isLoginPage) {
     // Verifica se l'utente è autenticato
     const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
     const isAuthenticated = !!authCookie?.value;
@@ -80,6 +80,16 @@ export async function middleware(request: NextRequest) {
       const locale = locales.includes(localeFromPath as any) 
         ? localeFromPath 
         : defaultLocale;
+      
+      // Previeni redirect loop controllando se siamo già in un ciclo di redirect
+      const url = new URL(request.url);
+      const isRedirectLoop = url.searchParams.has('redirectTo') && 
+                             url.searchParams.get('redirectTo')?.includes('/admin/');
+      
+      if (isRedirectLoop) {
+        console.log(`[Middleware] Detected redirect loop, forcing to login page without params`);
+        return NextResponse.redirect(new URL(`/${locale}/admin/login`, request.url));
+      }
       
       const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
       redirectUrl.searchParams.set('redirectTo', pathname);

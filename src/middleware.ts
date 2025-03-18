@@ -38,43 +38,48 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   console.log(`[Middleware] Processing: ${pathname}`);
   
+  // Disattiva temporaneamente il redirect per la pagina di login
+  if (pathname === '/it/admin/login' || pathname === '/admin/login') {
+    console.log(`[Middleware] Login page accessed: ${pathname} - ALLOWING DIRECT ACCESS`);
+    return NextResponse.next();
+  }
+  
+  // Verifica se il percorso contiene già un locale valido
+  const hasValidLocale = locales.some(locale => pathname.startsWith(`/${locale}/`));
+  
   // === GESTIONE PERCORSI SENZA LOCALE ===
   
   // Redirect da /admin alla dashboard con locale
-  if (pathname === '/admin' || pathname === '/admin/') {
+  if ((pathname === '/admin' || pathname === '/admin/') && !hasValidLocale) {
     console.log(`[Middleware] Redirecting /admin to /${defaultLocale}/admin/dashboard`);
     return NextResponse.redirect(new URL(`/${defaultLocale}/admin/dashboard`, request.url));
-  }
-  
-  // Redirect da /admin/login alla pagina di login con locale
-  if (pathname === '/admin/login') {
-    console.log(`[Middleware] Redirecting /admin/login to /${defaultLocale}/admin/login`);
-    return NextResponse.redirect(new URL(`/${defaultLocale}/admin/login`, request.url));
   }
   
   // === GESTIONE PAGINA DI LOGIN ===
   
   // Consenti accesso diretto alla pagina di login con locale
-  if (pathname.endsWith('/admin/login')) {
+  if (pathname.includes('/admin/login')) {
     console.log(`[Middleware] Login page accessed: ${pathname} - ALLOWING ACCESS`);
-    return intlMiddleware(request);
+    if (!hasValidLocale) {
+      // Se non ha un locale valido, aggiungi il locale predefinito
+      return NextResponse.redirect(new URL(`/${defaultLocale}/admin/login`, request.url));
+    }
+    return NextResponse.next();
   }
   
   // === VERIFICA AUTENTICAZIONE ===
   
   // Verifica autenticazione per tutte le pagine admin (tranne login)
-  if (pathname.includes('/admin/') && !pathname.endsWith('/admin/login')) {
+  if (pathname.includes('/admin/') && !pathname.includes('/admin/login')) {
     const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
     const isAuthenticated = !!authCookie?.value;
     console.log(`[Middleware] Auth check: ${isAuthenticated ? 'Authenticated' : 'Not authenticated'}`);
     
     if (!isAuthenticated) {
-      // Ottieni il locale dall'URL o usa quello predefinito
-      const parts = pathname.split('/');
-      const localeFromPath = parts[1] && locales.includes(parts[1] as any) ? parts[1] : defaultLocale;
-      
-      console.log(`[Middleware] Not authenticated, redirecting to login page`);
-      return NextResponse.redirect(new URL(`/${localeFromPath}/admin/login`, request.url));
+      // Se non è autenticato, reindirizza alla pagina di login
+      const localeToUse = hasValidLocale ? pathname.split('/')[1] : defaultLocale;
+      console.log(`[Middleware] Not authenticated, redirecting to login page with locale: ${localeToUse}`);
+      return NextResponse.redirect(new URL(`/${localeToUse}/admin/login`, request.url));
     }
   }
   

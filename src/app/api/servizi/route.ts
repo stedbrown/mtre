@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
       );
     }
     
+    // Restituisci direttamente l'array dei servizi
     return NextResponse.json(data);
   } catch (error: any) {
     console.error('Errore durante il recupero dei servizi:', error);

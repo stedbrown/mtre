@@ -38,69 +38,40 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   console.log(`[Middleware] Processing: ${pathname}`);
   
-  // IMPORTANTE: bypass speciale per accesso diretto alla pagina di login
-  // Questo permette di accedere alla pagina di login senza autenticazione
-  // sia con /it/admin/login che con /en/admin/login che con /admin/login
-  const isLoginPage = pathname === '/admin/login' || 
-    pathname === '/it/admin/login' || 
-    pathname === '/en/admin/login' ||
-    pathname.endsWith('/admin/login');
-  
-  if (isLoginPage) {
-    console.log(`[Middleware] Login page directly accessed: ${pathname} - ALLOWING ACCESS`);
+  // IMPORTANTE: Bypass per la pagina di login
+  if (pathname.includes('/admin/login')) {
+    console.log(`[Middleware] Login page accessed: ${pathname} - ALLOWING ACCESS`);
     return intlMiddleware(request);
   }
   
-  // Gestisci i percorsi /admin senza locale
+  // Gestisci i percorsi /admin senza locale - solo redirect di base
   if (pathname === '/admin' || pathname === '/admin/') {
     console.log(`[Middleware] Redirecting from /admin/ to /${defaultLocale}/admin/dashboard`);
     return NextResponse.redirect(new URL(`/${defaultLocale}/admin/dashboard`, request.url));
   }
   
-  // Gestisci altri percorsi /admin/* senza locale
-  if (pathname.startsWith('/admin/') && !isLoginPage) {
+  // Gestisci altri percorsi /admin/* senza locale - solo redirect di base
+  if (pathname.startsWith('/admin/') && !pathname.includes('/admin/login')) {
     const subPath = pathname.slice(7); // rimuove '/admin/'
     console.log(`[Middleware] Redirecting from /admin/${subPath} to /${defaultLocale}/admin/${subPath}`);
     return NextResponse.redirect(new URL(`/${defaultLocale}/admin/${subPath}`, request.url));
   }
   
-  // Verifica autenticazione solo per percorsi /{locale}/admin/* (ma non login)
-  if (pathname.includes('/admin/') && !isLoginPage) {
-    // Verifica se l'utente è autenticato
+  // Verifica autenticazione molto semplificata per il percorso /admin/dashboard
+  if (pathname.includes('/admin/') && !pathname.includes('/admin/login')) {
+    // Verifica se l'utente è autenticato in modo molto basico
     const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
     const isAuthenticated = !!authCookie?.value;
-    console.log(`[Middleware] Auth check for ${pathname}: ${isAuthenticated ? 'Authenticated' : 'Not authenticated'}`);
+    console.log(`[Middleware] Auth check: ${isAuthenticated ? 'Authenticated' : 'Not authenticated'}`);
     
     if (!isAuthenticated) {
-      // Ottieni il locale dall'URL
-      const parts = pathname.split('/');
-      const localeFromPath = parts[1] || '';
-      
-      // Verifica se il locale è supportato, altrimenti usa quello di default
-      const locale = locales.includes(localeFromPath as any) 
-        ? localeFromPath 
-        : defaultLocale;
-      
-      // Previeni redirect loop controllando se siamo già in un ciclo di redirect
-      const url = new URL(request.url);
-      const isRedirectLoop = url.searchParams.has('redirectTo') && 
-                             url.searchParams.get('redirectTo')?.includes('/admin/');
-      
-      if (isRedirectLoop) {
-        console.log(`[Middleware] Detected redirect loop, forcing to login page without params`);
-        return NextResponse.redirect(new URL(`/${locale}/admin/login`, request.url));
-      }
-      
-      const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
-      redirectUrl.searchParams.set('redirectTo', pathname);
-      
-      console.log(`[Middleware] Redirecting to login: ${redirectUrl.toString()}`);
-      return NextResponse.redirect(redirectUrl);
+      // Redirect semplice alla pagina di login senza parametri
+      console.log(`[Middleware] Not authenticated, redirecting to basic login`);
+      return NextResponse.redirect(new URL(`/${defaultLocale}/admin/login`, request.url));
     }
   }
   
-  // Per tutti gli altri percorsi
-  console.log(`[Middleware] Passing to intl middleware: ${pathname}`);
+  // Per tutti gli altri percorsi, usa il middleware intl standard
   return intlMiddleware(request);
 }
 

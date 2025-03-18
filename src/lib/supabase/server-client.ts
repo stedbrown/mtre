@@ -31,6 +31,12 @@ export async function createClient() {
             console.log(`Cookie ${name} would be removed in a Server Action`);
           },
         },
+        cookieOptions: {
+          secure: true,
+          sameSite: 'lax',
+          domain: 'mtre.vercel.app',
+          path: '/'
+        }
       }
     );
     

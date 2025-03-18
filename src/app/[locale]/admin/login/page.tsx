@@ -15,7 +15,7 @@ export default function AdminLoginPage({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   
-  // Crea client Supabase direttamente con createBrowserClient
+  // Crea client Supabase
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -29,7 +29,7 @@ export default function AdminLoginPage({
     try {
       console.log(`[LoginPage] Attempting login for: ${email}`);
       
-      // Esegui il login direttamente con Supabase
+      // Esegui il login con Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -43,12 +43,16 @@ export default function AdminLoginPage({
         throw new Error('Nessuna sessione creata');
       }
       
-      // Salva il token manualmente in localStorage per debug
+      // Salva il token manualmente in localStorage per avere un backup
       localStorage.setItem('mtre-auth-token', data.session.access_token);
       localStorage.setItem('mtre-refresh-token', data.session.refresh_token);
       localStorage.setItem('mtre-user-email', data.user?.email || '');
       
       console.log(`[LoginPage] Login successful, redirecting to dashboard...`);
+      
+      // Imposta un cookie per indicare il successo dell'operazione
+      // (aiuta con il debugging)
+      document.cookie = `mtre-login-success=true; path=/; max-age=${60*60*24*30}`;
       
       // Reindirizza alla dashboard
       router.push(`/${locale}/admin/dashboard`);

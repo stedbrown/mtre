@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { login } from '@/lib/actions';
@@ -15,10 +15,22 @@ export default function LoginPage() {
   const params = useParams();
   const locale = params.locale as string;
 
+  // Log al caricamento della pagina
+  useEffect(() => {
+    console.log('Login page loaded', { 
+      locale, 
+      redirectTo,
+      url: window.location.href,
+      pathname: window.location.pathname
+    });
+  }, [locale, redirectTo]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    console.log('Login attempt', { email, redirectTo });
 
     try {
       const formData = new FormData();
@@ -30,13 +42,17 @@ export default function LoginPage() {
 
       const result = await login(formData);
       
+      console.log('Login result:', result);
+      
       if (result?.error) {
         setError(result.error);
       } else if (result?.success && result?.redirectUrl) {
-        // Gestire il reindirizzamento sul client
+        // Gestire il reindirizzamento sul client con log
+        console.log('Redirecting to:', result.redirectUrl);
         window.location.href = result.redirectUrl;
       }
     } catch (error: any) {
+      console.error('Login error:', error);
       setError(error.message || 'Si è verificato un errore durante il login');
     } finally {
       setLoading(false);

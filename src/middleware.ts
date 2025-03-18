@@ -25,10 +25,8 @@ URL: ${request.url}
 Pathname: ${request.nextUrl.pathname}
 Locale: ${request.nextUrl.locale || 'none'}
 Cookies: ${request.cookies.getAll().map(c => c.name).join(', ') || 'none'}
-Headers:
-${Array.from(request.headers.entries())
-    .map(([key, value]) => `  ${key}: ${value}`)
-    .join('\n')}
+User-Agent: ${request.headers.get('user-agent') || 'none'}
+Referer: ${request.headers.get('referer') || 'none'}
 ===================
   `);
 }
@@ -40,11 +38,16 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   console.log(`[Middleware] Processing: ${pathname}`);
   
-  // IMPORTANTE: gestione speciale per la pagina di login
-  // Controllo esplicito per evitare loop di redirect
-  if (pathname.endsWith('/admin/login')) {
-    console.log(`[Middleware] Login page detected: ${pathname} - ALLOWING ACCESS DIRECTLY`);
-    // Per la pagina di login, passa direttamente il controllo al middleware di intl
+  // IMPORTANTE: bypass speciale per accesso diretto alla pagina di login
+  // Questo permette di accedere alla pagina di login senza autenticazione
+  // sia con /it/admin/login che con /en/admin/login che con /admin/login
+  if (
+    pathname === '/admin/login' || 
+    pathname === '/it/admin/login' || 
+    pathname === '/en/admin/login' ||
+    pathname.endsWith('/admin/login')
+  ) {
+    console.log(`[Middleware] Login page directly accessed: ${pathname} - ALLOWING ACCESS`);
     return intlMiddleware(request);
   }
   

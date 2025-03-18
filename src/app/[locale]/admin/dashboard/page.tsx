@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
+import { createClient } from '@/lib/supabase/server-client';
 import Link from 'next/link';
 import { 
   FiUsers, FiFileText, FiCheckSquare, FiPlus, 
@@ -15,29 +15,19 @@ export default async function DashboardPage({
 }) {
   const { locale } = await params;
   
-  // Verifica l'autenticazione
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookies().then(cookieStore => cookieStore.get(name)?.value);
-        },
-        set(name: string, value: string, options: any) {
-          // Non possiamo impostare cookie qui
-        },
-        remove(name: string, options: any) {
-          // Non possiamo rimuovere cookie qui
-        },
-      },
-    }
-  );
+  // Verifica l'autenticazione usando il client server creato precedentemente
+  const supabase = await createClient();
   
+  // Ottieni l'utente corrente
   const { data: { user } } = await supabase.auth.getUser();
-  const isAuthenticated = !!user;
   
-  if (!isAuthenticated) {
+  console.log('[Dashboard] Auth check:', { 
+    user: user ? 'Present' : 'Not found',
+    userId: user?.id || 'None'
+  });
+  
+  // Se l'utente non è autenticato, mostra il messaggio di accesso richiesto
+  if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] p-4">
         <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">

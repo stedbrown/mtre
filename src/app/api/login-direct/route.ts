@@ -42,11 +42,22 @@ export async function POST(request: NextRequest) {
           },
           set(name: string, value: string, options) {
             // Imposta il cookie nella risposta
-            response.cookies.set(name, value, options);
+            response.cookies.set(name, value, {
+              ...options,
+              secure: true,
+              sameSite: 'lax',
+              path: '/'
+            });
           },
           remove(name: string, options) {
             // Rimuovi il cookie dalla risposta
-            response.cookies.set(name, '', { ...options, maxAge: 0 });
+            response.cookies.set(name, '', { 
+              ...options, 
+              maxAge: 0,
+              secure: true,
+              sameSite: 'lax',
+              path: '/'
+            });
           },
         },
       }
@@ -79,7 +90,12 @@ export async function POST(request: NextRequest) {
     response.cookies.set(
       'login-success', 
       'true', 
-      { maxAge: 5, path: '/' }
+      { 
+        maxAge: 60, 
+        path: '/',
+        secure: true,
+        sameSite: 'lax'
+      }
     );
 
     const responseData = JSON.stringify({

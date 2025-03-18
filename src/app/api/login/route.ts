@@ -2,6 +2,8 @@ import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -19,8 +21,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Crea il client di Supabase
+    // Crea il client di Supabase con gestione corretta dei cookies in Next.js 14+
     const cookieStore = cookies();
+    
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -30,10 +33,18 @@ export async function POST(request: NextRequest) {
             return cookieStore.get(name)?.value;
           },
           set(name: string, value: string, options: any) {
-            cookieStore.set({ name, value, ...options });
+            try {
+              cookieStore.set(name, value, options);
+            } catch (error) {
+              console.error('Error setting cookie:', error);
+            }
           },
           remove(name: string, options: any) {
-            cookieStore.set({ name, value: '', ...options });
+            try {
+              cookieStore.set(name, '', { ...options, maxAge: 0 });
+            } catch (error) {
+              console.error('Error removing cookie:', error);
+            }
           },
         },
       }
@@ -59,6 +70,7 @@ export async function POST(request: NextRequest) {
     // Determina l'URL di redirect
     const redirectPath = redirectTo || '/it/admin/dashboard';
     
+    // Crea la risposta con i cookies già impostati da Supabase
     return NextResponse.json({
       success: true,
       redirectUrl: redirectPath,

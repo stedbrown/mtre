@@ -73,12 +73,14 @@ export default function AdminLayoutClient({
             Devi effettuare l'accesso per visualizzare questa pagina.
           </p>
           <div className="flex justify-center">
-            <button
-              onClick={() => router.push(`/${locale}/admin/login`)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Vai al login
-            </button>
+            <form action={`/${locale}/admin/login`} method="get">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Vai al login
+              </button>
+            </form>
           </div>
         </div>
       </div>

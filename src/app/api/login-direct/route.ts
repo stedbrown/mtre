@@ -9,12 +9,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-    const redirectTo = formData.get('redirectTo') as string | null;
 
-    console.log('Login attempt via direct API:', { 
-      email, 
-      hasRedirect: !!redirectTo 
-    });
+    console.log('Login attempt via direct API:', { email });
 
     if (!email || !password) {
       return NextResponse.json(
@@ -75,8 +71,8 @@ export async function POST(request: NextRequest) {
     // Login riuscito
     console.log('Login successful, user:', data.user?.email);
 
-    // Determina l'URL di redirect
-    const redirectPath = redirectTo || '/it/admin/dashboard';
+    // Redirect fisso alla dashboard in italiano
+    const fixedRedirectPath = '/it/admin/dashboard';
     
     // Imposta la risposta di successo
     response.headers.set('content-type', 'application/json');
@@ -88,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     const responseData = JSON.stringify({
       success: true,
-      redirectUrl: redirectPath,
+      redirectUrl: fixedRedirectPath,
       user: {
         id: data.user?.id,
         email: data.user?.email,

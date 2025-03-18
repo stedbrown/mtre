@@ -7,9 +7,9 @@ export const dynamic = 'force-dynamic';
 // Bypassando completamente il middleware
 export async function GET(
   request: NextRequest,
-  { params }: { params: { locale: string } }
+  context: { params: Promise<{ locale: string }> }
 ) {
-  const locale = params.locale;
+  const { locale } = await context.params;
   const loginHTML = `
   <!DOCTYPE html>
   <html lang="${locale}">

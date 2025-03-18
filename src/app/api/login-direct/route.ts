@@ -1,124 +1,85 @@
+import { createClient } from '@/lib/supabase/server-client';
 import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
+  const formData = await request.formData();
+  
+  // Ottieni i valori dal form
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  
+  // Log dell'informazione iniziale
+  console.log(`[API] Login attempt for user: ${email}`);
+  
+  // Verifica che i campi email e password siano presenti
+  if (!email || !password) {
+    console.log(`[API] Login error: missing email or password`);
+    return NextResponse.json(
+      { error: 'Email e password sono richiesti' },
+      { status: 400 }
+    );
+  }
+  
   try {
-    const formData = await request.formData();
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    console.log('Login attempt via direct API:', { email });
-
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email e password sono richiesti' },
-        { status: 400 }
-      );
-    }
-
-    // Crea una risposta vuota per impostare i cookie
-    const response = new NextResponse(
-      JSON.stringify({
-        success: false,
-        error: 'Inizializzazione in corso...',
-      }),
-      {
-        status: 200,
-        headers: { 'content-type': 'application/json' },
-      }
-    );
-
-    // Crea il client Supabase con i cookie custom per RSC/Route Handler
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookies().then(cookieStore => cookieStore.get(name)?.value);
-          },
-          set(name: string, value: string, options) {
-            // Imposta il cookie nella risposta
-            response.cookies.set(name, value, {
-              ...options,
-              secure: true,
-              sameSite: 'lax',
-              path: '/'
-            });
-          },
-          remove(name: string, options) {
-            // Rimuovi il cookie dalla risposta
-            response.cookies.set(name, '', { 
-              ...options, 
-              maxAge: 0,
-              secure: true,
-              sameSite: 'lax',
-              path: '/'
-            });
-          },
-        },
-      }
-    );
-
-    // Esegui il login
+    // Crea il client Supabase
+    const supabase = await createClient();
+    
+    // Effettua il login
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-
+    
+    // Gestisci eventuali errori di login
     if (error) {
-      console.error('Login error:', error.message);
-      
-      // Risposta di errore
+      console.log(`[API] Login error: ${error.message}`);
       return NextResponse.json(
-        { success: false, error: error.message },
+        { error: error.message },
         { status: 401 }
       );
     }
-
-    // Login riuscito
-    console.log('Login successful, user:', data.user?.email);
-
-    // Redirect fisso alla dashboard in italiano
-    const fixedRedirectPath = '/it/admin/dashboard';
     
-    // Imposta la risposta di successo
-    response.headers.set('content-type', 'application/json');
-    response.cookies.set(
-      'login-success', 
-      'true', 
-      { 
-        maxAge: 60, 
-        path: '/',
-        secure: true,
-        sameSite: 'lax'
+    // Se il login ha successo, ottieni la sessione e imposta la risposta
+    console.log(`[API] Login successful for user: ${email}`);
+    
+    // Crea la risposta con il redirect alla dashboard
+    const redirectTo = '/it/admin/dashboard';
+    const response = NextResponse.redirect(new URL(redirectTo, request.url));
+    
+    // Configura i cookie per sessione sicura
+    const cookieOptions = {
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax' as const,
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 giorni
+    };
+    
+    // Ottieni i cookie dalla risposta Supabase
+    const setCookieHeader = data.session?.cookieString || '';
+    
+    if (setCookieHeader) {
+      // Estrai i cookie da impostare
+      const cookieParts = setCookieHeader.split(';');
+      const mainPart = cookieParts[0];
+      const [cookieName, cookieValue] = mainPart.split('=');
+      
+      if (cookieName && cookieValue) {
+        // Imposta il cookie nella risposta con le opzioni di sicurezza
+        response.cookies.set(cookieName, cookieValue, cookieOptions);
+        console.log(`[API] Set secure cookie: ${cookieName}`);
       }
-    );
-
-    const responseData = JSON.stringify({
-      success: true,
-      redirectUrl: fixedRedirectPath,
-      user: {
-        id: data.user?.id,
-        email: data.user?.email,
-      }
-    });
-
-    // Costruisci la risposta finale
-    return new NextResponse(responseData, {
-      status: 200,
-      headers: response.headers,
-    });
+    }
+    
+    return response;
   } catch (error: any) {
-    console.error('Unexpected error in API login-direct:', error);
+    // Gestisci errori generici
+    console.error(`[API] Login unexpected error:`, error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Si è verificato un errore durante il login' 
-      },
+      { error: 'Si è verificato un errore durante il login' },
       { status: 500 }
     );
   }

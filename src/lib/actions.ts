@@ -30,25 +30,15 @@ async function createSupabaseClient() {
   );
 }
 
-export async function login(formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const redirectTo = formData.get('redirectTo') as string;
+export async function redirectToLogin(redirectTo?: string) {
+  const locale = 'it'; // Default locale
+  let loginUrl = `/${locale}/admin/login`;
   
-  const supabase = await createSupabaseClient();
-  
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  
-  if (error) {
-    return { error: error.message };
+  if (redirectTo) {
+    loginUrl += `?redirectTo=${encodeURIComponent(redirectTo)}`;
   }
   
-  // Utilizziamo un approccio alternativo per il reindirizzamento
-  const redirectPath = redirectTo || '/it/admin/dashboard';
-  return { success: true, redirectUrl: redirectPath };
+  return redirect(loginUrl);
 }
 
 export async function logout() {

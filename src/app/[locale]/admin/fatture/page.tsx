@@ -50,13 +50,14 @@ async function filterFatture(formData: FormData) {
 
 export default async function FatturePage({
   params,
-  searchParams
+  searchParams: searchParamsPromise
 }: {
   params: Promise<{ locale: string }>,
-  searchParams: { search?: string; stato?: string; periodo?: string }
+  searchParams: Promise<{ search?: string; stato?: string; periodo?: string }>
 }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
+  // In Next.js 15, params e searchParams sono Promise che devono essere attese
   const { locale } = await params;
+  const searchParams = await searchParamsPromise;
   
   // Verifica l'autenticazione tramite cookie
   const cookieStore = await cookies();
@@ -88,7 +89,43 @@ export default async function FatturePage({
   
   // Applica i filtri dalla query di ricerca
   if (searchParams.search) {
-    query = query.or(`numero.ilike.%${searchParams.search}%,cliente.nome.ilike.%${searchParams.search}%,cliente.cognome.ilike.%${searchParams.search}%`);
+    const searchValue = searchParams.search.trim();
+    
+    // Per le fatture, devo usare textSearch per cercare in relazioni
+    // Cerca prima nella tabella fatture
+    const { data: fattureIds, error: fattureError } = await supabase
+      .from('fatture')
+      .select('id')
+      .or(`numero.ilike.%${searchValue}%`);
+    
+    if (fattureError) {
+      console.error('Errore nella ricerca del testo:', fattureError);
+    }
+    
+    // Cerca poi clienti che corrispondono alla ricerca
+    const { data: clientiIds, error: clientiError } = await supabase
+      .from('clienti')
+      .select('id')
+      .or(`nome.ilike.%${searchValue}%,cognome.ilike.%${searchValue}%`);
+    
+    if (clientiError) {
+      console.error('Errore nella ricerca clienti:', clientiError);
+    }
+    
+    // Crea un array di ID fatture da filtrare
+    const idsToFilter = fattureIds?.map((f: { id: string }) => f.id) || [];
+    
+    // Aggiungi le fatture associate ai clienti trovati
+    if (clientiIds && clientiIds.length > 0) {
+      query = query.or(
+        `id.in.(${idsToFilter.join(',')}),cliente_id.in.(${clientiIds.map((c: { id: string }) => c.id).join(',')})`
+      );
+    } else if (idsToFilter.length > 0) {
+      query = query.in('id', idsToFilter);
+    } else {
+      // Se non ci sono risultati, aggiungi un filtro impossibile
+      query = query.eq('id', '00000000-0000-0000-0000-000000000000');
+    }
   }
   
   if (searchParams.stato && searchParams.stato !== '') {

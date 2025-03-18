@@ -43,13 +43,14 @@ async function filterPreventivi(formData: FormData) {
 
 export default async function PreventiviPage({
   params,
-  searchParams
+  searchParams: searchParamsPromise
 }: {
   params: Promise<{ locale: string }>,
-  searchParams: { search?: string; stato?: string; periodo?: string }
+  searchParams: Promise<{ search?: string; stato?: string; periodo?: string }>
 }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
+  // In Next.js 15, params e searchParams sono Promise che devono essere attese
   const { locale } = await params;
+  const searchParams = await searchParamsPromise;
   
   // Verifica l'autenticazione tramite cookie
   const cookieStore = await cookies();
@@ -81,7 +82,42 @@ export default async function PreventiviPage({
   
   // Applica i filtri dalla query di ricerca
   if (searchParams.search) {
-    query = query.or(`numero.ilike.%${searchParams.search}%,clienti.nome.ilike.%${searchParams.search}%,clienti.cognome.ilike.%${searchParams.search}%`);
+    const searchValue = searchParams.search.trim();
+    
+    // Cerchiamo prima i numeri di preventivo
+    const { data: preventiviIds, error: preventiviError } = await supabase
+      .from('preventivi')
+      .select('id')
+      .ilike('numero', `%${searchValue}%`);
+    
+    if (preventiviError) {
+      console.error('Errore nella ricerca preventivi:', preventiviError);
+    }
+    
+    // Cerchiamo poi i clienti
+    const { data: clientiIds, error: clientiError } = await supabase
+      .from('clienti')
+      .select('id')
+      .or(`nome.ilike.%${searchValue}%,cognome.ilike.%${searchValue}%`);
+    
+    if (clientiError) {
+      console.error('Errore nella ricerca clienti:', clientiError);
+    }
+    
+    // Crea un array di ID preventivi da filtrare
+    const idsToFilter = preventiviIds?.map((p: { id: string }) => p.id) || [];
+    
+    // Aggiungi i preventivi associati ai clienti trovati
+    if (clientiIds && clientiIds.length > 0) {
+      query = query.or(
+        `id.in.(${idsToFilter.join(',')}),cliente_id.in.(${clientiIds.map((c: { id: string }) => c.id).join(',')})`
+      );
+    } else if (idsToFilter.length > 0) {
+      query = query.in('id', idsToFilter);
+    } else {
+      // Se non ci sono risultati, aggiungi un filtro impossibile
+      query = query.eq('id', '00000000-0000-0000-0000-000000000000');
+    }
   }
   
   if (searchParams.stato && searchParams.stato !== '') {

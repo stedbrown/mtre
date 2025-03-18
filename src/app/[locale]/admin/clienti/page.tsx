@@ -24,12 +24,10 @@ async function filterClienti(formData: FormData) {
   'use server';
   
   const searchQuery = formData.get('search') as string;
-  const tipo = formData.get('tipo') as string;
   
   // Crea i parametri di ricerca da aggiungere all'URL
   const searchParams = new URLSearchParams();
   if (searchQuery) searchParams.set('search', searchQuery);
-  if (tipo) searchParams.set('tipo', tipo);
   
   // Revalidate the path with the search params
   revalidatePath('/admin/clienti');
@@ -41,13 +39,14 @@ async function filterClienti(formData: FormData) {
 
 export default async function ClientiPage({
   params,
-  searchParams
+  searchParams: searchParamsPromise
 }: {
   params: Promise<{ locale: string }>,
-  searchParams: { search?: string; tipo?: string }
+  searchParams: Promise<{ search?: string; tipo?: string }>
 }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
+  // In Next.js 15, params e searchParams sono Promise che devono essere attese
   const { locale } = await params;
+  const searchParams = await searchParamsPromise;
   
   // Verifica l'autenticazione tramite cookie
   const cookieStore = await cookies();
@@ -73,14 +72,17 @@ export default async function ClientiPage({
   
   // Applica i filtri dalla query di ricerca
   if (searchParams.search) {
-    query = query.or(`nome.ilike.%${searchParams.search}%,cognome.ilike.%${searchParams.search}%,azienda.ilike.%${searchParams.search}%,email.ilike.%${searchParams.search}%`);
+    const searchValue = searchParams.search.trim();
+    query = query.or(
+      `nome.ilike.%${searchValue}%,` +
+      `cognome.ilike.%${searchValue}%,` +
+      `email.ilike.%${searchValue}%,` +
+      `telefono.ilike.%${searchValue}%,` +
+      `citta.ilike.%${searchValue}%`
+    );
   }
   
-  if (searchParams.tipo === 'privati') {
-    query = query.or('azienda.is.null,azienda.eq.');
-  } else if (searchParams.tipo === 'aziende') {
-    query = query.not('azienda', 'is', null).not('azienda', 'eq', '');
-  }
+  // Tipo cliente (privato o azienda) è stato rimosso perché la colonna azienda non esiste
   
   // Ordina per nome
   query = query.order('nome');
@@ -136,23 +138,9 @@ export default async function ClientiPage({
                 name="search"
                 defaultValue={searchParams.search || ''}
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Cerca per nome, email, azienda..."
+                placeholder="Cerca per nome, email, telefono..."
               />
             </div>
-          </div>
-          
-          <div className="w-full md:w-auto">
-            <label htmlFor="tipo" className="block text-sm font-medium text-gray-700 mb-1">Tipo cliente</label>
-            <select
-              id="tipo"
-              name="tipo"
-              defaultValue={searchParams.tipo || ''}
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option value="">Tutti i clienti</option>
-              <option value="privati">Solo privati</option>
-              <option value="aziende">Solo aziende</option>
-            </select>
           </div>
           
           <div className="w-full md:w-auto flex items-end">

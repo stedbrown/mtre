@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Montserrat } from 'next/font/google';
 import { 
   FiHome, FiUsers, FiFileText, FiCheckSquare, FiPackage, 
-  FiSettings, FiLogOut, FiMenu, FiX
+  FiSettings, FiLogOut, FiMenu, FiX, FiRefreshCw
 } from 'react-icons/fi';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
@@ -25,6 +25,7 @@ export default function AdminLayoutClient({
   const [isLoading, setIsLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   
@@ -40,63 +41,83 @@ export default function AdminLayoutClient({
     }
   );
 
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        console.log('[AdminLayoutClient] Checking authentication status...');
-        
-        // Verifica cookie di debug
-        const mtreCookie = document.cookie.split('; ').find(row => row.startsWith('mtre-login-success'));
-        console.log('[AdminLayoutClient] mtre-login-success cookie:', mtreCookie || 'not found');
-        
-        // Ottieni la sessione corrente
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
-        // Log della sessione (senza esporre dati sensibili)
-        console.log('[AdminLayoutClient] Session check:', {
-          hasSession: !!session,
-          expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
-          error: sessionError ? sessionError.message : null
-        });
-        
-        if (sessionError) {
-          throw sessionError;
-        }
-        
-        // Ottieni l'utente
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        console.log('[AdminLayoutClient] User check:', {
-          hasUser: !!user,
-          email: user?.email || null,
-          error: userError ? userError.message : null
-        });
-        
-        if (userError) {
-          throw userError;
-        }
-        
-        setIsAuthenticated(!!user);
-        setUserEmail(user?.email || null);
-        setAuthError(null);
-      } catch (error: any) {
-        console.error('[AdminLayoutClient] Authentication error:', error);
-        setIsAuthenticated(false);
-        setUserEmail(null);
-        setAuthError(error.message || 'Errore durante il controllo dell\'autenticazione');
-      } finally {
-        setIsLoading(false);
+  const checkAuth = async () => {
+    try {
+      console.log('[AdminLayoutClient] Checking authentication status...');
+      
+      const mtreCookie = document.cookie.split('; ').find(row => row.startsWith('mtre-login-success'));
+      console.log('[AdminLayoutClient] mtre-login-success cookie:', mtreCookie || 'not found');
+      
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      console.log('[AdminLayoutClient] Session check:', {
+        hasSession: !!session,
+        expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
+        error: sessionError ? sessionError.message : null
+      });
+      
+      if (sessionError) {
+        throw sessionError;
       }
+      
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      console.log('[AdminLayoutClient] User check:', {
+        hasUser: !!user,
+        email: user?.email || null,
+        error: userError ? userError.message : null
+      });
+      
+      if (userError) {
+        throw userError;
+      }
+      
+      setIsAuthenticated(!!user);
+      setUserEmail(user?.email || null);
+      setAuthError(null);
+    } catch (error: any) {
+      console.error('[AdminLayoutClient] Authentication error:', error);
+      setIsAuthenticated(false);
+      setUserEmail(null);
+      setAuthError(error.message || 'Errore durante il controllo dell\'autenticazione');
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
     }
+  };
 
+  useEffect(() => {
     checkAuth();
-  }, [supabase.auth]);
+  }, []);
+
+  const refreshSession = async () => {
+    setRefreshing(true);
+    try {
+      const { error } = await supabase.auth.refreshSession();
+      
+      if (error) {
+        throw error;
+      }
+      
+      await checkAuth();
+    } catch (error: any) {
+      console.error('[AdminLayoutClient] Error refreshing session:', error);
+      setAuthError(`Errore durante l'aggiornamento della sessione: ${error.message}`);
+      setRefreshing(false);
+    }
+  };
 
   const handleLogout = async () => {
     try {
       console.log('[AdminLayoutClient] Logging out...');
       await supabase.auth.signOut();
       console.log('[AdminLayoutClient] Successfully logged out');
+      
+      document.cookie = 'sb-pehacdouexhebskdbpxp-auth-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'sb-access-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'sb-refresh-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'mtre-login-success=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      
       router.push(`/${locale}/admin/login`);
     } catch (error: any) {
       console.error('[AdminLayoutClient] Logout error:', error);
@@ -125,15 +146,33 @@ export default function AdminLayoutClient({
               <strong>Errore di autenticazione:</strong> {authError}
             </div>
           )}
-          <div className="flex justify-center">
+          <div className="flex flex-col space-y-3 justify-center">
             <form action={`/${locale}/admin/login`} method="get">
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               >
                 Vai al login
               </button>
             </form>
+            
+            <button
+              onClick={refreshSession}
+              disabled={refreshing}
+              className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+            >
+              {refreshing ? (
+                <>
+                  <FiRefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Aggiornamento in corso...
+                </>
+              ) : (
+                <>
+                  <FiRefreshCw className="mr-2 h-4 w-4" />
+                  Aggiorna sessione
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>

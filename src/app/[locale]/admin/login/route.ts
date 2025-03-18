@@ -180,13 +180,8 @@ export async function GET(
         const errorContainer = document.getElementById('errorContainer');
         const errorMessage = document.getElementById('errorMessage');
         
-        // Ottieni i parametri dell'URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectTo = urlParams.get('redirectTo');
-        
         console.log('Login page loaded via route handler', { 
           locale: '${locale}',
-          redirectTo: redirectTo,
           url: window.location.href,
           pathname: window.location.pathname
         });
@@ -202,16 +197,13 @@ export async function GET(
           loadingIcon.classList.remove('hidden');
           errorContainer.classList.add('hidden');
           
-          console.log('Login attempt', { email, redirectTo });
+          console.log('Login attempt', { email });
           
           try {
             // Costruisce i dati di login
             const formData = new FormData();
             formData.append('email', email);
             formData.append('password', password);
-            if (redirectTo) {
-              formData.append('redirectTo', redirectTo);
-            }
 
             // Effettua la chiamata di login direttamente al backend di Supabase
             const response = await fetch('/api/login-direct', {

@@ -48,45 +48,41 @@ function createDebugResponse(request: NextRequest, message: string) {
 }
 
 export async function middleware(request: NextRequest) {
-  const url = request.nextUrl.clone();
-  const { pathname } = url;
+  const { pathname } = request.nextUrl;
   
-  console.log(`[Middleware] Processing: ${pathname}`);
-  
-  // CASO SPECIALE: tratta la pagina di login come un caso completamente separato
-  // Controlla esplicitamente tutti i percorsi possibili di login
-  if (
-    pathname === '/admin/login' || 
-    pathname === '/it/admin/login' || 
-    pathname === '/en/admin/login' ||
-    pathname.endsWith('/admin/login')
-  ) {
-    console.log(`[Middleware] Login page detected: ${pathname} - ALLOWING ACCESS`);
-    return intlMiddleware(request);
-  }
-  
-  // Se l'utente accede a /admin o /admin/ senza locale, reindirizza a /{locale}/admin/dashboard
+  // STEP 1: Gestisci i percorsi /admin senza locale (redirect a /{locale}/admin/...)
   if (pathname === '/admin' || pathname === '/admin/') {
-    url.pathname = `/${defaultLocale}/admin/dashboard`;
-    return NextResponse.redirect(url);
+    // Redirect to default locale dashboard
+    return NextResponse.redirect(new URL(`/${defaultLocale}/admin/dashboard`, request.url));
   }
   
-  // Per tutti gli altri percorsi /admin/* (eccetto login che è già stato gestito)
-  if (pathname.includes('/admin/')) {
-    // Verifica se l'utente è autenticato
+  if (pathname.startsWith('/admin/')) {
+    // Se è un percorso /admin senza locale, redirect a /{locale}/admin/...
+    // Preserva il resto del percorso dopo /admin/
+    const subPath = pathname.slice(7); // rimuove '/admin/'
+    return NextResponse.redirect(new URL(`/${defaultLocale}/admin/${subPath}`, request.url));
+  }
+  
+  // STEP 2: Verifica l'autenticazione per i percorsi /{locale}/admin/...
+  // Ma NON per /{locale}/admin/login
+  if (pathname.includes('/admin/') && !pathname.endsWith('/admin/login')) {
+    // Verifica autenticazione
     const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
     const isAuthenticated = !!authCookie?.value;
     
-    // Se non è autenticato, reindirizza alla pagina di login
     if (!isAuthenticated) {
-      const locale = url.locale || defaultLocale;
-      url.pathname = `/${locale}/admin/login`;
-      url.searchParams.set('redirectTo', pathname);
-      return NextResponse.redirect(url);
+      // Redirect a login mantenendo il locale già presente nell'URL
+      const parts = pathname.split('/');
+      const locale = parts[1]; // il locale è la prima parte dopo /
+      
+      const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
+      redirectUrl.searchParams.set('redirectTo', pathname);
+      
+      return NextResponse.redirect(redirectUrl);
     }
   }
   
-  // Per tutte le altre pagine, applica solo il middleware di internazionalizzazione
+  // STEP 3: Per tutti gli altri percorsi, usa il middleware di internazionalizzazione
   return intlMiddleware(request);
 }
 

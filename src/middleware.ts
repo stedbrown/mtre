@@ -19,16 +19,34 @@ const intlMiddleware = createMiddleware({
 
 // Funzione di debug per stampare informazioni dettagliate sulla richiesta
 function debugRequest(request: NextRequest) {
+  const cookieNames = request.cookies.getAll().map(c => `${c.name}=${c.value.substring(0, 10)}...`).join('; ');
+  
   console.log(`
 === DEBUG MIDDLEWARE ===
 URL: ${request.url}
 Pathname: ${request.nextUrl.pathname}
 Locale: ${request.nextUrl.locale || 'none'}
-Cookies: ${request.cookies.getAll().map(c => c.name).join(', ') || 'none'}
-User-Agent: ${request.headers.get('user-agent') || 'none'}
+Cookies: ${cookieNames || 'none'}
+User-Agent: ${request.headers.get('user-agent')?.substring(0, 50) || 'none'}
 Referer: ${request.headers.get('referer') || 'none'}
 ===================
   `);
+}
+
+// Funzione per verificare se un utente è autenticato
+function isUserAuthenticated(request: NextRequest): boolean {
+  // Verifica il cookie di autenticazione di Supabase
+  const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
+  const hasAuthCookie = !!authCookie?.value;
+  
+  // Log per debug
+  console.log(`[Middleware] Auth check:`, {
+    hasAuthCookie,
+    cookieValue: hasAuthCookie ? 'Present (not shown)' : 'Missing',
+    url: request.nextUrl.pathname
+  });
+  
+  return hasAuthCookie;
 }
 
 export async function middleware(request: NextRequest) {
@@ -38,9 +56,29 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   console.log(`[Middleware] Processing: ${pathname}`);
   
-  // Disattiva temporaneamente il redirect per la pagina di login
-  if (pathname === '/it/admin/login' || pathname === '/admin/login') {
-    console.log(`[Middleware] Login page accessed: ${pathname} - ALLOWING DIRECT ACCESS`);
+  // Verifica se è una pagina di login con o senza locale
+  const isLoginPage = pathname === '/admin/login' || 
+                     pathname === '/it/admin/login' || 
+                     pathname.endsWith('/admin/login');
+  
+  if (isLoginPage) {
+    // Per le pagine di login, controlla se l'utente è già autenticato
+    const isAuthenticated = isUserAuthenticated(request);
+    
+    if (isAuthenticated) {
+      // Se è già autenticato, reindirizza alla dashboard
+      console.log(`[Middleware] User already authenticated, redirecting to dashboard`);
+      return NextResponse.redirect(new URL(`/${defaultLocale}/admin/dashboard`, request.url));
+    }
+    
+    // Se non è autenticato e la pagina è /admin/login (senza locale), reindirizza con locale
+    if (pathname === '/admin/login') {
+      console.log(`[Middleware] Redirecting /admin/login to /${defaultLocale}/admin/login`);
+      return NextResponse.redirect(new URL(`/${defaultLocale}/admin/login`, request.url));
+    }
+    
+    // Altrimenti permetti l'accesso diretto
+    console.log(`[Middleware] Allowing access to login page: ${pathname}`);
     return NextResponse.next();
   }
   
@@ -55,25 +93,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`/${defaultLocale}/admin/dashboard`, request.url));
   }
   
-  // === GESTIONE PAGINA DI LOGIN ===
-  
-  // Consenti accesso diretto alla pagina di login con locale
-  if (pathname.includes('/admin/login')) {
-    console.log(`[Middleware] Login page accessed: ${pathname} - ALLOWING ACCESS`);
-    if (!hasValidLocale) {
-      // Se non ha un locale valido, aggiungi il locale predefinito
-      return NextResponse.redirect(new URL(`/${defaultLocale}/admin/login`, request.url));
-    }
-    return NextResponse.next();
-  }
-  
   // === VERIFICA AUTENTICAZIONE ===
   
   // Verifica autenticazione per tutte le pagine admin (tranne login)
   if (pathname.includes('/admin/') && !pathname.includes('/admin/login')) {
-    const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
-    const isAuthenticated = !!authCookie?.value;
-    console.log(`[Middleware] Auth check: ${isAuthenticated ? 'Authenticated' : 'Not authenticated'}`);
+    const isAuthenticated = isUserAuthenticated(request);
     
     if (!isAuthenticated) {
       // Se non è autenticato, reindirizza alla pagina di login

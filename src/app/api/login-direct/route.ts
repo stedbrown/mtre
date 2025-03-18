@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       {
         cookies: {
           get(name: string) {
-            return cookies().get(name)?.value;
+            return cookies().then(cookieStore => cookieStore.get(name)?.value);
           },
           set(name: string, value: string, options) {
             // Imposta il cookie nella risposta

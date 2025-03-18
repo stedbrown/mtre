@@ -209,7 +209,15 @@ export async function GET(
             const response = await fetch('/api/login-direct', {
               method: 'POST',
               body: formData,
+              redirect: 'manual'
             });
+            
+            if (response.type === 'opaqueredirect') {
+              // La risposta è un redirect, seguilo automaticamente
+              console.log('Redirect received from server, navigating...');
+              window.location.href = '/it/admin/dashboard';
+              return;
+            }
             
             const result = await response.json();
             console.log('Login result:', result);
@@ -223,10 +231,10 @@ export async function GET(
               submitButton.disabled = false;
               buttonText.textContent = 'Accedi';
               loadingIcon.classList.add('hidden');
-            } else if (result.success && result.redirectUrl) {
-              // Effettua il redirect
-              console.log('Redirecting to:', result.redirectUrl);
-              window.location.href = result.redirectUrl;
+            } else {
+              // In caso di successo ma nessun redirect, vai comunque alla dashboard
+              console.log('Login successful, redirecting to dashboard');
+              window.location.href = '/it/admin/dashboard';
             }
           } catch (error) {
             console.error('Login error:', error);

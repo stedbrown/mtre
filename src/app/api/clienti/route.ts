@@ -45,7 +45,8 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    return NextResponse.json({ clienti: data });
+    // Restituisci direttamente l'array dei clienti, non avvolto in un oggetto
+    return NextResponse.json(data);
   } catch (error: any) {
     console.error('Errore nell\'API clienti:', error);
     return NextResponse.json(

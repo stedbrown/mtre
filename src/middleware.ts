@@ -17,72 +17,77 @@ const intlMiddleware = createMiddleware({
   localeDetection: true
 });
 
-// Funzione per stampare i log nei Response Headers per debug
-function createDebugResponse(request: NextRequest, message: string) {
-  const headers = new Headers();
-  headers.set('x-debug-url', request.url);
-  headers.set('x-debug-path', request.nextUrl.pathname);
-  headers.set('x-debug-message', message);
-  
-  // Aggiunge tutti i cookie per debug
-  request.cookies.getAll().forEach(cookie => {
-    headers.set(`x-cookie-${cookie.name}`, cookie.value.substring(0, 30) + '...');
-  });
-  
-  const response = NextResponse.next({ headers });
-  
-  // Anche se ridirezionati, manteniamo i debug headers
-  if (message.includes('redirect')) {
-    const locale = request.nextUrl.locale || defaultLocale;
-    const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
-    const redirectResponse = NextResponse.redirect(redirectUrl);
-    
-    headers.forEach((value, key) => {
-      redirectResponse.headers.set(key, value);
-    });
-    
-    return redirectResponse;
-  }
-  
-  return response;
+// Funzione di debug per stampare informazioni dettagliate sulla richiesta
+function debugRequest(request: NextRequest) {
+  console.log(`
+=== DEBUG MIDDLEWARE ===
+URL: ${request.url}
+Pathname: ${request.nextUrl.pathname}
+Locale: ${request.nextUrl.locale || 'none'}
+Cookies: ${request.cookies.getAll().map(c => c.name).join(', ') || 'none'}
+Headers:
+${Array.from(request.headers.entries())
+    .map(([key, value]) => `  ${key}: ${value}`)
+    .join('\n')}
+===================
+  `);
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  // Log per debug
+  debugRequest(request);
   
-  // STEP 1: Gestisci i percorsi /admin senza locale (redirect a /{locale}/admin/...)
+  const { pathname } = request.nextUrl;
+  console.log(`[Middleware] Processing: ${pathname}`);
+  
+  // IMPORTANTE: gestione speciale per la pagina di login
+  // Controllo esplicito per evitare loop di redirect
+  if (pathname.endsWith('/admin/login')) {
+    console.log(`[Middleware] Login page detected: ${pathname} - ALLOWING ACCESS DIRECTLY`);
+    // Per la pagina di login, passa direttamente il controllo al middleware di intl
+    return intlMiddleware(request);
+  }
+  
+  // Gestisci i percorsi /admin senza locale
   if (pathname === '/admin' || pathname === '/admin/') {
-    // Redirect to default locale dashboard
+    console.log(`[Middleware] Redirecting from /admin/ to /${defaultLocale}/admin/dashboard`);
     return NextResponse.redirect(new URL(`/${defaultLocale}/admin/dashboard`, request.url));
   }
   
+  // Gestisci altri percorsi /admin/* senza locale
   if (pathname.startsWith('/admin/')) {
-    // Se è un percorso /admin senza locale, redirect a /{locale}/admin/...
-    // Preserva il resto del percorso dopo /admin/
     const subPath = pathname.slice(7); // rimuove '/admin/'
+    console.log(`[Middleware] Redirecting from /admin/${subPath} to /${defaultLocale}/admin/${subPath}`);
     return NextResponse.redirect(new URL(`/${defaultLocale}/admin/${subPath}`, request.url));
   }
   
-  // STEP 2: Verifica l'autenticazione per i percorsi /{locale}/admin/...
-  // Ma NON per /{locale}/admin/login
+  // Verifica autenticazione solo per percorsi /{locale}/admin/* (ma non login)
   if (pathname.includes('/admin/') && !pathname.endsWith('/admin/login')) {
-    // Verifica autenticazione
+    // Verifica se l'utente è autenticato
     const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
     const isAuthenticated = !!authCookie?.value;
+    console.log(`[Middleware] Auth check for ${pathname}: ${isAuthenticated ? 'Authenticated' : 'Not authenticated'}`);
     
     if (!isAuthenticated) {
-      // Redirect a login mantenendo il locale già presente nell'URL
+      // Ottieni il locale dall'URL
       const parts = pathname.split('/');
-      const locale = parts[1]; // il locale è la prima parte dopo /
+      const localeFromPath = parts[1] || '';
+      
+      // Verifica se il locale è supportato, altrimenti usa quello di default
+      const locale = locales.includes(localeFromPath as any) 
+        ? localeFromPath 
+        : defaultLocale;
       
       const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
       redirectUrl.searchParams.set('redirectTo', pathname);
       
+      console.log(`[Middleware] Redirecting to login: ${redirectUrl.toString()}`);
       return NextResponse.redirect(redirectUrl);
     }
   }
   
-  // STEP 3: Per tutti gli altri percorsi, usa il middleware di internazionalizzazione
+  // Per tutti gli altri percorsi
+  console.log(`[Middleware] Passing to intl middleware: ${pathname}`);
   return intlMiddleware(request);
 }
 

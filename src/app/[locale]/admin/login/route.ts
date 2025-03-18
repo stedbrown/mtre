@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Forza questa route ad essere dinamica
+export const dynamic = 'force-dynamic';
+
 // Questa route risponde alle richieste GET per /[locale]/admin/login
 // Bypassando completamente il middleware
 export async function GET(
@@ -14,83 +17,156 @@ export async function GET(
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login MTRE Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Stili di base */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: linear-gradient(to bottom, #f9fafb, #ffffff);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .header h1 {
+        font-size: 1.875rem;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .header p {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      .card {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+        padding: 1.5rem;
+        border: 1px solid #f3f4f6;
+      }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+      }
+      input {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        font-size: 0.875rem;
+      }
+      button {
+        width: 100%;
+        background-color: #4f46e5;
+        color: white;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.875rem;
+        transition: background-color 0.2s;
+      }
+      button:hover {
+        background-color: #4338ca;
+      }
+      button:disabled {
+        background-color: #6366f1;
+        cursor: not-allowed;
+      }
+      .error {
+        background-color: #fee2e2;
+        border-radius: 0.375rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+      }
+      .error-icon {
+        flex-shrink: 0;
+        color: #ef4444;
+        margin-right: 0.75rem;
+      }
+      .error-message {
+        color: #b91c1c;
+        font-size: 0.875rem;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
   </head>
-  <body class="min-h-screen flex flex-col justify-center py-12 px-6 bg-gradient-to-b from-gray-50 to-white">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="text-center">
-        <h2 class="text-3xl font-extrabold text-gray-900">M.T.R.E. Admin</h2>
-        <p class="mt-2 text-sm text-gray-600">
-          Accedi all'area amministrativa
-        </p>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>M.T.R.E. Admin</h1>
+        <p>Accedi all'area amministrativa</p>
       </div>
-    </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border border-gray-100">
-        <form id="loginForm" class="space-y-6">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <div class="mt-1">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autocomplete="email"
-                required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="nome@esempio.com"
-              />
+      <div class="card">
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="nome@esempio.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div id="errorContainer" class="error hidden">
+            <div class="error-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
             </div>
+            <div id="errorMessage" class="error-message"></div>
           </div>
 
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <div class="mt-1">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autocomplete="current-password"
-                required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="••••••••"
-              />
-            </div>
-          </div>
-
-          <div id="errorContainer" class="rounded-md bg-red-50 p-4 hidden">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <p id="errorMessage" class="text-sm text-red-700"></p>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              id="submitButton"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
-            >
-              <span id="loadingIcon" class="hidden">
-                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              </span>
-              <span id="buttonText">Accedi</span>
-            </button>
-          </div>
+          <button type="submit" id="submitButton">
+            <span id="loadingIcon" class="hidden">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="animation: spin 1s linear infinite; margin-right: 0.5rem;">
+                <circle opacity="0.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path opacity="0.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+            <span id="buttonText">Accedi</span>
+          </button>
         </form>
       </div>
     </div>
@@ -137,8 +213,8 @@ export async function GET(
               formData.append('redirectTo', redirectTo);
             }
 
-            // Effettua la chiamata di login
-            const response = await fetch('/api/login', {
+            // Effettua la chiamata di login direttamente al backend di Supabase
+            const response = await fetch('/api/login-direct', {
               method: 'POST',
               body: formData,
             });

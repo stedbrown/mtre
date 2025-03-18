@@ -48,39 +48,45 @@ function createDebugResponse(request: NextRequest, message: string) {
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const url = request.nextUrl.clone();
+  const { pathname } = url;
   
-  // LOG
-  console.log(`REQUEST PATH: ${pathname}`);
+  console.log(`[Middleware] Processing: ${pathname}`);
   
-  // 1. Gestione esplicita della pagina di login - DEVE VENIRE PRIMA DI TUTTO
-  if (pathname === '/admin/login' || pathname.endsWith('/admin/login')) {
-    console.log('LOGIN PAGE DETECTED - ALLOWING ACCESS');
+  // CASO SPECIALE: tratta la pagina di login come un caso completamente separato
+  // Controlla esplicitamente tutti i percorsi possibili di login
+  if (
+    pathname === '/admin/login' || 
+    pathname === '/it/admin/login' || 
+    pathname === '/en/admin/login' ||
+    pathname.endsWith('/admin/login')
+  ) {
+    console.log(`[Middleware] Login page detected: ${pathname} - ALLOWING ACCESS`);
     return intlMiddleware(request);
   }
   
-  // 2. Gestione di /admin senza locale
+  // Se l'utente accede a /admin o /admin/ senza locale, reindirizza a /{locale}/admin/dashboard
   if (pathname === '/admin' || pathname === '/admin/') {
-    const redirectUrl = new URL(`/${defaultLocale}/admin/dashboard`, request.url);
-    return NextResponse.redirect(redirectUrl);
+    url.pathname = `/${defaultLocale}/admin/dashboard`;
+    return NextResponse.redirect(url);
   }
   
-  // 3. Se è un percorso admin (ma non la pagina di login che è già stata gestita)
+  // Per tutti gli altri percorsi /admin/* (eccetto login che è già stato gestito)
   if (pathname.includes('/admin/')) {
-    // Verifica autenticazione
+    // Verifica se l'utente è autenticato
     const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
     const isAuthenticated = !!authCookie?.value;
     
+    // Se non è autenticato, reindirizza alla pagina di login
     if (!isAuthenticated) {
-      // Reindirizza al login con il locale corretto
-      const locale = request.nextUrl.locale || defaultLocale;
-      const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
-      redirectUrl.searchParams.set('redirectTo', pathname);
-      return NextResponse.redirect(redirectUrl);
+      const locale = url.locale || defaultLocale;
+      url.pathname = `/${locale}/admin/login`;
+      url.searchParams.set('redirectTo', pathname);
+      return NextResponse.redirect(url);
     }
   }
   
-  // 4. In tutti gli altri casi, applica solo il middleware di internazionalizzazione
+  // Per tutte le altre pagine, applica solo il middleware di internazionalizzazione
   return intlMiddleware(request);
 }
 

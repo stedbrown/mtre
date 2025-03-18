@@ -18,8 +18,6 @@ const intlMiddleware = createMiddleware({
 });
 
 export async function middleware(request: NextRequest) {
-  // Percorsi che richiedono autenticazione
-  const adminPaths = ['/admin'];
   const { pathname } = request.nextUrl;
   
   // Gestione speciale per /admin senza locale
@@ -27,15 +25,18 @@ export async function middleware(request: NextRequest) {
     const redirectUrl = new URL(`/${defaultLocale}/admin/dashboard`, request.url);
     return NextResponse.redirect(redirectUrl);
   }
-  
-  // Verifica se il percorso richiede autenticazione
-  const isAdminPath = adminPaths.some(path => 
-    pathname.startsWith(`/${request.nextUrl.locale}${path}`)
-  );
 
   // Determina se il percorso è la pagina di login
   const isLoginPage = pathname.includes('/admin/login');
   
+  // Se è la pagina di login, consenti sempre l'accesso
+  if (isLoginPage) {
+    return intlMiddleware(request);
+  }
+
+  // Verifica se il percorso richiede autenticazione (tutti i percorsi /admin/ tranne login)
+  const isAdminPath = pathname.includes('/admin/');
+
   // Se non è un percorso admin, usa solo il middleware di internazionalizzazione
   if (!isAdminPath) {
     return intlMiddleware(request);
@@ -45,14 +46,8 @@ export async function middleware(request: NextRequest) {
   const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
   const isAuthenticated = !!authCookie?.value;
   
-  // Se è la pagina di login, consenti l'accesso indipendentemente dall'autenticazione
-  if (isLoginPage) {
-    return intlMiddleware(request);
-  }
-  
   // Se non autenticato e richiede un percorso admin, reindirizza al login
-  if (!isAuthenticated && isAdminPath) {
-    // Determina il locale corretto
+  if (!isAuthenticated) {
     const locale = request.nextUrl.locale || defaultLocale;
     const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
     redirectUrl.searchParams.set('redirectTo', pathname);

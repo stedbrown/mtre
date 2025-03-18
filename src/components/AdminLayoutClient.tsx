@@ -45,12 +45,26 @@ export default function AdminLayoutClient({
     try {
       console.log('[AdminLayoutClient] Checking authentication status...');
       
-      const mtreCookie = document.cookie.split('; ').find(row => row.startsWith('mtre-login-success'));
-      console.log('[AdminLayoutClient] mtre-login-success cookie:', mtreCookie || 'not found');
+      const token = localStorage.getItem('mtre-auth-token');
+      const userEmailStored = localStorage.getItem('mtre-user-email');
+      const hasLocalStorageAuth = !!token;
+      
+      console.log('[AdminLayoutClient] Local storage auth check:', {
+        hasToken: !!token,
+        email: userEmailStored || null
+      });
+      
+      if (hasLocalStorageAuth) {
+        console.log('[AdminLayoutClient] User authenticated via localStorage');
+        setIsAuthenticated(true);
+        setUserEmail(userEmailStored);
+        setAuthError(null);
+        return;
+      }
       
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
-      console.log('[AdminLayoutClient] Session check:', {
+      console.log('[AdminLayoutClient] Supabase session check:', {
         hasSession: !!session,
         expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
         error: sessionError ? sessionError.message : null
@@ -60,21 +74,23 @@ export default function AdminLayoutClient({
         throw sessionError;
       }
       
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
-      console.log('[AdminLayoutClient] User check:', {
-        hasUser: !!user,
-        email: user?.email || null,
-        error: userError ? userError.message : null
-      });
-      
-      if (userError) {
-        throw userError;
+      if (session) {
+        console.log('[AdminLayoutClient] User authenticated via Supabase session');
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError) {
+          throw userError;
+        }
+        
+        setIsAuthenticated(true);
+        setUserEmail(user?.email || null);
+        setAuthError(null);
+      } else {
+        console.log('[AdminLayoutClient] No auth session found');
+        setIsAuthenticated(false);
+        setUserEmail(null);
+        setAuthError('Sessione non trovata');
       }
-      
-      setIsAuthenticated(!!user);
-      setUserEmail(user?.email || null);
-      setAuthError(null);
     } catch (error: any) {
       console.error('[AdminLayoutClient] Authentication error:', error);
       setIsAuthenticated(false);
@@ -111,13 +127,17 @@ export default function AdminLayoutClient({
     try {
       console.log('[AdminLayoutClient] Logging out...');
       await supabase.auth.signOut();
-      console.log('[AdminLayoutClient] Successfully logged out');
+      
+      localStorage.removeItem('mtre-auth-token');
+      localStorage.removeItem('mtre-refresh-token');
+      localStorage.removeItem('mtre-user-email');
       
       document.cookie = 'sb-pehacdouexhebskdbpxp-auth-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       document.cookie = 'sb-access-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       document.cookie = 'sb-refresh-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       document.cookie = 'mtre-login-success=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       
+      console.log('[AdminLayoutClient] Successfully logged out');
       router.push(`/${locale}/admin/login`);
     } catch (error: any) {
       console.error('[AdminLayoutClient] Logout error:', error);

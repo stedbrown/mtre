@@ -28,9 +28,20 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
     
     // Effettua il login
+    console.log(`[API] Attempting Supabase signInWithPassword for: ${email}`);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
+    });
+    
+    // Log dettagliato della risposta di Supabase
+    console.log(`[API] Supabase login response:`, {
+      success: !error,
+      hasSession: !!data?.session,
+      hasUser: !!data?.user,
+      sessionExpires: data?.session?.expires_at || 'N/A',
+      error: error ? error.message : null,
+      cookieString: data?.session?.cookieString ? 'Present' : 'Missing',
     });
     
     // Gestisci eventuali errori di login
@@ -42,12 +53,25 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    if (!data.session) {
+      console.log(`[API] Login error: No session returned from Supabase`);
+      return NextResponse.json(
+        { error: 'Autenticazione fallita: sessione non creata' },
+        { status: 401 }
+      );
+    }
+    
     // Se il login ha successo, ottieni la sessione e imposta la risposta
     console.log(`[API] Login successful for user: ${email}`);
     
     // Crea la risposta con il redirect alla dashboard
     const redirectTo = '/it/admin/dashboard';
     const response = NextResponse.redirect(new URL(redirectTo, request.url));
+    
+    // Imposta manualmente il cookie di Supabase
+    const token = data.session.access_token;
+    const refreshToken = data.session.refresh_token;
+    const cookieName = 'sb-pehacdouexhebskdbpxp-auth-token';
     
     // Configura i cookie per sessione sicura
     const cookieOptions = {
@@ -58,22 +82,27 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 7 giorni
     };
     
-    // Ottieni i cookie dalla risposta Supabase
-    const setCookieHeader = data.session?.cookieString || '';
+    // Crea il valore del cookie JSON
+    const cookieValue = JSON.stringify({
+      access_token: token,
+      refresh_token: refreshToken,
+      expires_at: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
+    });
     
-    if (setCookieHeader) {
-      // Estrai i cookie da impostare
-      const cookieParts = setCookieHeader.split(';');
-      const mainPart = cookieParts[0];
-      const [cookieName, cookieValue] = mainPart.split('=');
-      
-      if (cookieName && cookieValue) {
-        // Imposta il cookie nella risposta con le opzioni di sicurezza
-        response.cookies.set(cookieName, cookieValue, cookieOptions);
-        console.log(`[API] Set secure cookie: ${cookieName}`);
-      }
-    }
+    // Imposta il cookie di autenticazione nella risposta
+    response.cookies.set(cookieName, cookieValue, cookieOptions);
+    console.log(`[API] Set auth cookie manually: ${cookieName}`);
     
+    // Setup anche un cookie di debug per verificare se il login è avvenuto
+    response.cookies.set('mtre-login-success', 'true', {
+      path: '/',
+      maxAge: 60 * 5, // 5 minuti
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+    
+    console.log(`[API] Redirecting to: ${redirectTo}`);
     return response;
   } catch (error: any) {
     // Gestisci errori generici

@@ -5,6 +5,7 @@ import {
   FiUsers, FiFileText, FiCheckSquare, FiPlus, 
   FiPhone, FiMail, FiMapPin, FiCalendar 
 } from 'react-icons/fi';
+import ClickableTableRow from '@/components/ClickableTableRow';
 
 // In Next.js 15, params è una Promise che deve essere awaited
 export default async function DashboardPage({
@@ -279,20 +280,23 @@ export default async function DashboardPage({
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {attivitaRecenti.map((fattura: any) => (
-                  <tr key={fattura.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <ClickableTableRow
+                    key={fattura.id}
+                    href={`/${locale}/admin/fatture/${fattura.id}`}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 group-hover:text-indigo-600">
                       <div className="flex items-center">
-                        <FiCalendar className="mr-2 h-4 w-4 text-gray-400" />
+                        <FiCalendar className="mr-2 h-4 w-4 text-gray-400 group-hover:text-indigo-500" />
                         {new Date(fattura.data).toLocaleDateString('it-IT')}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:text-indigo-600">
                       {fattura.numero}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 group-hover:text-indigo-600">
                       {fattura.cliente ? `${fattura.cliente.nome} ${fattura.cliente.cognome}` : 'Cliente rimosso'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:text-indigo-600">
                       {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(fattura.importo_totale)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -304,7 +308,7 @@ export default async function DashboardPage({
                         {fattura.stato.charAt(0).toUpperCase() + fattura.stato.slice(1)}
                       </span>
                     </td>
-                  </tr>
+                  </ClickableTableRow>
                 ))}
               </tbody>
             </table>

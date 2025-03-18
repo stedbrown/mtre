@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const preventivoId = params.id;
+    const { id } = await params;
     const supabase = await createClient();
     
     // 1. Ottieni i dati del preventivo
@@ -23,7 +23,7 @@ export async function POST(
           importo
         )
       `)
-      .eq('id', preventivoId)
+      .eq('id', id)
       .single();
     
     if (preventivoError || !preventivo) {
@@ -45,7 +45,7 @@ export async function POST(
         importo_totale: preventivo.importo_totale,
         note: preventivo.note,
         valuta: preventivo.valuta,
-        preventivo_id: preventivoId
+        preventivo_id: id
       })
       .select()
       .single();
@@ -88,7 +88,7 @@ export async function POST(
     const { error: updateError } = await supabase
       .from('preventivi')
       .update({ stato: 'approvato' })
-      .eq('id', preventivoId);
+      .eq('id', id);
     
     if (updateError) {
       console.error('Errore nell\'aggiornamento dello stato del preventivo:', updateError);

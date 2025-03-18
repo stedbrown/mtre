@@ -4,6 +4,21 @@ import Link from 'next/link';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import DeleteButton from '@/components/DeleteButton';
+import ClickableTableRow from '@/components/ClickableTableRow';
+import ClientActionCell from '@/components/ClientActionCell';
+import {
+  AdminHeader,
+  AdminButton,
+  AdminFilterContainer,
+  AdminSearchField,
+  AdminSelectField,
+  AdminTableContainer,
+  AdminActionButton,
+  AdminBadge,
+  AdminIcons,
+  AdminInlineActions
+} from '@/components/AdminUI';
 
 interface Preventivo {
   id: string;
@@ -168,15 +183,15 @@ export default async function PreventiviPage({
     switch (stato.toLowerCase()) {
       case 'accettato':
       case 'approvato':
-        return 'bg-green-100 text-green-800 border border-green-200';
+        return 'success';
       case 'inviato':
       case 'in attesa':
-        return 'bg-yellow-100 text-yellow-800 border border-yellow-200';
+        return 'warning';
       case 'rifiutato':
-        return 'bg-red-100 text-red-800 border border-red-200';
+        return 'danger';
       case 'bozza':
       default:
-        return 'bg-gray-100 text-gray-800 border border-gray-200';
+        return 'default';
     }
   };
   
@@ -201,92 +216,63 @@ export default async function PreventiviPage({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Preventivi</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Gestisci i tuoi preventivi e monitora il loro stato
-          </p>
-        </div>
-        <Link
-          href={`/${locale}/admin/preventivi/nuovo`}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-        >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          Nuovo preventivo
-        </Link>
-      </div>
+      <AdminHeader
+        title="Preventivi"
+        description="Gestisci i tuoi preventivi e monitora il loro stato"
+        actionLabel="Nuovo preventivo"
+        actionHref={`/admin/preventivi/nuovo`}
+        locale={locale}
+      />
       
       {/* Filtri */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-        <form action={filterPreventivi} className="flex flex-wrap gap-4">
-          <div className="w-full md:w-auto md:flex-1">
-            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">Cerca</label>
-            <div className="relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                id="search"
-                name="search"
-                defaultValue={searchParams.search || ''}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Cerca per numero, cliente..."
-              />
-            </div>
-          </div>
-          
-          <div className="w-full md:w-auto">
-            <label htmlFor="stato" className="block text-sm font-medium text-gray-700 mb-1">Stato</label>
-            <select
-              id="stato"
-              name="stato"
-              defaultValue={searchParams.stato || ''}
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option value="">Tutti gli stati</option>
-              <option value="bozza">Bozza</option>
-              <option value="in attesa">In attesa</option>
-              <option value="approvato">Approvato</option>
-              <option value="rifiutato">Rifiutato</option>
-            </select>
-          </div>
-          
-          <div className="w-full md:w-auto">
-            <label htmlFor="periodo" className="block text-sm font-medium text-gray-700 mb-1">Periodo</label>
-            <select
-              id="periodo"
-              name="periodo"
-              defaultValue={searchParams.periodo || ''}
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option value="">Tutti</option>
-              <option value="mese">Ultimo mese</option>
-              <option value="trimestre">Ultimo trimestre</option>
-              <option value="anno">Ultimo anno</option>
-            </select>
-          </div>
-          
-          <div className="w-full md:w-auto flex items-end">
-            <button
-              type="submit"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-              </svg>
-              Filtra
-            </button>
-          </div>
-        </form>
-      </div>
+      <AdminFilterContainer action={filterPreventivi}>
+        <AdminSearchField
+          id="search"
+          name="search"
+          defaultValue={searchParams.search || ''}
+          placeholder="Cerca per numero, cliente..."
+          label="Cerca"
+        />
+        
+        <AdminSelectField
+          id="stato"
+          name="stato"
+          defaultValue={searchParams.stato || ''}
+          label="Stato"
+          options={[
+            { value: '', label: 'Tutti gli stati' },
+            { value: 'accettato', label: 'Approvato' },
+            { value: 'inviato', label: 'In attesa' },
+            { value: 'rifiutato', label: 'Rifiutato' },
+            { value: 'bozza', label: 'Bozza' }
+          ]}
+        />
+        
+        <AdminSelectField
+          id="periodo"
+          name="periodo"
+          defaultValue={searchParams.periodo || ''}
+          label="Periodo"
+          options={[
+            { value: '', label: 'Tutti i periodi' },
+            { value: 'mese', label: 'Ultimo mese' },
+            { value: 'trimestre', label: 'Ultimo trimestre' },
+            { value: 'anno', label: 'Ultimo anno' }
+          ]}
+        />
+        
+        <div className="w-full md:w-auto flex items-end">
+          <AdminButton
+            type="submit"
+            variant="outline"
+            icon={AdminIcons.filter}
+          >
+            Filtra
+          </AdminButton>
+        </div>
+      </AdminFilterContainer>
       
-      {/* Statistiche rapide */}
+      {/* Statistiche */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
           <div className="flex items-center">
@@ -358,155 +344,108 @@ export default async function PreventiviPage({
       </div>
       
       {/* Tabella preventivi */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Numero
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Data
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Cliente
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                  Importo
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Stato
-                </th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Azioni
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {preventivi && preventivi.length > 0 ? (
-                preventivi.map((preventivo: Preventivo) => (
-                  <tr key={preventivo.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {preventivo.numero}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(preventivo.data_emissione)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {`${preventivo.clienti?.nome || ''} ${preventivo.clienti?.cognome || ''}`}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                      {formatCurrency(preventivo.importo_totale)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getStatoColor(preventivo.stato)}`}>
-                        {formatStato(preventivo.stato)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
-                        <Link
-                          href={`/${locale}/admin/preventivi/${preventivo.id}`}
-                          className="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md transition-colors"
-                          title="Visualizza preventivo"
-                        >
-                          <span className="sr-only">Visualizza</span>
-                          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                        </Link>
-                        <Link
-                          href={`/${locale}/admin/preventivi/${preventivo.id}/modifica`}
-                          className="p-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded-md transition-colors"
-                          title="Modifica preventivo"
-                        >
-                          <span className="sr-only">Modifica</span>
-                          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </Link>
-                        <a
-                          href={`/api/preventivi/${preventivo.id}/pdf`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-md transition-colors"
-                          title="Scarica PDF"
-                        >
-                          <span className="sr-only">PDF</span>
-                          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                          </svg>
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-500">
-                    <div className="flex flex-col items-center justify-center">
-                      <svg className="h-10 w-10 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <p>Nessun preventivo trovato</p>
-                      <Link
-                        href={`/${locale}/admin/preventivi/nuovo`}
-                        className="mt-2 text-indigo-600 hover:text-indigo-800 transition-colors"
-                      >
-                        Crea il tuo primo preventivo
-                      </Link>
-                    </div>
+      <AdminTableContainer>
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Numero
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Data
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Cliente
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                Importo
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Stato
+              </th>
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Azioni
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {preventivi && preventivi.length > 0 ? (
+              preventivi.map((preventivo: Preventivo) => (
+                <ClickableTableRow 
+                  key={preventivo.id}
+                  href={`/${locale}/admin/preventivi/${preventivo.id}`}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:text-indigo-600">
+                    {preventivo.numero}
                   </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        
-        {/* Paginazione */}
-        {preventivi && preventivi.length > 0 && (
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm text-gray-700">
-                  Visualizzazione di <span className="font-medium">{preventivi.length}</span> preventivi
-                </p>
-              </div>
-              <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Precedente</span>
-                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {formatDate(preventivo.data_emissione)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {`${preventivo.clienti?.nome || ''} ${preventivo.clienti?.cognome || ''}`}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
+                    {formatCurrency(preventivo.importo_totale)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <AdminBadge variant={getStatoColor(preventivo.stato)}>
+                      {formatStato(preventivo.stato)}
+                    </AdminBadge>
+                  </td>
+                  <ClientActionCell>
+                    <AdminInlineActions>
+                      <AdminActionButton
+                        label="Visualizza"
+                        href={`/${locale}/admin/preventivi/${preventivo.id}`}
+                        icon={AdminIcons.view}
+                        variant="primary"
+                      />
+                      <AdminActionButton
+                        label="Modifica"
+                        href={`/${locale}/admin/preventivi/${preventivo.id}/modifica`}
+                        icon={AdminIcons.edit}
+                        variant="primary"
+                      />
+                      <AdminActionButton
+                        label="PDF"
+                        href={`/api/preventivi/${preventivo.id}/pdf`}
+                        icon={AdminIcons.pdf}
+                        variant="danger"
+                      />
+                      <DeleteButton 
+                        id={preventivo.id} 
+                        table="preventivi" 
+                        locale={locale} 
+                        returnPath="admin/preventivi" 
+                        itemName="preventivo"
+                        cascadeDelete={true}
+                      />
+                    </AdminInlineActions>
+                  </ClientActionCell>
+                </ClickableTableRow>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-500">
+                  <div className="flex flex-col items-center justify-center">
+                    <svg className="h-10 w-10 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                  </a>
-                  <a
-                    href="#"
-                    aria-current="page"
-                    className="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                  >
-                    1
-                  </a>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Successivo</span>
-                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                </nav>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+                    <p>Nessun preventivo trovato</p>
+                    <AdminButton 
+                      href={`/${locale}/admin/preventivi/nuovo`}
+                      variant="secondary"
+                      className="mt-2"
+                    >
+                      Crea il tuo primo preventivo
+                    </AdminButton>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </AdminTableContainer>
     </div>
   );
 } 

@@ -3,6 +3,21 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import DeleteButton from '@/components/DeleteButton';
+import ClickableTableRow from '@/components/ClickableTableRow';
+import ClientActionCell from '@/components/ClientActionCell';
+import ClientEmailCell from '@/components/ClientEmailCell';
+import ClientPhoneCell from '@/components/ClientPhoneCell';
+import {
+  AdminHeader,
+  AdminButton,
+  AdminFilterContainer,
+  AdminSearchField,
+  AdminTableContainer,
+  AdminActionButton,
+  AdminIcons,
+  AdminInlineActions
+} from '@/components/AdminUI';
 
 interface Cliente {
   id: string;
@@ -103,207 +118,144 @@ export default async function ClientiPage({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Clienti</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Gestisci i tuoi clienti e visualizza le loro informazioni
-          </p>
-        </div>
-        <Link
-          href={`/${locale}/admin/clienti/nuovo`}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-        >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          Nuovo cliente
-        </Link>
-      </div>
+      <AdminHeader
+        title="Clienti"
+        description="Gestisci i tuoi clienti e visualizza le loro informazioni"
+        actionLabel="Nuovo cliente"
+        actionHref={`/admin/clienti/nuovo`}
+        locale={locale}
+      />
       
       {/* Filtri */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-        <form action={filterClienti} className="flex flex-wrap gap-4">
-          <div className="w-full md:w-auto md:flex-1">
-            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">Cerca</label>
-            <div className="relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                id="search"
-                name="search"
-                defaultValue={searchParams.search || ''}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Cerca per nome, email, telefono..."
-              />
-            </div>
-          </div>
-          
-          <div className="w-full md:w-auto flex items-end">
-            <button
-              type="submit"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-            >
+      <AdminFilterContainer action={filterClienti}>
+        <AdminSearchField
+          id="search"
+          name="search"
+          defaultValue={searchParams.search || ''}
+          placeholder="Cerca per nome, email, telefono..."
+          label="Cerca"
+        />
+        
+        <div className="w-full md:w-auto flex items-end">
+          <AdminButton
+            type="submit"
+            variant="outline"
+            icon={
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
               </svg>
-              Filtra
-            </button>
-          </div>
-        </form>
-      </div>
+            }
+          >
+            Filtra
+          </AdminButton>
+        </div>
+      </AdminFilterContainer>
       
       {/* Tabella clienti */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nome
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                  Email
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                  Telefono
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                  Indirizzo
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                  Città
-                </th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Azioni
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {clienti && clienti.length > 0 ? (
-                clienti.map((cliente: Cliente) => (
-                  <tr key={cliente.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 flex-shrink-0 rounded-full bg-indigo-100 flex items-center justify-center">
-                          <span className="text-indigo-600 font-medium">
-                            {cliente.nome.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{cliente.nome} {cliente.cognome || ''}</div>
-                          {cliente.azienda && (
-                            <div className="text-sm text-gray-500">{cliente.azienda}</div>
-                          )}
-                        </div>
+      <AdminTableContainer>
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Nome
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                Email
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                Telefono
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                Indirizzo
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                Città
+              </th>
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Azioni
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {clienti && clienti.length > 0 ? (
+              clienti.map((cliente: Cliente) => (
+                <ClickableTableRow
+                  key={cliente.id}
+                  href={`/${locale}/admin/clienti/${cliente.id}`}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 flex-shrink-0 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <span className="text-indigo-600 font-medium">
+                          {cliente.nome.charAt(0).toUpperCase()}
+                        </span>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                      {cliente.email ? (
-                        <a href={`mailto:${cliente.email}`} className="text-indigo-600 hover:text-indigo-900">
-                          {cliente.email}
-                        </a>
-                      ) : (
-                        <span className="text-gray-400">-</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                      {cliente.telefono ? (
-                        <a href={`tel:${cliente.telefono}`} className="text-indigo-600 hover:text-indigo-900">
-                          {cliente.telefono}
-                        </a>
-                      ) : (
-                        <span className="text-gray-400">-</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
-                      {cliente.indirizzo || <span className="text-gray-400">-</span>}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
-                      {cliente.citta || <span className="text-gray-400">-</span>}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-3">
-                        <Link
-                          href={`/${locale}/admin/clienti/${cliente.id}`}
-                          className="text-indigo-600 hover:text-indigo-900 transition-colors"
-                        >
-                          <span className="sr-only">Visualizza</span>
-                          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                        </Link>
-                        <Link
-                          href={`/${locale}/admin/clienti/${cliente.id}/modifica`}
-                          className="text-indigo-600 hover:text-indigo-900 transition-colors"
-                        >
-                          <span className="sr-only">Modifica</span>
-                          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </Link>
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900 group-hover:text-indigo-600">{cliente.nome} {cliente.cognome || ''}</div>
+                        {cliente.azienda && (
+                          <div className="text-sm text-gray-500">{cliente.azienda}</div>
+                        )}
                       </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
-                    Nessun cliente trovato
+                    </div>
                   </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                  <ClientEmailCell email={cliente.email} />
+                  <ClientPhoneCell telefono={cliente.telefono} />
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
+                    {cliente.indirizzo || <span className="text-gray-400">-</span>}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
+                    {cliente.citta || <span className="text-gray-400">-</span>}
+                  </td>
+                  <ClientActionCell>
+                    <AdminInlineActions>
+                      <AdminActionButton
+                        label="Visualizza"
+                        href={`/${locale}/admin/clienti/${cliente.id}`}
+                        icon={AdminIcons.view}
+                        variant="primary"
+                      />
+                      <AdminActionButton
+                        label="Modifica"
+                        href={`/${locale}/admin/clienti/${cliente.id}/modifica`}
+                        icon={AdminIcons.edit}
+                        variant="primary"
+                      />
+                      <DeleteButton 
+                        id={cliente.id} 
+                        table="clienti" 
+                        locale={locale} 
+                        returnPath="admin/clienti" 
+                        itemName="cliente"
+                        cascadeDelete={true}
+                      />
+                    </AdminInlineActions>
+                  </ClientActionCell>
+                </ClickableTableRow>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-500">
+                  <div className="flex flex-col items-center justify-center">
+                    <svg className="h-10 w-10 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <p>Nessun cliente trovato</p>
+                    <AdminButton 
+                      href={`/${locale}/admin/clienti/nuovo`}
+                      variant="secondary"
+                      className="mt-2"
+                    >
+                      Crea il tuo primo cliente
+                    </AdminButton>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </AdminTableContainer>
         
-        {/* Paginazione */}
-        {clienti && clienti.length > 0 && (
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm text-gray-700">
-                  Visualizzazione di <span className="font-medium">{clienti.length}</span> clienti
-                </p>
-              </div>
-              <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Precedente</span>
-                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                  <a
-                    href="#"
-                    aria-current="page"
-                    className="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                  >
-                    1
-                  </a>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Successivo</span>
-                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                </nav>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Paginazione (se necessaria in futuro) */}
     </div>
   );
 } 

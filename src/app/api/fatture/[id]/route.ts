@@ -1,13 +1,12 @@
+'use server';
+
 import { createClient } from '@/lib/supabase/server-client';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const cookieStore = await cookies();
     const supabase = await createClient();
     

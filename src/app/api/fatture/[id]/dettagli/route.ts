@@ -5,10 +5,10 @@ import { NextRequest, NextResponse } from 'next/server';
 // Elimina tutti i dettagli di una fattura
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const cookieStore = await cookies();
     const supabase = await createClient();
     
@@ -40,10 +40,10 @@ export async function DELETE(
 // Crea nuovi dettagli per una fattura
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const cookieStore = await cookies();
     const supabase = await createClient();
     

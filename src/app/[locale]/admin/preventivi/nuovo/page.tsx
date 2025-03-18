@@ -39,11 +39,21 @@ export default function NuovoPreventivoPage() {
   const [clienti, setClienti] = useState<Cliente[]>([]);
   const [servizi, setServizi] = useState<Servizio[]>([]);
   
+  // Genera un numero di preventivo più affidabile e significativo
+  const generatePreventiveNumber = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    // Usiamo timestamp per garantire unicità anche in caso di creazione simultanea
+    const timestamp = Date.now().toString().slice(-5);
+    return `PREV-${year}${month}-${timestamp}`;
+  };
+  
   const [formData, setFormData] = useState({
     cliente_id: '',
     data_emissione: new Date().toISOString().split('T')[0],
     data_scadenza: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    numero: `P-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
+    numero: generatePreventiveNumber(),
     stato: 'in attesa',
     note: '',
     importo_totale: 0,
@@ -51,6 +61,11 @@ export default function NuovoPreventivoPage() {
   });
   
   const [dettagli, setDettagli] = useState<DettaglioPreventivo[]>([]);
+  
+  // Aggiungi stato per il modale
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
+  const [modalText, setModalText] = useState('');
   
   useEffect(() => {
     // Carica clienti e servizi
@@ -242,6 +257,26 @@ export default function NuovoPreventivoPage() {
     }
   };
   
+  // Funzione per aprire il modale di modifica descrizione
+  const openDescriptionModal = (index: number) => {
+    setCurrentEditIndex(index);
+    setModalText(dettagli[index].descrizione || '');
+    setModalOpen(true);
+  };
+  
+  // Funzione per salvare la descrizione dal modale
+  const saveModalDescription = () => {
+    if (currentEditIndex !== null) {
+      handleDettaglioChange(currentEditIndex, {
+        target: {
+          name: 'descrizione',
+          value: modalText
+        }
+      } as React.ChangeEvent<HTMLTextAreaElement>);
+      setModalOpen(false);
+    }
+  };
+  
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -293,10 +328,10 @@ export default function NuovoPreventivoPage() {
                 id="numero"
                 name="numero"
                 value={formData.numero}
-                onChange={handleChange}
-                required
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                readOnly
+                className="block w-full px-3 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm text-gray-500 sm:text-sm cursor-not-allowed"
               />
+              <p className="mt-1 text-xs text-gray-500">Il numero preventivo viene generato automaticamente</p>
             </div>
             
             <div>
@@ -351,18 +386,15 @@ export default function NuovoPreventivoPage() {
               <label htmlFor="valuta" className="block text-sm font-medium text-gray-700 mb-1">
                 Valuta <span className="text-red-500">*</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="valuta"
                 name="valuta"
-                value={formData.valuta}
-                onChange={handleChange}
-                required
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              >
-                <option value="CHF">CHF</option>
-                <option value="EUR">EUR</option>
-                <option value="USD">USD</option>
-              </select>
+                value="CHF"
+                readOnly
+                className="block w-full px-3 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm text-gray-500 sm:text-sm cursor-not-allowed"
+              />
+              <p className="mt-1 text-xs text-gray-500">I preventivi possono essere emessi solo in Franchi Svizzeri (CHF)</p>
             </div>
           </div>
           
@@ -430,14 +462,26 @@ export default function NuovoPreventivoPage() {
                           </select>
                         </td>
                         <td className="px-3 py-4">
-                          <input
-                            type="text"
-                            name="descrizione"
-                            value={dettaglio.descrizione || ''}
-                            onChange={(e) => handleDettaglioChange(index, e)}
-                            placeholder={dettaglio.is_custom ? "Inserisci descrizione personalizzata" : ""}
-                            className="block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          />
+                          <div className="relative">
+                            <textarea
+                              name="descrizione"
+                              value={dettaglio.descrizione || ''}
+                              onChange={(e) => handleDettaglioChange(index, e)}
+                              placeholder={dettaglio.is_custom ? "Inserisci descrizione personalizzata" : ""}
+                              rows={3}
+                              className="block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm resize-y min-h-[70px]"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => openDescriptionModal(index)}
+                              className="absolute bottom-2 right-2 p-1 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 transition-colors"
+                              title="Modifica in modalità ampia"
+                            >
+                              <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                            </button>
+                          </div>
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap">
                           <input
@@ -523,6 +567,41 @@ export default function NuovoPreventivoPage() {
           </button>
         </div>
       </form>
+
+      {/* Modale per modifica descrizione */}
+      {modalOpen && currentEditIndex !== null && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl overflow-hidden">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Modifica descrizione</h3>
+            </div>
+            <div className="p-4">
+              <textarea
+                value={modalText}
+                onChange={(e) => setModalText(e.target.value)}
+                className="w-full h-64 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm resize-none"
+                placeholder="Inserisci una descrizione dettagliata..."
+              />
+            </div>
+            <div className="p-4 border-t border-gray-200 flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => setModalOpen(false)}
+                className="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+              >
+                Annulla
+              </button>
+              <button
+                type="button"
+                onClick={saveModalDescription}
+                className="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+              >
+                Salva descrizione
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

@@ -23,22 +23,67 @@ export default function AdminLayoutClient({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookieOptions: {
+        secure: true,
+        sameSite: 'lax',
+        path: '/'
+      }
+    }
   );
 
   useEffect(() => {
     async function checkAuth() {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        console.log('[AdminLayoutClient] Checking authentication status...');
+        
+        // Verifica cookie di debug
+        const mtreCookie = document.cookie.split('; ').find(row => row.startsWith('mtre-login-success'));
+        console.log('[AdminLayoutClient] mtre-login-success cookie:', mtreCookie || 'not found');
+        
+        // Ottieni la sessione corrente
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        // Log della sessione (senza esporre dati sensibili)
+        console.log('[AdminLayoutClient] Session check:', {
+          hasSession: !!session,
+          expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
+          error: sessionError ? sessionError.message : null
+        });
+        
+        if (sessionError) {
+          throw sessionError;
+        }
+        
+        // Ottieni l'utente
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        console.log('[AdminLayoutClient] User check:', {
+          hasUser: !!user,
+          email: user?.email || null,
+          error: userError ? userError.message : null
+        });
+        
+        if (userError) {
+          throw userError;
+        }
+        
         setIsAuthenticated(!!user);
-      } catch (error) {
-        console.error('Errore durante il controllo dell\'autenticazione:', error);
+        setUserEmail(user?.email || null);
+        setAuthError(null);
+      } catch (error: any) {
+        console.error('[AdminLayoutClient] Authentication error:', error);
         setIsAuthenticated(false);
+        setUserEmail(null);
+        setAuthError(error.message || 'Errore durante il controllo dell\'autenticazione');
       } finally {
         setIsLoading(false);
       }
@@ -49,10 +94,13 @@ export default function AdminLayoutClient({
 
   const handleLogout = async () => {
     try {
+      console.log('[AdminLayoutClient] Logging out...');
       await supabase.auth.signOut();
+      console.log('[AdminLayoutClient] Successfully logged out');
       router.push(`/${locale}/admin/login`);
-    } catch (error) {
-      console.error('Errore durante il logout:', error);
+    } catch (error: any) {
+      console.error('[AdminLayoutClient] Logout error:', error);
+      alert('Errore durante il logout: ' + error.message);
     }
   };
 
@@ -72,13 +120,20 @@ export default function AdminLayoutClient({
           <p className="text-gray-600 mb-6 text-center">
             Devi effettuare l'accesso per visualizzare questa pagina.
           </p>
+          {authError && (
+            <div className="p-3 mb-4 bg-red-50 border border-red-200 rounded text-sm text-red-600">
+              <strong>Errore di autenticazione:</strong> {authError}
+            </div>
+          )}
           <div className="flex justify-center">
-            <a
-              href={`/${locale}/admin/login`}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Vai al login
-            </a>
+            <form action={`/${locale}/admin/login`} method="get">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Vai al login
+              </button>
+            </form>
           </div>
         </div>
       </div>

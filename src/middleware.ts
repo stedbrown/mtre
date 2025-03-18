@@ -49,97 +49,39 @@ function createDebugResponse(request: NextRequest, message: string) {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const url = request.url;
   
-  // Log completo della richiesta
-  console.log(`DEBUG - Middleware called for: ${url}`);
-  console.log(`DEBUG - Pathname: ${pathname}`);
-  console.log(`DEBUG - Locale: ${request.nextUrl.locale || 'none'}`);
-  console.log(`DEBUG - Cookies: ${request.cookies.getAll().map(c => c.name).join(', ') || 'none'}`);
+  // LOG
+  console.log(`REQUEST PATH: ${pathname}`);
   
-  // Verifica specifica per la pagina di login con diversi metodi
-  const loginPathCheck1 = pathname.includes('/admin/login');
-  const loginPathCheck2 = pathname.indexOf('/admin/login') !== -1;
-  const loginPathCheck3 = pathname.endsWith('/admin/login');
-  const loginPathCheck4 = /\/admin\/login/.test(pathname);
+  // 1. Gestione esplicita della pagina di login - DEVE VENIRE PRIMA DI TUTTO
+  if (pathname === '/admin/login' || pathname.endsWith('/admin/login')) {
+    console.log('LOGIN PAGE DETECTED - ALLOWING ACCESS');
+    return intlMiddleware(request);
+  }
   
-  console.log(`DEBUG - Login path checks:
-    includes: ${loginPathCheck1}
-    indexOf: ${loginPathCheck2}
-    endsWith: ${loginPathCheck3}
-    regex: ${loginPathCheck4}
-    pathname: '${pathname}'
-  `);
-  
-  // Gestione speciale per /admin senza locale
+  // 2. Gestione di /admin senza locale
   if (pathname === '/admin' || pathname === '/admin/') {
-    console.log('DEBUG - Redirecting from root /admin to dashboard');
     const redirectUrl = new URL(`/${defaultLocale}/admin/dashboard`, request.url);
-    const response = NextResponse.redirect(redirectUrl);
-    response.headers.set('x-debug-redirect', 'Root admin to dashboard');
-    return response;
-  }
-
-  // Determina se il percorso è la pagina di login
-  const isLoginPage = pathname.includes('/admin/login');
-  console.log('DEBUG - isLoginPage:', isLoginPage);
-  
-  // Test alternativo specifico per la pagina di login
-  if (
-    pathname === '/admin/login' || 
-    pathname === '/it/admin/login' ||
-    pathname === '/en/admin/login' ||
-    pathname.endsWith('/admin/login')
-  ) {
-    console.log('DEBUG - DIRECT LOGIN PAGE MATCH');
-    const response = intlMiddleware(request);
-    response.headers.set('x-debug-action', 'Direct login page match');
-    return response;
+    return NextResponse.redirect(redirectUrl);
   }
   
-  // Se è la pagina di login, consenti sempre l'accesso
-  if (isLoginPage) {
-    console.log('DEBUG - Allowing access to login page');
-    const response = intlMiddleware(request);
-    response.headers.set('x-debug-action', 'Allow login page');
-    return response;
-  }
-
-  // Verifica se il percorso richiede autenticazione (tutti i percorsi /admin/ tranne login)
-  const isAdminPath = pathname.includes('/admin/');
-  console.log('DEBUG - isAdminPath:', isAdminPath);
-
-  // Se non è un percorso admin, usa solo il middleware di internazionalizzazione
-  if (!isAdminPath) {
-    console.log('DEBUG - Not an admin path, using only intl middleware');
-    const response = intlMiddleware(request);
-    response.headers.set('x-debug-action', 'Not admin path');
-    return response;
-  }
-  
-  // Per i percorsi admin, verifica l'autenticazione tramite cookie
-  const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
-  const isAuthenticated = !!authCookie?.value;
-  console.log('DEBUG - isAuthenticated:', isAuthenticated);
-  
-  // Se non autenticato e richiede un percorso admin, reindirizza al login
-  if (!isAuthenticated) {
-    console.log('DEBUG - Not authenticated, redirecting to login');
-    const locale = request.nextUrl.locale || defaultLocale;
-    const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
-    redirectUrl.searchParams.set('redirectTo', pathname);
+  // 3. Se è un percorso admin (ma non la pagina di login che è già stata gestita)
+  if (pathname.includes('/admin/')) {
+    // Verifica autenticazione
+    const authCookie = request.cookies.get('sb-pehacdouexhebskdbpxp-auth-token');
+    const isAuthenticated = !!authCookie?.value;
     
-    const response = NextResponse.redirect(redirectUrl);
-    response.headers.set('x-debug-action', 'Redirect to login');
-    response.headers.set('x-debug-redirectTo', redirectUrl.toString());
-    return response;
+    if (!isAuthenticated) {
+      // Reindirizza al login con il locale corretto
+      const locale = request.nextUrl.locale || defaultLocale;
+      const redirectUrl = new URL(`/${locale}/admin/login`, request.url);
+      redirectUrl.searchParams.set('redirectTo', pathname);
+      return NextResponse.redirect(redirectUrl);
+    }
   }
   
-  // Applica il middleware di internazionalizzazione
-  console.log('DEBUG - Authenticated, applying intl middleware');
-  const response = intlMiddleware(request);
-  response.headers.set('x-debug-action', 'Authenticated user');
-  return response;
+  // 4. In tutti gli altri casi, applica solo il middleware di internazionalizzazione
+  return intlMiddleware(request);
 }
 
 // Configura quali percorsi devono essere gestiti dal middleware

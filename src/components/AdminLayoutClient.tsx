@@ -13,6 +13,14 @@ import {
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
+// Helper function to read cookie value
+function getCookie(name: string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  return null;
+}
+
 export default function AdminLayoutClient({
   children,
   locale,
@@ -31,40 +39,56 @@ export default function AdminLayoutClient({
   
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookieOptions: {
-        secure: true,
-        sameSite: 'lax',
-        path: '/'
-      }
-    }
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
   const checkAuth = async () => {
     try {
       console.log('[AdminLayoutClient] Checking authentication status...');
       
+      // Check for debug cookie
+      const loginSuccessCookie = getCookie('mtre-login-success');
+      console.log('[AdminLayoutClient] mtre-login-success cookie:', loginSuccessCookie);
+      
+      // Check for Supabase auth cookie
+      const supabaseCookie = getCookie('sb-pehacdouexhebskdbpxp-auth-token');
+      console.log('[AdminLayoutClient] Supabase auth cookie present:', !!supabaseCookie);
+      
+      // Check localStorage first
       const token = localStorage.getItem('mtre-auth-token');
       const userEmailStored = localStorage.getItem('mtre-user-email');
       const hasLocalStorageAuth = !!token;
       
-      console.log('[AdminLayoutClient] Local storage auth check:', {
-        hasToken: !!token,
-        email: userEmailStored || null
-      });
-      
       if (hasLocalStorageAuth) {
         console.log('[AdminLayoutClient] User authenticated via localStorage');
+        
+        // Try to set the session with the stored token if Supabase session is missing
+        if (!supabaseCookie) {
+          try {
+            const refreshToken = localStorage.getItem('mtre-refresh-token');
+            if (refreshToken) {
+              console.log('[AdminLayoutClient] Attempting to restore session from localStorage tokens');
+              await supabase.auth.setSession({
+                access_token: token,
+                refresh_token: refreshToken
+              });
+            }
+          } catch (error) {
+            console.error('[AdminLayoutClient] Failed to restore session:', error);
+          }
+        }
+        
         setIsAuthenticated(true);
         setUserEmail(userEmailStored);
         setAuthError(null);
+        setIsLoading(false);
         return;
       }
       
+      // Then check Supabase session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
-      console.log('[AdminLayoutClient] Supabase session check:', {
+      console.log('[AdminLayoutClient] Session check:', {
         hasSession: !!session,
         expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
         error: sessionError ? sessionError.message : null
@@ -76,10 +100,26 @@ export default function AdminLayoutClient({
       
       if (session) {
         console.log('[AdminLayoutClient] User authenticated via Supabase session');
+        
+        // Store session in localStorage as backup
+        localStorage.setItem('mtre-auth-token', session.access_token);
+        localStorage.setItem('mtre-refresh-token', session.refresh_token);
+        
+        // Get user details
         const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        console.log('[AdminLayoutClient] User check:', {
+          hasUser: !!user,
+          email: user?.email || null,
+          error: userError ? userError.message : null
+        });
         
         if (userError) {
           throw userError;
+        }
+        
+        if (user?.email) {
+          localStorage.setItem('mtre-user-email', user.email);
         }
         
         setIsAuthenticated(true);
@@ -103,7 +143,39 @@ export default function AdminLayoutClient({
   };
 
   useEffect(() => {
+    // Check authentication on component mount
     checkAuth();
+    
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('[AdminLayoutClient] Auth state changed:', event, session ? 'session exists' : 'no session');
+      
+      if (event === 'SIGNED_IN' && session) {
+        // Update localStorage
+        localStorage.setItem('mtre-auth-token', session.access_token);
+        localStorage.setItem('mtre-refresh-token', session.refresh_token);
+        if (session.user?.email) {
+          localStorage.setItem('mtre-user-email', session.user.email);
+        }
+        
+        setIsAuthenticated(true);
+        setUserEmail(session.user?.email || null);
+        setAuthError(null);
+      } else if (event === 'SIGNED_OUT') {
+        // Clear localStorage
+        localStorage.removeItem('mtre-auth-token');
+        localStorage.removeItem('mtre-refresh-token');
+        localStorage.removeItem('mtre-user-email');
+        
+        setIsAuthenticated(false);
+        setUserEmail(null);
+      }
+    });
+    
+    // Cleanup
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const refreshSession = async () => {
@@ -128,14 +200,16 @@ export default function AdminLayoutClient({
       console.log('[AdminLayoutClient] Logging out...');
       await supabase.auth.signOut();
       
+      // Clear localStorage
       localStorage.removeItem('mtre-auth-token');
       localStorage.removeItem('mtre-refresh-token');
       localStorage.removeItem('mtre-user-email');
       
-      document.cookie = 'sb-pehacdouexhebskdbpxp-auth-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-      document.cookie = 'sb-access-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-      document.cookie = 'sb-refresh-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-      document.cookie = 'mtre-login-success=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      // Manually clear all cookies
+      document.cookie = 'sb-pehacdouexhebskdbpxp-auth-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
+      document.cookie = 'sb-access-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
+      document.cookie = 'sb-refresh-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
+      document.cookie = 'mtre-login-success=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
       
       console.log('[AdminLayoutClient] Successfully logged out');
       router.push(`/${locale}/admin/login`);

@@ -9,11 +9,8 @@ export function createClient() {
       cookieOptions: {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        path: '/'
-      },
-      // Configure cookie name (useful for debugging)
-      cookies: {
-        name: 'sb-mtre-auth',
+        path: '/',
+        name: 'sb-mtre-auth'
       }
     }
   );

@@ -4,12 +4,22 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
 
-export default function AdminLoginPage({
+export default async function AdminLoginPage({
   params
 }: {
-  params: { locale: string }
+  params: Promise<{ locale: string }>
 }) {
-  const { locale } = params;
+  const { locale } = await params;
+  
+  return <AdminLoginClient locale={locale} />;
+}
+
+// Client component separato per gestire lo stato e l'interattività
+function AdminLoginClient({
+  locale
+}: {
+  locale: string
+}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);

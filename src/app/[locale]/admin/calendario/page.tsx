@@ -70,10 +70,12 @@ export default async function CalendarioPage({
   searchParams
 }: { 
   params: Promise<{ locale: string }>,
-  searchParams: any
+  searchParams: Promise<any>
 }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
+  // In Next.js 15 dobbiamo awaittare params anche se non è una Promise
   const { locale } = await params;
+  // Dobbiamo awaittare anche searchParams
+  const searchParamsData = await searchParams;
   
   // Funzione per filtrare gli appuntamenti
   async function filterAppuntamenti(formData: FormData) {
@@ -135,7 +137,7 @@ export default async function CalendarioPage({
         <AdminSearchField
           id="search"
           name="search"
-          defaultValue={searchParams.search || ''}
+          defaultValue={searchParamsData.search || ''}
           placeholder="Cerca per titolo, cliente..."
           label="Cerca"
         />
@@ -143,7 +145,7 @@ export default async function CalendarioPage({
         <AdminSelectField
           id="stato"
           name="stato"
-          defaultValue={searchParams.stato || ''}
+          defaultValue={searchParamsData.stato || ''}
           label="Stato"
           options={[
             { value: '', label: 'Tutti gli stati' },
@@ -156,7 +158,7 @@ export default async function CalendarioPage({
         <AdminSelectField
           id="periodo"
           name="periodo"
-          defaultValue={searchParams.periodo || ''}
+          defaultValue={searchParamsData.periodo || ''}
           label="Periodo"
           options={[
             { value: '', label: 'Tutti' },

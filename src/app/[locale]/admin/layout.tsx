@@ -3,14 +3,14 @@ import AdminLayoutClient from '@/components/AdminLayoutClient';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
-// In Next.js 15, params è una Promise che deve essere awaited
 export default async function AdminLayout({
   children,
-  params,
+  params
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
+  // Next.js 15 richiede che params sia await anche se non è una Promise
   const { locale } = await params;
   
   return (
@@ -18,4 +18,4 @@ export default async function AdminLayout({
       <AdminLayoutClient locale={locale}>{children}</AdminLayoutClient>
     </div>
   );
-} 
+}

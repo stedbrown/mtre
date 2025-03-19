@@ -1,16 +1,18 @@
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({ subsets: ['latin'] });
+
 // Marchiamo questo componente come dinamico per evitare conflitti con route.ts
 export const dynamic = 'force-dynamic';
 
-export default async function LoginLayout({
+export default function AdminLoginLayout({
   children,
-  params
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
-  const { locale } = await params;
-  
-  // Layout semplificato che permette al route handler di funzionare correttamente
-  return <>{children}</>;
+  return (
+    <div className={`min-h-screen bg-gray-50 ${montserrat.className}`}>
+      {children}
+    </div>
+  );
 } 

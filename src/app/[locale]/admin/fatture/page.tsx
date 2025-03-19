@@ -65,14 +65,14 @@ async function filterFatture(formData: FormData) {
 
 export default async function FatturePage({
   params,
-  searchParams: searchParamsPromise
+  searchParams
 }: {
   params: Promise<{ locale: string }>,
   searchParams: Promise<{ search?: string; stato?: string; periodo?: string }>
 }) {
   // In Next.js 15, params e searchParams sono Promise che devono essere attese
   const { locale } = await params;
-  const searchParams = await searchParamsPromise;
+  const searchParamsData = await searchParams;
   
   // Verifica l'autenticazione tramite cookie
   const cookieStore = await cookies();
@@ -103,8 +103,8 @@ export default async function FatturePage({
   `);
   
   // Applica i filtri dalla query di ricerca
-  if (searchParams.search) {
-    const searchValue = searchParams.search.trim();
+  if (searchParamsData.search) {
+    const searchValue = searchParamsData.search.trim();
     
     // Per le fatture, devo usare textSearch per cercare in relazioni
     // Cerca prima nella tabella fatture
@@ -143,15 +143,15 @@ export default async function FatturePage({
     }
   }
   
-  if (searchParams.stato && searchParams.stato !== '') {
-    query = query.eq('stato', searchParams.stato);
+  if (searchParamsData.stato && searchParamsData.stato !== '') {
+    query = query.eq('stato', searchParamsData.stato);
   }
   
-  if (searchParams.periodo) {
+  if (searchParamsData.periodo) {
     const now = new Date();
     let date;
     
-    switch (searchParams.periodo) {
+    switch (searchParamsData.periodo) {
       case 'mese':
         date = new Date(now.setMonth(now.getMonth() - 1));
         break;
@@ -234,7 +234,7 @@ export default async function FatturePage({
         <AdminSearchField
           id="search"
           name="search"
-          defaultValue={searchParams.search || ''}
+          defaultValue={searchParamsData.search || ''}
           placeholder="Cerca per numero, cliente..."
           label="Cerca"
         />
@@ -242,7 +242,7 @@ export default async function FatturePage({
         <AdminSelectField
           id="stato"
           name="stato"
-          defaultValue={searchParams.stato || ''}
+          defaultValue={searchParamsData.stato || ''}
           label="Stato"
           options={[
             { value: '', label: 'Tutti gli stati' },
@@ -256,7 +256,7 @@ export default async function FatturePage({
         <AdminSelectField
           id="periodo"
           name="periodo"
-          defaultValue={searchParams.periodo || ''}
+          defaultValue={searchParamsData.periodo || ''}
           label="Periodo"
           options={[
             { value: '', label: 'Tutti i periodi' },

@@ -2,14 +2,11 @@ import ClienteForm from './ClienteForm';
 import { AdminHeader } from '@/components/AdminUI';
 
 export default async function ModificaClientePage({
-  params,
-  searchParams
+  params
 }: {
-  params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ locale: string; id: string }>
 }) {
   const { locale, id } = await params;
-  await searchParams; // Attendiamo searchParams anche se non lo utilizziamo
 
   return (
     <div className="space-y-6">
@@ -22,6 +19,7 @@ export default async function ModificaClientePage({
           label: 'Torna alla lista clienti'
         }}
       />
+      
       <ClienteForm clienteId={id} locale={locale} />
     </div>
   );

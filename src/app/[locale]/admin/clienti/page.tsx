@@ -34,34 +34,30 @@ interface Cliente {
   created_at?: string;
 }
 
-// Azione server per filtrare i clienti
-async function filterClienti(formData: FormData) {
-  'use server';
-  
-  const searchQuery = formData.get('search') as string;
-  
-  // Crea i parametri di ricerca da aggiungere all'URL
-  const searchParams = new URLSearchParams();
-  if (searchQuery) searchParams.set('search', searchQuery);
-  
-  // Revalidate the path with the search params
-  revalidatePath('/admin/clienti');
-  
-  // Redirect to the same page with search params
-  const redirectUrl = `/admin/clienti${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
-  redirect(redirectUrl);
-}
-
 export default async function ClientiPage({
   params,
-  searchParams: searchParamsPromise
+  searchParams
 }: {
   params: Promise<{ locale: string }>,
   searchParams: Promise<{ search?: string; tipo?: string }>
 }) {
   // In Next.js 15, params e searchParams sono Promise che devono essere attese
   const { locale } = await params;
-  const searchParams = await searchParamsPromise;
+  const searchParamsData = await searchParams;
+  
+  // Funzione server per filtrare i clienti
+  async function filterClienti(formData: FormData) {
+    'use server';
+    
+    const search = formData.get('search') as string || '';
+    const tipo = formData.get('tipo') as string || '';
+    
+    const searchParams = new URLSearchParams();
+    if (search) searchParams.set('search', search);
+    if (tipo) searchParams.set('tipo', tipo);
+    
+    redirect(`/${locale}/admin/clienti?${searchParams.toString()}`);
+  }
   
   // Verifica l'autenticazione tramite cookie
   const cookieStore = await cookies();
@@ -69,87 +65,115 @@ export default async function ClientiPage({
   const isAuthenticated = !!authCookie?.value;
   
   if (!isAuthenticated) {
-    return (
-      <div className="p-6 bg-white rounded-lg shadow">
-        <h1 className="text-2xl font-bold mb-4">Accesso negato</h1>
-        <p className="text-gray-600">Devi effettuare l'accesso per visualizzare questa pagina.</p>
-        <a href={`/${locale}/admin/login`} className="mt-4 inline-block text-indigo-600 hover:text-indigo-800">
-          Vai alla pagina di login
-        </a>
-      </div>
-    );
+    redirect(`/${locale}/admin/login`);
   }
   
+  // Ottieni il client Supabase
   const supabase = await createClient();
   
-  // Prepara la query di base
-  let query = supabase.from('clienti').select('*');
+  // Preparazione della query di base
+  let query = supabase
+    .from('clienti')
+    .select('*');
   
   // Applica i filtri dalla query di ricerca
-  if (searchParams.search) {
-    const searchValue = searchParams.search.trim();
+  if (searchParamsData.search) {
+    const searchValue = searchParamsData.search.trim();
     query = query.or(
       `nome.ilike.%${searchValue}%,` +
       `cognome.ilike.%${searchValue}%,` +
       `email.ilike.%${searchValue}%,` +
-      `telefono.ilike.%${searchValue}%,` +
-      `citta.ilike.%${searchValue}%`
+      `telefono.ilike.%${searchValue}%`
     );
   }
   
-  // Tipo cliente (privato o azienda) è stato rimosso perché la colonna azienda non esiste
+  if (searchParamsData.tipo && searchParamsData.tipo !== 'tutti') {
+    query = query.eq('tipo', searchParamsData.tipo);
+  }
   
   // Ordina per nome
-  query = query.order('nome');
+  query = query.order('cognome', { ascending: true });
   
-  // Recupera i clienti
+  // Esegui la query
   const { data: clienti, error } = await query;
   
   if (error) {
     console.error('Errore nel recupero dei clienti:', error);
     return (
-      <div className="p-6 bg-white rounded-lg shadow">
-        <h1 className="text-2xl font-bold mb-4">Errore</h1>
-        <p className="text-gray-600">Si è verificato un errore nel recupero dei clienti.</p>
-      </div>
+      <div>Si è verificato un errore nel caricamento dei clienti.</div>
     );
   }
   
   return (
     <div className="space-y-6">
       {/* Header */}
-      <AdminHeader
-        title="Clienti"
-        description="Gestisci i tuoi clienti e visualizza le loro informazioni"
-        actionLabel="Nuovo cliente"
-        actionHref={`/admin/clienti/nuovo`}
-        locale={locale}
-      />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Clienti</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Gestisci i tuoi clienti e i loro contatti
+          </p>
+        </div>
+        <Link
+          href={`/${locale}/admin/clienti/nuovo`}
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Nuovo cliente
+        </Link>
+      </div>
       
       {/* Filtri */}
-      <AdminFilterContainer action={filterClienti}>
-        <AdminSearchField
-          id="search"
-          name="search"
-          defaultValue={searchParams.search || ''}
-          placeholder="Cerca per nome, email, telefono..."
-          label="Cerca"
-        />
-        
-        <div className="w-full md:w-auto flex items-end">
-          <AdminButton
-            type="submit"
-            variant="outline"
-            icon={
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+        <form action={filterClienti} className="flex flex-wrap gap-4">
+          <div className="w-full md:w-auto md:flex-1">
+            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">Cerca</label>
+            <div className="relative rounded-md shadow-sm">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="search"
+                name="search"
+                defaultValue={searchParamsData.search || ''}
+                placeholder="Cerca per nome, email, telefono..."
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
+          
+          <div className="w-full md:w-auto">
+            <label htmlFor="tipo" className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+            <select
+              id="tipo"
+              name="tipo"
+              defaultValue={searchParamsData.tipo || ''}
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="tutti">Tutti i tipi</option>
+              <option value="privato">Privato</option>
+              <option value="azienda">Azienda</option>
+            </select>
+          </div>
+          
+          <div className="w-full md:w-auto flex items-end">
+            <button
+              type="submit"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+            >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
               </svg>
-            }
-          >
-            Filtra
-          </AdminButton>
-        </div>
-      </AdminFilterContainer>
+              Filtra
+            </button>
+          </div>
+        </form>
+      </div>
       
       {/* Tabella clienti */}
       <AdminTableContainer>

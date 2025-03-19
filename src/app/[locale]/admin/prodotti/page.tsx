@@ -34,10 +34,11 @@ export default async function ProdottiPage({
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  // In Next.js 15, params e searchParams sono Promise che devono essere attese
   const { locale } = await params;
   const searchParamsData = await searchParams;
-  const searchQuery = searchParamsData.search as string | undefined;
-  const categoriaFilter = searchParamsData.categoria as string | undefined;
+  const searchQuery = typeof searchParamsData.search === 'string' ? searchParamsData.search : undefined;
+  const categoriaFilter = typeof searchParamsData.categoria === 'string' ? searchParamsData.categoria : undefined;
   
   // Funzione per filtrare i prodotti
   async function filterProdotti(formData: FormData) {

@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 export async function createClient() {
+  // Next.js 15 richiede l'attesa dei cookie
   const cookieStore = await cookies();
   
   return createServerClient(
@@ -9,18 +10,22 @@ export async function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return cookieStore.getAll();
+        async get(name) {
+          const cookie = await cookieStore.get(name);
+          return cookie?.value;
         },
-        setAll(cookiesToSet) {
+        async set(name, value, options) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Il metodo setAll è stato chiamato da un Server Component
-            // Questo può essere ignorato se hai un middleware che aggiorna
-            // le sessioni degli utenti
+            await cookieStore.set({ name, value, ...options });
+          } catch (error) {
+            // Ignore errors when cookies cannot be modified
+          }
+        },
+        async remove(name, options) {
+          try {
+            await cookieStore.set({ name, value: '', ...options });
+          } catch (error) {
+            // Ignore errors when cookies cannot be modified
           }
         },
       },

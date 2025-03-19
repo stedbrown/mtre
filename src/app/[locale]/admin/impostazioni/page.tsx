@@ -8,6 +8,7 @@ import {
   FiFileText, FiCreditCard, FiInfo, FiImage
 } from 'react-icons/fi';
 import Link from 'next/link';
+import { use } from 'react';
 
 // Azione server per aggiornare le informazioni aziendali
 async function updateAziendaInfo(formData: FormData) {
@@ -162,7 +163,7 @@ export default async function ImpostazioniPage({
 }: {
   params: Promise<{ locale: string }>
 }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
+  // In Next.js 15 dobbiamo awaittare params anche se non è una Promise
   const { locale } = await params;
   
   // Verifica l'autenticazione

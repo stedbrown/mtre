@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { getTranslations } from 'next-intl/server';
+import { use } from 'react';
 
 export const runtime = 'edge';
 
@@ -11,8 +12,8 @@ export const size = {
 
 export const contentType = 'image/png';
 
-export default async function Image({ params }: { params: { locale: string } }) {
-  const { locale } = params;
+export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = use(params);
   const t = await getTranslations({ locale, namespace: 'testimonials' });
   
   return new ImageResponse(

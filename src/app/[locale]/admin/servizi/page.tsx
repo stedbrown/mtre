@@ -1,10 +1,10 @@
 import { createClient } from '@/lib/supabase/server-client';
-import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { formatCurrency, truncateText } from '@/lib/utils';
 import DeleteButton from '@/components/DeleteButton';
 import ClickableCard from '@/components/ClickableCard';
 import ClientCardActions from '@/components/ClientCardActions';
+import { checkServerSession } from '@/lib/hooks';
 
 // Definizione dei tipi
 interface Servizio {
@@ -22,26 +22,15 @@ export default async function ServiziPage({
 }: {
   params: Promise<{ locale: string }>
 }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
+  // In Next.js 15 dobbiamo awaittare params anche se non è una Promise
   const { locale } = await params;
   
-  // Verifica l'autenticazione tramite cookie
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('sb-pehacdouexhebskdbpxp-auth-token');
-  const isAuthenticated = !!authCookie?.value;
+  // Verifica l'autenticazione usando il nuovo metodo
+  const user = await checkServerSession(`/${locale}/admin/login?redirectTo=/${locale}/admin/servizi`);
   
-  if (!isAuthenticated) {
-    return (
-      <div className="p-6 bg-white rounded-lg shadow">
-        <h1 className="text-2xl font-bold mb-4">Accesso negato</h1>
-        <p className="text-gray-600">Devi effettuare l'accesso per visualizzare questa pagina.</p>
-        <a href={`/${locale}/admin/login`} className="mt-4 inline-block text-indigo-600 hover:text-indigo-800">
-          Vai alla pagina di login
-        </a>
-      </div>
-    );
-  }
+  // Se non siamo autenticati, il checkServerSession farà il redirect automaticamente
   
+  // Ottieni il client Supabase
   const supabase = await createClient();
   
   // Recupera i servizi
@@ -250,37 +239,9 @@ export default async function ServiziPage({
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Visualizzazione di <span className="font-medium">{servizi.length}</span> servizi
+                Mostrando <span className="font-medium">1</span> a <span className="font-medium">{servizi.length}</span> di{' '}
+                <span className="font-medium">{servizi.length}</span> risultati
               </p>
-            </div>
-            <div>
-              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <a
-                  href="#"
-                  className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                >
-                  <span className="sr-only">Precedente</span>
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </a>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                >
-                  1
-                </a>
-                <a
-                  href="#"
-                  className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                >
-                  <span className="sr-only">Successivo</span>
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                  </svg>
-                </a>
-              </nav>
             </div>
           </div>
         </div>

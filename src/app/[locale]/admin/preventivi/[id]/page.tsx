@@ -7,7 +7,7 @@ import ConvertToInvoiceButton from '@/components/ConvertToInvoiceButton';
 import DownloadPdfButton from '@/components/DownloadPdfButton';
 
 export default async function DettaglioPreventivoPage({ params }: { params: Promise<{ id: string, locale: string }> }) {
-  // In Next.js 15, params è una Promise che deve essere awaited
+  // In Next.js 15 dobbiamo awaittare params anche se non è una Promise
   const { id, locale } = await params;
   
   const supabase = createServerClient(

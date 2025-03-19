@@ -58,14 +58,19 @@ async function filterPreventivi(formData: FormData) {
 
 export default async function PreventiviPage({
   params,
-  searchParams: searchParamsPromise
+  searchParams
 }: {
   params: Promise<{ locale: string }>,
-  searchParams: Promise<{ search?: string; stato?: string; periodo?: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   // In Next.js 15, params e searchParams sono Promise che devono essere attese
   const { locale } = await params;
-  const searchParams = await searchParamsPromise;
+  const searchParamsData = await searchParams;
+  
+  // Converti i parametri di ricerca in stringhe singole
+  const searchQuery = typeof searchParamsData.search === 'string' ? searchParamsData.search : undefined;
+  const statoFilter = typeof searchParamsData.stato === 'string' ? searchParamsData.stato : undefined;
+  const periodoFilter = typeof searchParamsData.periodo === 'string' ? searchParamsData.periodo : undefined;
   
   // Verifica l'autenticazione tramite cookie
   const cookieStore = await cookies();
@@ -96,8 +101,8 @@ export default async function PreventiviPage({
   `);
   
   // Applica i filtri dalla query di ricerca
-  if (searchParams.search) {
-    const searchValue = searchParams.search.trim();
+  if (searchQuery) {
+    const searchValue = searchQuery.trim();
     
     // Cerchiamo prima i numeri di preventivo
     const { data: preventiviIds, error: preventiviError } = await supabase
@@ -135,15 +140,15 @@ export default async function PreventiviPage({
     }
   }
   
-  if (searchParams.stato && searchParams.stato !== '') {
-    query = query.ilike('stato', `%${searchParams.stato}%`);
+  if (statoFilter && statoFilter !== '') {
+    query = query.ilike('stato', `%${statoFilter}%`);
   }
   
-  if (searchParams.periodo) {
+  if (periodoFilter) {
     const now = new Date();
     let date;
     
-    switch (searchParams.periodo) {
+    switch (periodoFilter) {
       case 'mese':
         date = new Date(now.setMonth(now.getMonth() - 1));
         break;
@@ -229,7 +234,7 @@ export default async function PreventiviPage({
         <AdminSearchField
           id="search"
           name="search"
-          defaultValue={searchParams.search || ''}
+          defaultValue={searchQuery || ''}
           placeholder="Cerca per numero, cliente..."
           label="Cerca"
         />
@@ -237,7 +242,7 @@ export default async function PreventiviPage({
         <AdminSelectField
           id="stato"
           name="stato"
-          defaultValue={searchParams.stato || ''}
+          defaultValue={statoFilter || ''}
           label="Stato"
           options={[
             { value: '', label: 'Tutti gli stati' },
@@ -251,7 +256,7 @@ export default async function PreventiviPage({
         <AdminSelectField
           id="periodo"
           name="periodo"
-          defaultValue={searchParams.periodo || ''}
+          defaultValue={periodoFilter || ''}
           label="Periodo"
           options={[
             { value: '', label: 'Tutti i periodi' },

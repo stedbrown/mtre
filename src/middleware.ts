@@ -1,16 +1,52 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { locales, defaultLocale } from '@/i18n/navigation';
+
+// Funzione di supporto per controllare se un percorso è un percorso admin
+function isAdminPath(path: string): boolean {
+  return path.includes('/admin') && !path.includes('/admin/login');
+}
+
+// Funzione di supporto per estrarre la locale dal percorso
+function getLocaleFromPath(path: string): string | undefined {
+  const segments = path.split('/').filter(Boolean);
+  return segments.length > 0 && locales.includes(segments[0] as any) ? segments[0] : undefined;
+}
 
 export async function middleware(request: NextRequest) {
-  // Crea la risposta con le stesse intestazioni della richiesta
+  const pathname = request.nextUrl.pathname;
+  
+  // 1. Gestione della redirezione root a locale predefinita
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url));
+  }
+  
+  // 2. Gestione accesso diretto senza locale
+  const pathnameHasLocale = locales.some(locale => 
+    pathname === `/${locale}` || pathname.startsWith(`/${locale}/`));
+  
+  if (!pathnameHasLocale) {
+    // Se il percorso non include una locale, verifica se è un percorso admin
+    if (pathname.startsWith('/admin')) {
+      return NextResponse.redirect(new URL(`/${defaultLocale}${pathname}`, request.url));
+    }
+    
+    // Per altri percorsi senza locale, aggiungi la locale predefinita
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments.length > 0) {
+      return NextResponse.redirect(new URL(`/${defaultLocale}${pathname}`, request.url));
+    }
+  }
+  
+  // 3. Preparazione della risposta
   const response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   });
-
-  // Crea un client Supabase che utilizzerà i cookie per l'autenticazione
+  
+  // 4. Configurazione del client Supabase
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -20,7 +56,6 @@ export async function middleware(request: NextRequest) {
           return request.cookies.get(name)?.value;
         },
         set(name: string, value: string, options: any) {
-          // Imposta i cookie sia nella richiesta che nella risposta
           request.cookies.set({
             name,
             value,
@@ -33,7 +68,6 @@ export async function middleware(request: NextRequest) {
           });
         },
         remove(name: string, options: any) {
-          // Rimuove i cookie sia dalla richiesta che dalla risposta
           request.cookies.delete({
             name,
             ...options,
@@ -44,32 +78,35 @@ export async function middleware(request: NextRequest) {
           });
         },
       },
+      cookieOptions: {
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/'
+      }
     }
   );
-
-  // Questo verifica e aggiorna automaticamente la sessione se necessario
-  const { data: { user } } = await supabase.auth.getUser();
   
-  // Percorso attuale della richiesta
-  const path = request.nextUrl.pathname;
+  // 5. Verifica l'autenticazione utente
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error) {
+    console.error("[Middleware] Errore durante il recupero dell'utente:", error.message);
+  }
   
-  // Verifica se il percorso richiede autenticazione
-  const isAdminPath = path.includes('/admin') && !path.includes('/admin/login');
-  
-  // Se è un percorso amministrativo e l'utente non è autenticato, reindirizza al login
-  if (isAdminPath && !user) {
-    // Determina la locale e reindirizza all'URL appropriato
-    const locale = path.split('/')[1] || 'it';
+  // 6. Gestione protezione percorsi admin
+  if (isAdminPath(pathname) && !user) {
+    // Estrai la locale o usa quella predefinita
+    const locale = getLocaleFromPath(pathname) || defaultLocale;
     return NextResponse.redirect(new URL(`/${locale}/admin/login`, request.url));
   }
-
+  
+  // 7. Ritorna la risposta elaborata
   return response;
 }
 
 // Specifiche per le rotte a cui applicare il middleware
 export const config = {
   matcher: [
-    // Escludi risorse statiche e API route
-    '/((?!_next/static|_next/image|api|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // Applica a tutti i percorsi tranne risorse statiche e API
+    '/((?!_next/static|_next/image|api|favicon.ico|.*\\.(svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }; 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createBrowserClient } from '@supabase/ssr';
+import { createClient } from '@/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
 
 export default async function AdminLoginPage({
@@ -27,19 +27,8 @@ function AdminLoginClient({
   const [debugMessages, setDebugMessages] = useState<string[]>([]);
   const router = useRouter();
   
-  // Crea client Supabase
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      // Configure consistent cookie options 
-      cookieOptions: {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/'
-      }
-    }
-  );
+  // Usa il client importato da utils per coerenza
+  const supabase = createClient();
 
   const addDebugMessage = (message: string) => {
     console.log(message);
@@ -80,10 +69,17 @@ function AdminLoginClient({
     try {
       addDebugMessage(`[LoginPage] Attempting login for: ${email}`);
       
-      // Clear any existing cookies to avoid conflicts
-      document.cookie = 'sb-pehacdouexhebskdbpxp-auth-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
-      document.cookie = 'sb-access-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
-      document.cookie = 'sb-refresh-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
+      // Pulisci eventuali cookie esistenti
+      const cookiesToClear = [
+        'sb-pehacdouexhebskdbpxp-auth-token', 
+        'sb-access-token', 
+        'sb-refresh-token',
+        'sb-mtre-auth'
+      ];
+      
+      cookiesToClear.forEach(cookieName => {
+        document.cookie = `${cookieName}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax`;
+      });
       
       // Esegui il login con Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -113,8 +109,8 @@ function AdminLoginClient({
       
       addDebugMessage('[LoginPage] Debug cookie set, redirecting to dashboard...');
       
-      // Reindirizza alla dashboard
-      router.push(`/${locale}/admin/dashboard`);
+      // Forzare un nuovo caricamento della pagina per assicurarsi che i cookie siano inviati
+      window.location.href = `/${locale}/admin/dashboard`;
     } catch (err: any) {
       console.error('[LoginPage] Login error:', err);
       setError(err.message || 'Errore durante il login');

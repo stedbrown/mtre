@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { createBrowserClient } from '@supabase/ssr';
+import { createClient } from '@/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
 import { Montserrat } from 'next/font/google';
 import { 
@@ -37,10 +37,7 @@ export default function AdminLayoutClient({
   const pathname = usePathname();
   const router = useRouter();
   
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createClient();
 
   const checkAuth = async () => {
     try {

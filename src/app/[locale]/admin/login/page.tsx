@@ -71,10 +71,9 @@ function AdminLoginClient({
       
       // Pulisci eventuali cookie esistenti
       const cookiesToClear = [
-        'sb-pehacdouexhebskdbpxp-auth-token', 
-        'sb-access-token', 
+        'sb-access-token',
         'sb-refresh-token',
-        'sb-mtre-auth'
+        'mtre-login-success'
       ];
       
       cookiesToClear.forEach(cookieName => {

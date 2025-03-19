@@ -1,7 +1,5 @@
 import { createClient } from '@/lib/supabase/server-client';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,28 +23,10 @@ export async function POST(request: NextRequest) {
   }
   
   try {
-    console.log(`[API] Creating direct cookie-based Supabase client for login...`);
+    console.log(`[API] Creating Supabase client for login...`);
     
-    // Crea un client Supabase direttamente con le opzioni di cookie
-    // Usa createServerClient direttamente per evitare problemi con auth
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: any) {
-            // Non possiamo impostare cookie qui
-          },
-          remove(name: string, options: any) {
-            // Non possiamo rimuovere cookie qui
-          },
-        }
-      }
-    );
+    // Crea un client Supabase semplice
+    const supabase = createClient();
     
     // Effettua il login
     console.log(`[API] Attempting Supabase signInWithPassword for: ${email}`);
@@ -62,7 +42,7 @@ export async function POST(request: NextRequest) {
       hasUser: !!data?.user,
       sessionExpires: data?.session?.expires_at || 'N/A',
       error: error ? error.message : null,
-      refreshToken: data?.session?.refresh_token ? 'Present' : 'Missing', 
+      refreshToken: data?.session?.refresh_token ? 'Present' : 'Missing',
       accessToken: data?.session?.access_token ? 'Present' : 'Missing'
     });
     
@@ -95,46 +75,28 @@ export async function POST(request: NextRequest) {
     const token = data.session.access_token;
     const refreshToken = data.session.refresh_token;
     const expiresAt = data.session.expires_at || Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
-    const cookieName = 'sb-pehacdouexhebskdbpxp-auth-token';
-    
-    // Configura i cookie per sessione sicura
-    const cookieOptions = {
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax' as const,
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7, // 7 giorni
-    };
-    
-    // Crea il valore del cookie JSON con tutti i campi necessari
-    const cookieValue = JSON.stringify({
-      access_token: token,
-      refresh_token: refreshToken,
-      expires_at: expiresAt,
-      expires_in: Math.floor((expiresAt * 1000 - Date.now()) / 1000),
-      token_type: 'bearer',
-      user: data.user
-    });
-    
-    // Imposta il cookie di autenticazione nella risposta
-    response.cookies.set(cookieName, cookieValue, cookieOptions);
-    console.log(`[API] Set full auth cookie manually: ${cookieName}`);
     
     // Imposta anche i cookie individuali per debug
     response.cookies.set('sb-access-token', token, {
-      ...cookieOptions,
+      path: '/',
       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 giorni
     });
     
     response.cookies.set('sb-refresh-token', refreshToken, {
-      ...cookieOptions, 
+      path: '/',
       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 giorni
     });
     
     // Setup anche un cookie di debug per verificare se il login è avvenuto
     response.cookies.set('mtre-login-success', 'true', {
       path: '/',
-      maxAge: 60 * 10, // 10 minuti
+      maxAge: 60 * 60 * 24, // 24 ore
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

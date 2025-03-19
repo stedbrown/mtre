@@ -4,10 +4,21 @@ import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { useRouter } from 'next/navigation';
 
-export default function AdminLoginPage({
-  params: { locale }
+export default async function AdminLoginPage({
+  params
 }: {
-  params: { locale: string }
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params;
+  
+  return <AdminLoginClient locale={locale} />;
+}
+
+// Client component separato per gestire lo stato e l'interattività
+function AdminLoginClient({
+  locale
+}: {
+  locale: string
 }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +30,15 @@ export default function AdminLoginPage({
   // Crea client Supabase
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      // Configure consistent cookie options 
+      cookieOptions: {
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/'
+      }
+    }
   );
 
   const addDebugMessage = (message: string) => {

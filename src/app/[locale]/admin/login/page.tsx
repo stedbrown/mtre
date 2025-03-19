@@ -1,84 +1,30 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createClient } from '@/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
 
-export default async function AdminLoginPage({
+export default function AdminLoginPage({
   params
 }: {
-  params: Promise<{ locale: string }>
+  params: { locale: string }
 }) {
-  const { locale } = await params;
-  
-  return <AdminLoginClient locale={locale} />;
-}
-
-// Client component separato per gestire lo stato e l'interattività
-function AdminLoginClient({
-  locale
-}: {
-  locale: string
-}) {
+  const { locale } = params;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [debugMessages, setDebugMessages] = useState<string[]>([]);
   const router = useRouter();
   
-  // Usa il client importato da utils per coerenza
   const supabase = createClient();
 
-  const addDebugMessage = (message: string) => {
-    console.log(message);
-    setDebugMessages(prev => [...prev, message]);
-  };
-  
-  // Check for existing session on page load
-  useEffect(() => {
-    const checkExistingSession = async () => {
-      try {
-        addDebugMessage('[LoginPage] Checking for existing session...');
-        const { data, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          addDebugMessage(`[LoginPage] Error checking session: ${error.message}`);
-          return;
-        }
-        
-        if (data.session) {
-          addDebugMessage('[LoginPage] Found existing session, redirecting to dashboard');
-          router.push(`/${locale}/admin/dashboard`);
-        } else {
-          addDebugMessage('[LoginPage] No existing session found');
-        }
-      } catch (err: any) {
-        addDebugMessage(`[LoginPage] Session check error: ${err.message}`);
-      }
-    };
-    
-    checkExistingSession();
-  }, []);
-  
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     
     try {
-      addDebugMessage(`[LoginPage] Attempting login for: ${email}`);
-      
-      // Pulisci eventuali cookie esistenti
-      const cookiesToClear = [
-        'sb-access-token',
-        'sb-refresh-token',
-        'mtre-login-success'
-      ];
-      
-      cookiesToClear.forEach(cookieName => {
-        document.cookie = `${cookieName}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax`;
-      });
+      console.log(`[LoginPage] Attempting login for: ${email}`);
       
       // Esegui il login con Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -90,30 +36,13 @@ function AdminLoginClient({
         throw error;
       }
       
-      if (!data.session) {
-        throw new Error('Nessuna sessione creata');
-      }
+      console.log('[LoginPage] Login successful');
       
-      addDebugMessage('[LoginPage] Login successful, session created');
-      
-      // Salva il token manualmente in localStorage per avere un backup
-      localStorage.setItem('mtre-auth-token', data.session.access_token);
-      localStorage.setItem('mtre-refresh-token', data.session.refresh_token);
-      localStorage.setItem('mtre-user-email', data.user?.email || '');
-      
-      addDebugMessage('[LoginPage] Tokens stored in localStorage');
-      
-      // Imposta un cookie per indicare il successo dell'operazione (aiuta con il debugging)
-      document.cookie = `mtre-login-success=true; path=/; max-age=${60*60*24*30}; secure; samesite=lax`;
-      
-      addDebugMessage('[LoginPage] Debug cookie set, redirecting to dashboard...');
-      
-      // Forzare un nuovo caricamento della pagina per assicurarsi che i cookie siano inviati
-      window.location.href = `/${locale}/admin/dashboard`;
+      // Reindirizza alla dashboard
+      router.push(`/${locale}/admin/dashboard`);
     } catch (err: any) {
       console.error('[LoginPage] Login error:', err);
       setError(err.message || 'Errore durante il login');
-      addDebugMessage(`[LoginPage] Login error: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -175,15 +104,6 @@ function AdminLoginClient({
               </button>
             </div>
           </form>
-          
-          {debugMessages.length > 0 && (
-            <div className="mt-6 p-3 bg-gray-50 rounded-md text-xs font-mono text-gray-600 max-h-40 overflow-y-auto">
-              <h3 className="font-bold mb-1">Debug Log:</h3>
-              {debugMessages.map((msg, idx) => (
-                <div key={idx} className="mb-1">{msg}</div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>

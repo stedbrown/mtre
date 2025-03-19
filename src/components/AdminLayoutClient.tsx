@@ -13,14 +13,6 @@ import {
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
-// Helper function to read cookie value
-function getCookie(name: string) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-  return null;
-}
-
 export default function AdminLayoutClient({
   children,
   locale,
@@ -33,7 +25,6 @@ export default function AdminLayoutClient({
   const [isLoading, setIsLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   
@@ -43,84 +34,17 @@ export default function AdminLayoutClient({
     try {
       console.log('[AdminLayoutClient] Checking authentication status...');
       
-      // Check for debug cookie
-      const loginSuccessCookie = getCookie('mtre-login-success');
-      console.log('[AdminLayoutClient] mtre-login-success cookie:', loginSuccessCookie);
+      // Verifica la sessione con Supabase
+      const { data: { session }, error } = await supabase.auth.getSession();
       
-      // Check for Supabase auth cookie
-      const supabaseCookie = getCookie('sb-pehacdouexhebskdbpxp-auth-token');
-      console.log('[AdminLayoutClient] Supabase auth cookie present:', !!supabaseCookie);
-      
-      // Check localStorage first
-      const token = localStorage.getItem('mtre-auth-token');
-      const userEmailStored = localStorage.getItem('mtre-user-email');
-      const hasLocalStorageAuth = !!token;
-      
-      if (hasLocalStorageAuth) {
-        console.log('[AdminLayoutClient] User authenticated via localStorage');
-        
-        // Try to set the session with the stored token if Supabase session is missing
-        if (!supabaseCookie) {
-          try {
-            const refreshToken = localStorage.getItem('mtre-refresh-token');
-            if (refreshToken) {
-              console.log('[AdminLayoutClient] Attempting to restore session from localStorage tokens');
-              await supabase.auth.setSession({
-                access_token: token,
-                refresh_token: refreshToken
-              });
-            }
-          } catch (error) {
-            console.error('[AdminLayoutClient] Failed to restore session:', error);
-          }
-        }
-        
-        setIsAuthenticated(true);
-        setUserEmail(userEmailStored);
-        setAuthError(null);
-        setIsLoading(false);
-        return;
-      }
-      
-      // Then check Supabase session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      console.log('[AdminLayoutClient] Session check:', {
-        hasSession: !!session,
-        expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
-        error: sessionError ? sessionError.message : null
-      });
-      
-      if (sessionError) {
-        throw sessionError;
+      if (error) {
+        throw error;
       }
       
       if (session) {
-        console.log('[AdminLayoutClient] User authenticated via Supabase session');
-        
-        // Store session in localStorage as backup
-        localStorage.setItem('mtre-auth-token', session.access_token);
-        localStorage.setItem('mtre-refresh-token', session.refresh_token);
-        
-        // Get user details
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        console.log('[AdminLayoutClient] User check:', {
-          hasUser: !!user,
-          email: user?.email || null,
-          error: userError ? userError.message : null
-        });
-        
-        if (userError) {
-          throw userError;
-        }
-        
-        if (user?.email) {
-          localStorage.setItem('mtre-user-email', user.email);
-        }
-        
+        console.log('[AdminLayoutClient] User authenticated');
         setIsAuthenticated(true);
-        setUserEmail(user?.email || null);
+        setUserEmail(session.user?.email || null);
         setAuthError(null);
       } else {
         console.log('[AdminLayoutClient] No auth session found');
@@ -135,78 +59,37 @@ export default function AdminLayoutClient({
       setAuthError(error.message || 'Errore durante il controllo dell\'autenticazione');
     } finally {
       setIsLoading(false);
-      setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    // Check authentication on component mount
+    // Verifica l'autenticazione all'avvio
     checkAuth();
     
-    // Listen for auth state changes
+    // Ascolta i cambiamenti di stato dell'autenticazione
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('[AdminLayoutClient] Auth state changed:', event, session ? 'session exists' : 'no session');
+      console.log('[AdminLayoutClient] Auth state changed:', event);
       
       if (event === 'SIGNED_IN' && session) {
-        // Update localStorage
-        localStorage.setItem('mtre-auth-token', session.access_token);
-        localStorage.setItem('mtre-refresh-token', session.refresh_token);
-        if (session.user?.email) {
-          localStorage.setItem('mtre-user-email', session.user.email);
-        }
-        
         setIsAuthenticated(true);
         setUserEmail(session.user?.email || null);
         setAuthError(null);
       } else if (event === 'SIGNED_OUT') {
-        // Clear localStorage
-        localStorage.removeItem('mtre-auth-token');
-        localStorage.removeItem('mtre-refresh-token');
-        localStorage.removeItem('mtre-user-email');
-        
         setIsAuthenticated(false);
         setUserEmail(null);
       }
     });
     
-    // Cleanup
+    // Pulizia
     return () => {
       subscription.unsubscribe();
     };
   }, []);
 
-  const refreshSession = async () => {
-    setRefreshing(true);
-    try {
-      const { error } = await supabase.auth.refreshSession();
-      
-      if (error) {
-        throw error;
-      }
-      
-      await checkAuth();
-    } catch (error: any) {
-      console.error('[AdminLayoutClient] Error refreshing session:', error);
-      setAuthError(`Errore durante l'aggiornamento della sessione: ${error.message}`);
-      setRefreshing(false);
-    }
-  };
-
   const handleLogout = async () => {
     try {
       console.log('[AdminLayoutClient] Logging out...');
       await supabase.auth.signOut();
-      
-      // Clear localStorage
-      localStorage.removeItem('mtre-auth-token');
-      localStorage.removeItem('mtre-refresh-token');
-      localStorage.removeItem('mtre-user-email');
-      
-      // Manually clear all cookies
-      document.cookie = 'sb-pehacdouexhebskdbpxp-auth-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
-      document.cookie = 'sb-access-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
-      document.cookie = 'sb-refresh-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
-      document.cookie = 'mtre-login-success=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax';
       
       console.log('[AdminLayoutClient] Successfully logged out');
       router.push(`/${locale}/admin/login`);
@@ -246,24 +129,6 @@ export default function AdminLayoutClient({
                 Vai al login
               </button>
             </form>
-            
-            <button
-              onClick={refreshSession}
-              disabled={refreshing}
-              className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-            >
-              {refreshing ? (
-                <>
-                  <FiRefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                  Aggiornamento in corso...
-                </>
-              ) : (
-                <>
-                  <FiRefreshCw className="mr-2 h-4 w-4" />
-                  Aggiorna sessione
-                </>
-              )}
-            </button>
           </div>
         </div>
       </div>

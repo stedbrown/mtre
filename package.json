@@ -17,9 +17,12 @@
     "next-intl": "^4.0.2",
     "pdfkit": "^0.16.0",
     "pdfkit-table": "^0.1.99",
+    "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "recharts": "^2.15.1",
+    "swissqrbill": "^4.1.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

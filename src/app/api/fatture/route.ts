@@ -98,10 +98,24 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // Aggiustiamo i campi per adattarli alla struttura del database
+    const fatturaDaInserire = {
+      ...fatturaData,
+      data_emissione: fatturaData.data, // Mappiamo il campo 'data' a 'data_emissione'
+      data_scadenza: fatturaData.scadenza, // Mappiamo il campo 'scadenza' a 'data_scadenza'
+      stato: fatturaData.stato
+    };
+    
+    // Rimuoviamo i campi che abbiamo già mappato
+    delete fatturaDaInserire.data;
+    delete fatturaDaInserire.scadenza;
+    
+    console.log('Dati fattura da inserire:', fatturaDaInserire);
+    
     // Inizia una transazione
     const { data: fattura, error: fatturaError } = await supabase
       .from('fatture')
-      .insert([fatturaData])
+      .insert([fatturaDaInserire])
       .select()
       .single();
     
@@ -115,10 +129,30 @@ export async function POST(request: NextRequest) {
     
     // Aggiungi i dettagli della fattura
     if (dettagli && dettagli.length > 0) {
-      const dettagliConFattura = dettagli.map((dettaglio: any) => ({
-        ...dettaglio,
-        fattura_id: fattura.id
-      }));
+      const dettagliConFattura = dettagli.map((dettaglio: any) => {
+        // Gestione servizio personalizzato
+        if (dettaglio.servizio_id === 'custom') {
+          return {
+            fattura_id: fattura.id,
+            servizio_id: null, // Nessun servizio collegato, è personalizzato
+            descrizione: dettaglio.descrizione,
+            quantita: dettaglio.quantita,
+            prezzo_unitario: dettaglio.prezzo_unitario,
+            importo: dettaglio.importo
+          };
+        } else {
+          return {
+            fattura_id: fattura.id,
+            servizio_id: dettaglio.servizio_id,
+            descrizione: dettaglio.descrizione,
+            quantita: dettaglio.quantita,
+            prezzo_unitario: dettaglio.prezzo_unitario,
+            importo: dettaglio.importo
+          };
+        }
+      });
+      
+      console.log('Dettagli fattura da inserire:', dettagliConFattura);
       
       const { error: dettagliError } = await supabase
         .from('dettagli_fattura')

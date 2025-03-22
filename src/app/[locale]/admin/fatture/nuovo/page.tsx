@@ -24,7 +24,8 @@ interface DettaglioFattura {
   descrizione: string;
   quantita: number;
   prezzo_unitario: number;
-  totale: number;
+  importo: number;
+  is_custom?: boolean;
 }
 
 export default function NuovaFatturaPage() {
@@ -37,11 +38,23 @@ export default function NuovaFatturaPage() {
   const [clienti, setClienti] = useState<Cliente[]>([]);
   const [servizi, setServizi] = useState<Servizio[]>([]);
   
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
+  const [modalText, setModalText] = useState('');
+  
+  const generateFatturaNumber = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const timestamp = Date.now().toString().slice(-5);
+    return `F-${year}${month}-${timestamp}`;
+  };
+  
   const [formData, setFormData] = useState({
     cliente_id: '',
     data: new Date().toISOString().split('T')[0],
     scadenza: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    numero: `F-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
+    numero: generateFatturaNumber(),
     stato: 'emessa',
     note: '',
     importo_totale: 0,
@@ -51,7 +64,6 @@ export default function NuovaFatturaPage() {
   const [dettagli, setDettagli] = useState<DettaglioFattura[]>([]);
   
   useEffect(() => {
-    // Carica clienti e servizi
     const fetchData = async () => {
       try {
         const [clientiRes, serviziRes] = await Promise.all([
@@ -92,7 +104,8 @@ export default function NuovaFatturaPage() {
         descrizione: '',
         quantita: 1,
         prezzo_unitario: 0,
-        totale: 0
+        importo: 0,
+        is_custom: false
       }
     ]);
   };
@@ -109,14 +122,35 @@ export default function NuovaFatturaPage() {
       const nuoviDettagli = [...prev];
       
       if (name === 'servizio_id') {
-        const servizio = servizi.find(s => s.id === value);
-        if (servizio) {
+        if (value === 'custom') {
           nuoviDettagli[index] = {
             ...nuoviDettagli[index],
-            servizio_id: value,
-            descrizione: servizio.descrizione,
-            prezzo_unitario: servizio.prezzo,
-            totale: servizio.prezzo * nuoviDettagli[index].quantita
+            servizio_id: 'custom',
+            descrizione: '',
+            prezzo_unitario: 0,
+            importo: 0,
+            is_custom: true
+          };
+        } else if (value) {
+          const servizio = servizi.find(s => s.id === value);
+          if (servizio) {
+            nuoviDettagli[index] = {
+              ...nuoviDettagli[index],
+              servizio_id: value,
+              descrizione: servizio.descrizione || '',
+              prezzo_unitario: servizio.prezzo || 0,
+              importo: (servizio.prezzo || 0) * (nuoviDettagli[index].quantita || 1),
+              is_custom: false
+            };
+          }
+        } else {
+          nuoviDettagli[index] = {
+            ...nuoviDettagli[index],
+            servizio_id: '',
+            descrizione: '',
+            prezzo_unitario: 0,
+            importo: 0,
+            is_custom: false
           };
         }
       } else if (name === 'quantita') {
@@ -124,14 +158,14 @@ export default function NuovaFatturaPage() {
         nuoviDettagli[index] = {
           ...nuoviDettagli[index],
           quantita,
-          totale: quantita * nuoviDettagli[index].prezzo_unitario
+          importo: quantita * (nuoviDettagli[index].prezzo_unitario || 0)
         };
       } else if (name === 'prezzo_unitario') {
         const prezzo = parseFloat(value) || 0;
         nuoviDettagli[index] = {
           ...nuoviDettagli[index],
           prezzo_unitario: prezzo,
-          totale: prezzo * nuoviDettagli[index].quantita
+          importo: prezzo * (nuoviDettagli[index].quantita || 1)
         };
       } else {
         nuoviDettagli[index] = {
@@ -147,7 +181,7 @@ export default function NuovaFatturaPage() {
   };
   
   const calcolaTotale = () => {
-    const totale = dettagli.reduce((sum, item) => sum + item.totale, 0);
+    const totale = dettagli.reduce((sum, item) => sum + item.importo, 0);
     setFormData(prev => ({
       ...prev,
       importo_totale: totale
@@ -170,7 +204,6 @@ export default function NuovaFatturaPage() {
     }
     
     try {
-      // Crea la fattura
       const fatturaResponse = await fetch('/api/fatture', {
         method: 'POST',
         headers: {
@@ -193,6 +226,24 @@ export default function NuovaFatturaPage() {
       setError(err.message || 'Si è verificato un errore durante la creazione della fattura');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+  
+  const openDescriptionModal = (index: number) => {
+    setCurrentEditIndex(index);
+    setModalText(dettagli[index].descrizione || '');
+    setModalOpen(true);
+  };
+  
+  const saveModalDescription = () => {
+    if (currentEditIndex !== null) {
+      handleDettaglioChange(currentEditIndex, {
+        target: {
+          name: 'descrizione',
+          value: modalText
+        }
+      } as React.ChangeEvent<HTMLTextAreaElement>);
+      setModalOpen(false);
     }
   };
   
@@ -247,10 +298,10 @@ export default function NuovaFatturaPage() {
                 id="numero"
                 name="numero"
                 value={formData.numero}
-                onChange={handleChange}
-                required
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                readOnly
+                className="block w-full px-3 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm text-gray-500 sm:text-sm cursor-not-allowed"
               />
+              <p className="mt-1 text-xs text-gray-500">Il numero fattura viene generato automaticamente</p>
             </div>
             
             <div>
@@ -299,24 +350,6 @@ export default function NuovaFatturaPage() {
                 <option value="pagata">Pagata</option>
                 <option value="scaduta">Scaduta</option>
                 <option value="annullata">Annullata</option>
-              </select>
-            </div>
-            
-            <div>
-              <label htmlFor="valuta" className="block text-sm font-medium text-gray-700 mb-1">
-                Valuta <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="valuta"
-                name="valuta"
-                value={formData.valuta}
-                onChange={handleChange}
-                required
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              >
-                <option value="CHF">CHF</option>
-                <option value="EUR">EUR</option>
-                <option value="USD">USD</option>
               </select>
             </div>
           </div>
@@ -374,21 +407,37 @@ export default function NuovaFatturaPage() {
                             className="block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                           >
                             <option value="">Seleziona un servizio</option>
-                            {servizi.map(servizio => (
-                              <option key={servizio.id} value={servizio.id}>
-                                {servizio.nome}
-                              </option>
-                            ))}
+                            <option value="custom" className="font-medium text-indigo-600">Servizio personalizzato</option>
+                            <optgroup label="Servizi disponibili">
+                              {servizi.map(servizio => (
+                                <option key={servizio.id} value={servizio.id}>
+                                  {servizio.nome}
+                                </option>
+                              ))}
+                            </optgroup>
                           </select>
                         </td>
                         <td className="px-3 py-4">
-                          <input
-                            type="text"
-                            name="descrizione"
-                            value={dettaglio.descrizione}
-                            onChange={(e) => handleDettaglioChange(index, e)}
-                            className="block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          />
+                          <div className="relative">
+                            <textarea
+                              name="descrizione"
+                              value={dettaglio.descrizione}
+                              onChange={(e) => handleDettaglioChange(index, e)}
+                              placeholder={dettaglio.is_custom ? "Inserisci descrizione personalizzata" : ""}
+                              rows={3}
+                              className="block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm resize-y min-h-[70px]"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => openDescriptionModal(index)}
+                              className="absolute bottom-2 right-2 p-1 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 transition-colors"
+                              title="Modifica in modalità ampia"
+                            >
+                              <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                            </button>
+                          </div>
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap">
                           <input
@@ -418,7 +467,7 @@ export default function NuovaFatturaPage() {
                           </div>
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {formData.valuta} {dettaglio.totale.toFixed(2)}
+                          {formData.valuta} {dettaglio.importo.toFixed(2)}
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
@@ -474,6 +523,39 @@ export default function NuovaFatturaPage() {
           </button>
         </div>
       </form>
+      
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Modifica descrizione</h3>
+            
+            <textarea
+              value={modalText}
+              onChange={(e) => setModalText(e.target.value)}
+              rows={10}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm resize-y"
+              placeholder="Inserisci una descrizione dettagliata..."
+            />
+            
+            <div className="mt-5 flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => setModalOpen(false)}
+                className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50"
+              >
+                Annulla
+              </button>
+              <button
+                type="button"
+                onClick={saveModalDescription}
+                className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Salva
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

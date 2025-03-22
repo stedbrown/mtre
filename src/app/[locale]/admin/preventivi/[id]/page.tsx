@@ -140,12 +140,12 @@ export default async function DettaglioPreventivoPage({ params }: { params: Prom
     
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <h1 className="text-2xl font-bold text-gray-900">Dettaglio Preventivo #{preventivo.numero}</h1>
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
             <Link
               href={`/${locale}/admin/preventivi`}
-              className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 w-full sm:w-auto text-center"
             >
               Torna alla Lista
             </Link>
@@ -153,17 +153,17 @@ export default async function DettaglioPreventivoPage({ params }: { params: Prom
               id={id} 
               type="preventivo" 
               numero={preventivo.numero}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 w-full sm:w-auto text-center"
             />
             {preventivo.stato.toLowerCase() !== 'rifiutato' && (
               <ConvertToInvoiceButton 
                 id={id} 
-                className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700"
+                className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 w-full sm:w-auto text-center"
               />
             )}
             <Link
               href={`/${locale}/admin/preventivi/${id}/modifica`}
-              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700"
+              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 w-full sm:w-auto text-center"
             >
               Modifica
             </Link>

@@ -88,8 +88,8 @@ export default function Home() {
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
               <Image
-                src="https://images.unsplash.com/photo-1600240644455-3edc55c375fe"
-                alt="Team di giardinieri al lavoro"
+                src="/images/mtregiardinaggio.JPG"
+                alt="M.T.R.E. Giardinaggio - Team al lavoro"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"

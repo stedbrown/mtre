@@ -13,49 +13,37 @@ export default function TestimonialsPage() {
   const testimonials = [
     {
       id: 1,
-      name: t('testimonials.clients.client1.name'),
-      role: t('testimonials.clients.client1.role'),
-      image: 'https://randomuser.me/api/portraits/men/32.jpg',
+      name: 'Giusy Novara',
       text: t('testimonials.clients.client1.text'),
       rating: 5
     },
     {
       id: 2,
-      name: t('testimonials.clients.client2.name'),
-      role: t('testimonials.clients.client2.role'),
-      image: 'https://randomuser.me/api/portraits/women/44.jpg',
+      name: 'Stefano Vananti',
       text: t('testimonials.clients.client2.text'),
       rating: 5
     },
     {
       id: 3,
-      name: t('testimonials.clients.client3.name'),
-      role: t('testimonials.clients.client3.role'),
-      image: 'https://randomuser.me/api/portraits/men/67.jpg',
+      name: 'Roberto Raso',
       text: t('testimonials.clients.client3.text'),
       rating: 4
     },
     {
       id: 4,
-      name: t('testimonials.clients.client4.name', { defaultValue: 'Francesca Neri' }),
-      role: t('testimonials.clients.client4.role', { defaultValue: 'Proprietaria di Casa' }),
-      image: 'https://randomuser.me/api/portraits/women/17.jpg',
+      name: 'Antonio Nuzzo',
       text: t('testimonials.clients.client4.text', { defaultValue: 'Ho un piccolo giardino che sembrava impossibile da valorizzare. Il team di M.T.R.E. ha creato un progetto su misura che ha trasformato completamente lo spazio. Ora è il mio angolo di paradiso!' }),
       rating: 5
     },
     {
       id: 5,
-      name: t('testimonials.clients.client5.name', { defaultValue: 'Roberto Marini' }),
-      role: t('testimonials.clients.client5.role', { defaultValue: 'Direttore Hotel' }),
-      image: 'https://randomuser.me/api/portraits/men/22.jpg',
+      name: 'Giulia Parodi',
       text: t('testimonials.clients.client5.text', { defaultValue: 'La nostra catena di hotel si affida a M.T.R.E. per la manutenzione di tutti i giardini delle nostre strutture. La qualità del servizio è sempre impeccabile e contribuisce significativamente all&quot;immagine di lusso dei nostri hotel.' }),
       rating: 5
     },
     {
       id: 6,
-      name: t('testimonials.clients.client6.name', { defaultValue: 'Elena Martini' }),
-      role: t('testimonials.clients.client6.role', { defaultValue: 'Architetto' }),
-      image: 'https://randomuser.me/api/portraits/women/57.jpg',
+      name: 'Fabio Mancini',
       text: t('testimonials.clients.client6.text', { defaultValue: 'Collaboro spesso con M.T.R.E. per i progetti di architettura del paesaggio. La loro competenza tecnica e la capacità di interpretare le esigenze del cliente sono davvero notevoli. Un partner affidabile e professionale.' }),
       rating: 4
     }
@@ -103,20 +91,8 @@ export default function TestimonialsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial) => (
               <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <div className="flex items-center mb-4">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">{testimonial.name}</h3>
-                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                  </div>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-green-800">{testimonial.name}</h3>
                 </div>
                 
                 <div className="flex mb-4">
@@ -132,9 +108,14 @@ export default function TestimonialsPage() {
           <div className="mt-16 bg-white p-8 rounded-lg shadow-md max-w-3xl mx-auto text-center">
             <h2 className="text-2xl font-bold text-green-800 mb-4">{t('testimonials.cta.title')}</h2>
             <p className="text-gray-700 mb-6">{t('testimonials.cta.description')}</p>
-            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+            <a 
+              href="https://www.google.com/search?sca_esv=aef8e287bae27f94&sxsrf=AHTn8zreSXPeBZDhq1LvYSl6ePBpS2qesg:1743592153361&si=APYL9bs7Hg2KMLB-4tSoTdxuOx8BdRvHbByC_AuVpNyh0x2KzSzXOXaQ-S-V9_wU2llAFjAG_iiMn4GXCHaMwhD1xftg_Pu8-M_N9ThuljqMG4g9kpXZNwt6gHrKxLfk4P56oCU9JXIHT-kOzISS1ivYufKE6LMidQ%3D%3D&q=MTRE+GIARDINAGGIO+Recensioni&sa=X&ved=2ahUKEwjuurz3mrmMAxXLzgIHHQaOMB0Q0bkNegQIQxAD&biw=1920&bih=919#" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors inline-block"
+            >
               {t('testimonials.cta.button')}
-            </button>
+            </a>
           </div>
         </div>
       </section>

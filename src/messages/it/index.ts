@@ -296,33 +296,27 @@ const messages = {
     description: 'Leggi le testimonianze dei nostri clienti soddisfatti.',
     clients: {
       client1: {
-        name: 'Marco Bianchi',
-        role: 'Proprietario di Villa',
+        name: 'Giusy Novara',
         text: 'Ho affidato a M.T.R.E. la progettazione e realizzazione del giardino della mia nuova villa. Il risultato è stato eccezionale, superando di gran lunga le mie aspettative.'
       },
       client2: {
-        name: 'Laura Rossi',
-        role: 'Amministratore Condominiale',
+        name: 'Stefano Vananti',
         text: 'Come amministratore di condominio, ho scelto M.T.R.E. per la manutenzione delle aree verdi del nostro complesso residenziale. Il servizio è sempre puntuale e di alta qualità.'
       },
       client3: {
-        name: 'Giovanni Verdi',
-        role: 'Ristoratore',
+        name: 'Roberto Raso',
         text: 'Il mio ristorante ha un bellissimo dehor con piante e fiori curati da M.T.R.E. I clienti apprezzano molto l\'atmosfera creata e spesso mi fanno i complimenti.'
       },
       client4: {
-        name: 'Francesca Neri',
-        role: 'Proprietaria di Casa',
+        name: 'Antonio Nuzzo',
         text: 'Ho un piccolo giardino che sembrava impossibile da valorizzare. Il team di M.T.R.E. ha creato un progetto su misura che ha trasformato completamente lo spazio. Ora è il mio angolo di paradiso!'
       },
       client5: {
-        name: 'Roberto Marini',
-        role: 'Direttore Hotel',
+        name: 'Giulia Parodi',
         text: 'La nostra catena di hotel si affida a M.T.R.E. per la manutenzione di tutti i giardini delle nostre strutture. La qualità del servizio è sempre impeccabile e contribuisce significativamente all\'immagine di lusso dei nostri hotel.'
       },
       client6: {
-        name: 'Elena Martini',
-        role: 'Architetto',
+        name: 'Fabio Mancini',
         text: 'Collaboro spesso con M.T.R.E. per i progetti di architettura del paesaggio. La loro competenza tecnica e la capacità di interpretare le esigenze del cliente sono davvero notevoli. Un partner affidabile e professionale.'
       },
       readMore: 'Leggi tutte le testimonianze'

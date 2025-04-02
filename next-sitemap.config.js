@@ -20,4 +20,15 @@ module.exports = {
       hreflang: 'it',
     },
   ],
+  transform: (config, url) => {
+    // Sostituisce eventuali URL con mtre-giardinaggio.it con mtre.ch
+    const newUrl = url.replace('https://mtre-giardinaggio.it', 'https://mtre.ch');
+    return {
+      loc: newUrl,
+      changefreq: config.changefreq,
+      priority: config.priority,
+      lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+      alternateRefs: config.alternateRefs ?? [],
+    };
+  },
 } 

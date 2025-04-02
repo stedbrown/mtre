@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://mtre.ch
+
+# Sitemaps
+Sitemap: https://mtre.ch/sitemap.xml

@@ -12,6 +12,7 @@ import Breadcrumbs from '@/components/navigation/Breadcrumbs';
 export default function GalleryPage() {
   const t = useTranslations();
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>('all');
   
   // Token di accesso Instagram dalle variabili d'ambiente
   const instagramAccessToken = process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN || '';
@@ -84,6 +85,20 @@ export default function GalleryPage() {
     }
   ];
   
+  // Categorie per filtrare
+  const categories = [
+    { id: 'all', label: t('gallery.filters.all') },
+    { id: 'residential', label: t('gallery.filters.residential') },
+    { id: 'terraces', label: t('gallery.filters.terraces') },
+    { id: 'irrigation', label: t('gallery.filters.irrigation') },
+    { id: 'maintenance', label: t('gallery.filters.maintenance') }
+  ];
+  
+  // Filtra le immagini per categoria
+  const filteredImages = activeCategory === 'all' 
+    ? fallbackImages 
+    : fallbackImages.filter(img => img.category === activeCategory);
+  
   // Funzione per aprire il modale con l'immagine selezionata
   const openModal = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -111,16 +126,35 @@ export default function GalleryPage() {
           <h1 className="text-4xl font-bold text-center text-green-800 mb-8 mt-4">
             {t('gallery.title')}
           </h1>
-          <p className="text-lg text-center max-w-3xl mx-auto mb-12 text-gray-800 font-medium">
+          <p className="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-800 font-medium">
             {t('gallery.description')}
           </p>
           
+          {/* Filtri di categoria (mostrati solo se utilizziamo le immagini di fallback) */}
+          {!instagramAccessToken && (
+            <div className="mb-8 flex flex-wrap justify-center gap-2">
+              {categories.map(category => (
+                <button
+                  key={category.id}
+                  onClick={() => setActiveCategory(category.id)}
+                  className={`px-4 py-2 rounded-full transition-colors ${
+                    activeCategory === category.id
+                      ? 'bg-green-600 text-white' 
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                  }`}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+          )}
+          
           {/* Griglia di immagini - Usa InstagramGallery se il token è disponibile, altrimenti usa le immagini di fallback */}
           {instagramAccessToken ? (
-            <InstagramGallery accessToken={instagramAccessToken} limit={12} />
+            <InstagramGallery accessToken={instagramAccessToken} limit={36} />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {fallbackImages.map((image) => (
+              {filteredImages.map((image) => (
                 <div 
                   key={image.id} 
                   className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer group"
@@ -152,7 +186,7 @@ export default function GalleryPage() {
             
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a 
-                href="https://www.instagram.com/" 
+                href="https://www.instagram.com/mtregiardiniere/?igsh=ZXNqdXk4eW14dHJs#" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors inline-flex items-center justify-center"
@@ -191,18 +225,18 @@ export default function GalleryPage() {
         </div>
       </section>
       
-      {/* Modal per visualizzare l'immagine selezionata */}
+      {/* Modal per visualizzare l'immagine selezionata - Migliorato */}
       {selectedImage && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" 
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-2 sm:p-4" 
           onClick={closeModal}
         >
           <div 
-            className="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-lg overflow-hidden" 
+            className="relative max-w-5xl w-full max-h-[95vh] bg-white rounded-lg overflow-hidden shadow-2xl" 
             onClick={(e) => e.stopPropagation()}
           >
             <button 
-              className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md"
+              className="absolute top-2 right-2 z-10 bg-white rounded-full p-2 shadow-md"
               onClick={closeModal}
             >
               <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -210,17 +244,18 @@ export default function GalleryPage() {
               </svg>
             </button>
             
-            <div className="flex flex-col md:flex-row">
-              <div className="relative w-full md:w-2/3 h-[50vh] md:h-[70vh]">
+            <div className="flex flex-col lg:flex-row h-full">
+              <div className="relative w-full lg:w-2/3 h-[40vh] sm:h-[50vh] lg:h-[70vh] bg-black">
                 <Image
                   src={selectedImage.src}
                   alt={selectedImage.alt}
                   fill
                   className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 66vw"
                 />
               </div>
               
-              <div className="p-6 w-full md:w-1/3 overflow-y-auto max-h-[70vh]">
+              <div className="p-4 lg:p-6 w-full lg:w-1/3 overflow-y-auto max-h-[30vh] lg:max-h-[70vh]">
                 <h3 className="text-2xl font-bold text-green-800 mb-4">{selectedImage.title}</h3>
                 <p className="text-gray-700 mb-6">{selectedImage.description}</p>
                 

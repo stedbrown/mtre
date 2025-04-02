@@ -238,7 +238,7 @@ export default function Home() {
             {/* Testimonianza 1 */}
             <div className="bg-gray-50 p-6 rounded-lg shadow-md">
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-green-800">{t('testimonials.clients.client1.name')}</h3>
+                <h3 className="text-lg font-semibold text-green-800">Giusy Novara</h3>
               </div>
               <p className="text-gray-700 italic">&quot;{t('testimonials.clients.client1.text')}&quot;</p>
             </div>
@@ -246,7 +246,7 @@ export default function Home() {
             {/* Testimonianza 2 */}
             <div className="bg-gray-50 p-6 rounded-lg shadow-md">
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-green-800">{t('testimonials.clients.client2.name')}</h3>
+                <h3 className="text-lg font-semibold text-green-800">Stefano Vananti</h3>
               </div>
               <p className="text-gray-700 italic">&quot;{t('testimonials.clients.client2.text')}&quot;</p>
             </div>
@@ -254,7 +254,7 @@ export default function Home() {
             {/* Testimonianza 3 */}
             <div className="bg-gray-50 p-6 rounded-lg shadow-md">
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-green-800">{t('testimonials.clients.client3.name')}</h3>
+                <h3 className="text-lg font-semibold text-green-800">Roberto Raso</h3>
               </div>
               <p className="text-gray-700 italic">&quot;{t('testimonials.clients.client3.text')}&quot;</p>
             </div>

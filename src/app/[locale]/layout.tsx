@@ -117,8 +117,13 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-icon.png" type="image/png" sizes="180x180" />
+        {/* Favicon tags pointing to files in public/images/ */}
+        <link rel="icon" href="/images/favicon.ico" sizes="any" />
+        <link rel="icon" href="/images/favicon-16x16.png" type="image/png" sizes="16x16" />
+        <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" type="image/png" sizes="180x180" />
+        <link rel="android-chrome" href="/images/android-chrome-192x192.png" sizes="192x192" />
+        <link rel="android-chrome" href="/images/android-chrome-512x512.png" sizes="512x512" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <GoogleAnalytics />

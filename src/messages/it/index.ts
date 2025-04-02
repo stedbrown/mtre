@@ -6,6 +6,9 @@ const messages = {
     testimonials: 'Testimonianze',
     contact: 'Contatti'
   },
+  Breadcrumbs: {
+    home: 'Home'
+  },
   home: {
     hero: {
       title: 'M.T.R.E. Giardinaggio',

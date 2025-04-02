@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import MainLayout from '@/components/MainLayout';
 import ServiceCard from '@/components/ServiceCard';
 import HeroSection from '@/components/HeroSection';
+import Breadcrumbs from '@/components/navigation/Breadcrumbs';
 
 // Definizione del tipo per i servizi
 type Service = {
@@ -121,11 +122,12 @@ export default function ServicesPage() {
         description={t('services.description')}
         backgroundImage="/images/hero/services-new.jpg"
       />
-      
-      {/* Filtri per categoria */}
+
+      {/* Filtri per categoria & Breadcrumbs */}
       <section className="py-8 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-2">
+          <Breadcrumbs />
+          <div className="flex flex-wrap justify-center gap-2 mt-4">
             <button
               className={`px-4 py-2 rounded-full transition-colors ${
                 activeCategory === 'all'

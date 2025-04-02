@@ -6,6 +6,9 @@ const messages = {
     testimonials: 'Testimonials',
     contact: 'Contact'
   },
+  Breadcrumbs: {
+    home: 'Home'
+  },
   contact: {
     title: 'Contact Us',
     description: 'We are here to help. Contact us for any questions or requests.',

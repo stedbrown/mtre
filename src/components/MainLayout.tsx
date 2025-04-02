@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Script from 'next/script';
+import Breadcrumbs from './navigation/Breadcrumbs';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();

@@ -6,6 +6,9 @@ const messages = {
     testimonials: 'Referenzen',
     contact: 'Kontakt'
   },
+  Breadcrumbs: {
+    home: 'Startseite'
+  },
   home: {
     hero: {
       title: 'M.T.R.E. Gartenbau',

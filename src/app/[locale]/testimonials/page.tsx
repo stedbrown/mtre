@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import MainLayout from '@/components/MainLayout';
 import Image from 'next/image';
 import HeroSection from '@/components/HeroSection';
+import Breadcrumbs from '@/components/navigation/Breadcrumbs';
 
 export default function TestimonialsPage() {
   const t = useTranslations();
@@ -90,7 +91,8 @@ export default function TestimonialsPage() {
       
       <section className="py-16 bg-green-50">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-center text-green-800 mb-8">
+          <Breadcrumbs />
+          <h1 className="text-4xl font-bold text-center text-green-800 mb-8 mt-4">
             {t('testimonials.title')}
           </h1>
           <p className="text-lg text-center max-w-3xl mx-auto mb-12 text-gray-800 font-medium">

@@ -36,8 +36,25 @@ module.exports = {
     { href: 'https://mtre.ch', hreflang: 'x-default' }, // Default per i browser che non supportano le lingue specificate
   ],
   transform: (config, url) => {
-    // Sostituisce eventuali URL con mtre-giardinaggio.it con mtre.ch
-    const newUrl = url.replace('https://mtre-giardinaggio.it', 'https://mtre.ch');
+    // Forza il dominio mtre.ch se necessario
+    // Questa è una soluzione più robusta che sostituisce tutti i domini
+    
+    const correctDomain = 'https://mtre.ch';
+    const oldDomain = /https?:\/\/mtre-giardinaggio\.it/g;
+    
+    // Estrai il percorso dall'URL originale rimuovendo qualsiasi dominio
+    let path = url.replace(/^https?:\/\/[^\/]+/i, '');
+    
+    // Se il percorso non inizia con /, aggiungilo
+    if (!path.startsWith('/')) {
+      path = '/' + path;
+    }
+    
+    // Crea un nuovo URL con il dominio corretto
+    let newUrl = correctDomain + path;
+    
+    // Per sicurezza, assicuriamoci di sostituire qualsiasi riferimento rimanente al vecchio dominio
+    newUrl = newUrl.replace(oldDomain, correctDomain);
     
     // Elimina eventuali URL duplicati o query string
     const cleanUrl = newUrl.split('?')[0];
@@ -55,7 +72,7 @@ module.exports = {
     }
     
     // Homepage in tutte le lingue - massima priorità
-    if(cleanUrl === 'https://mtre.ch' || cleanUrl.match(/https:\/\/mtre\.ch\/[a-z]{2}$/)) {
+    if(cleanUrl === correctDomain || cleanUrl.match(new RegExp(`${correctDomain}/[a-z]{2}$`))) {
       priority = 1.0;
       changefreq = 'daily';
     } 
@@ -92,17 +109,25 @@ module.exports = {
       priority = Math.max(priority - (urlDepth - 2) * 0.1, 0.5);
     }
 
-    // Aggiungi codice lingua all'hreflang per localizzazione avanzata
-    const alternateRefs = config.alternateRefs ? [...config.alternateRefs] : [];
-    
+    // Verifica finale: assicurati che l'URL inizi con il dominio corretto
+    if (!cleanUrl.startsWith(correctDomain)) {
+      // Se per qualche motivo l'URL non inizia con il dominio corretto, lo correggiamo
+      console.warn(`URL non corretto rilevato: ${cleanUrl}, verrà corretto`);
+      return {
+        loc: correctDomain + (cleanUrl.startsWith('/') ? cleanUrl : '/' + cleanUrl),
+        changefreq: changefreq,
+        priority: priority,
+        lastmod: new Date().toISOString(),
+        alternateRefs: config.alternateRefs ? [...config.alternateRefs] : [],
+      };
+    }
+
     return {
       loc: cleanUrl,
       changefreq: changefreq,
       priority: priority,
       lastmod: new Date().toISOString(),
-      alternateRefs: alternateRefs,
-      // Aggiunta di metadati strutturati per migliorare l'interpretazione dei motori di ricerca
-      // I metadati saranno automaticamente elaborati dai crawler
+      alternateRefs: config.alternateRefs ? [...config.alternateRefs] : [],
     };
   },
 } 

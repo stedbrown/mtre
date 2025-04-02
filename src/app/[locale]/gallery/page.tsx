@@ -198,7 +198,7 @@ export default function GalleryPage() {
               </a>
               
               <a 
-                href="https://www.facebook.com/" 
+                href="https://www.facebook.com/share/18Gu23c6qq/?mibextid=wwXIfr" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors inline-flex items-center justify-center"

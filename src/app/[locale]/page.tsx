@@ -237,60 +237,24 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Testimonianza 1 */}
             <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-              <div className="flex items-center mb-4">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
-                  <Image
-                    src="https://randomuser.me/api/portraits/men/32.jpg"
-                    alt={t('testimonials.clients.client1.name')}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold">{t('testimonials.clients.client1.name')}</h3>
-                  <p className="text-gray-600 text-sm">{t('testimonials.clients.client1.role')}</p>
-                </div>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-green-800">{t('testimonials.clients.client1.name')}</h3>
               </div>
               <p className="text-gray-700 italic">&quot;{t('testimonials.clients.client1.text')}&quot;</p>
             </div>
             
             {/* Testimonianza 2 */}
             <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-              <div className="flex items-center mb-4">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
-                  <Image
-                    src="https://randomuser.me/api/portraits/women/44.jpg"
-                    alt={t('testimonials.clients.client2.name')}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold">{t('testimonials.clients.client2.name')}</h3>
-                  <p className="text-gray-600 text-sm">{t('testimonials.clients.client2.role')}</p>
-                </div>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-green-800">{t('testimonials.clients.client2.name')}</h3>
               </div>
               <p className="text-gray-700 italic">&quot;{t('testimonials.clients.client2.text')}&quot;</p>
             </div>
             
             {/* Testimonianza 3 */}
             <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-              <div className="flex items-center mb-4">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
-                  <Image
-                    src="https://randomuser.me/api/portraits/men/67.jpg"
-                    alt={t('testimonials.clients.client3.name')}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold">{t('testimonials.clients.client3.name')}</h3>
-                  <p className="text-gray-600 text-sm">{t('testimonials.clients.client3.role')}</p>
-                </div>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-green-800">{t('testimonials.clients.client3.name')}</h3>
               </div>
               <p className="text-gray-700 italic">&quot;{t('testimonials.clients.client3.text')}&quot;</p>
             </div>

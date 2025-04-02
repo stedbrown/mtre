@@ -244,8 +244,8 @@ export default function GalleryPage() {
               </svg>
             </button>
             
-            <div className="flex flex-col lg:flex-row h-full">
-              <div className="relative w-full lg:w-2/3 h-[40vh] sm:h-[50vh] lg:h-[70vh] bg-black">
+            <div className="flex flex-col h-full max-h-[95vh]">
+              <div className="relative w-full h-[35vh] sm:h-[45vh] lg:h-[50vh] bg-black">
                 <Image
                   src={selectedImage.src}
                   alt={selectedImage.alt}
@@ -255,9 +255,9 @@ export default function GalleryPage() {
                 />
               </div>
               
-              <div className="p-4 lg:p-6 w-full lg:w-1/3 overflow-y-auto max-h-[30vh] lg:max-h-[70vh]">
-                <h3 className="text-2xl font-bold text-green-800 mb-4">{selectedImage.title}</h3>
-                <p className="text-gray-700 mb-6">{selectedImage.description}</p>
+              <div className="p-4 w-full overflow-y-auto flex-grow" style={{ maxHeight: 'calc(60vh - 2rem)' }}>
+                <h3 className="text-xl font-bold text-green-800 mb-3">{selectedImage.title}</h3>
+                <p className="text-gray-700 mb-4">{selectedImage.description}</p>
                 
                 <Link 
                   href="/contact" 

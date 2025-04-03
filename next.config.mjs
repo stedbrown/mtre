@@ -84,21 +84,27 @@ const nextConfig = {
     webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB', 'INP'],
   },
   // Ottimizzazione per browser moderni
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.optimization.moduleIds = 'deterministic';
-    // Configurazione splitChunks semplificata per evitare errori
-    config.optimization.splitChunks = {
-      chunks: 'all',
-      maxInitialRequests: 25,
-      minSize: 20000,
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
+    
+    // Disabilita il code splitting sul server per evitare errori "self is not defined"
+    if (isServer) {
+      config.optimization.splitChunks = false;
+    } else {
+      // Configurazione splitChunks solo per il client
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        maxInitialRequests: 25,
+        minSize: 20000,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
         },
-      },
-    };
+      };
+    }
     
     return config;
   },

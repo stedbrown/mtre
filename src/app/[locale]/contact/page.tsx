@@ -29,8 +29,8 @@ export default function ContactPage() {
     setFormStatus('submitting');
 
     try {
-      // Sostituisco il placeholder con l'ID Formspree fornito dall'utente
-      const response = await fetch('https://formspree.io/f/xyylngnz', { // ID SOSTITUITO
+      // Sostituisco con il nuovo ID Formspree fornito dall'utente
+      const response = await fetch('https://formspree.io/f/mzzezzdj', { // ID AGGIORNATO
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

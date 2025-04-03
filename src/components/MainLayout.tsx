@@ -17,7 +17,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: 'M.T.R.E. Giardinaggio',
-    image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch'}/images/hero/home-new.avif`,
+    image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch'}/images/hero/home-new.jpg`,
     '@id': `${process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch'}/#LocalBusiness`,
     url: process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch',
     telephone: '+41 76 742 67 36',

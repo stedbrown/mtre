@@ -11,3 +11,4 @@ Host: https://mtre.ch
 
 # Sitemaps
 Sitemap: https://mtre.ch/sitemap.xml
+Sitemap: https://mtre.ch/sitemap-image.xml

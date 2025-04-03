@@ -41,9 +41,7 @@ export default function ServiceCard({
           alt={title}
           fill
           className="object-cover"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          quality={85}
-          loading="lazy"
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
           <h2 className="text-2xl font-bold text-white">{title}</h2>

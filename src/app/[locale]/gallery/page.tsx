@@ -21,7 +21,7 @@ export default function GalleryPage() {
   const fallbackImages: GalleryImage[] = [
     {
       id: 1,
-      src: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae',
+      src: '/images/services/garden-design.avif',
       alt: t('gallery.fallback.image1.alt'),
       category: 'residential',
       title: t('gallery.fallback.image1.title'),
@@ -29,7 +29,7 @@ export default function GalleryPage() {
     },
     {
       id: 2,
-      src: 'https://images.unsplash.com/photo-1558293842-c0fd3db86157',
+      src: '/images/services/maintenance.avif',
       alt: t('gallery.fallback.image2.alt'),
       category: 'terraces',
       title: t('gallery.fallback.image2.title'),
@@ -37,7 +37,7 @@ export default function GalleryPage() {
     },
     {
       id: 3,
-      src: 'https://images.unsplash.com/photo-1598902108854-10e335adac99',
+      src: '/images/services/irrigation.avif',
       alt: t('gallery.fallback.image3.alt'),
       category: 'irrigation',
       title: t('gallery.fallback.image3.title'),
@@ -45,7 +45,7 @@ export default function GalleryPage() {
     },
     {
       id: 4,
-      src: 'https://images.unsplash.com/photo-1611843467160-25afb8df1074',
+      src: '/images/services/tree-care.avif',
       alt: t('gallery.fallback.image4.alt'),
       category: 'maintenance',
       title: t('gallery.fallback.image4.title'),
@@ -53,7 +53,7 @@ export default function GalleryPage() {
     },
     {
       id: 5,
-      src: 'https://images.unsplash.com/photo-1626863905121-3b0c0ed7b94c',
+      src: '/images/services/green-areas.avif',
       alt: t('gallery.fallback.image5.alt'),
       category: 'residential',
       title: t('gallery.fallback.image5.title'),
@@ -61,7 +61,7 @@ export default function GalleryPage() {
     },
     {
       id: 6,
-      src: 'https://images.unsplash.com/photo-1600240644455-3edc55c375fe',
+      src: '/images/services/lighting.avif',
       alt: t('gallery.fallback.image6.alt'),
       category: 'residential',
       title: t('gallery.fallback.image6.title'),
@@ -69,7 +69,7 @@ export default function GalleryPage() {
     },
     {
       id: 7,
-      src: 'https://images.unsplash.com/photo-1598902108854-10e335adac99',
+      src: '/images/services/irrigation.avif',
       alt: t('gallery.fallback.image7.alt'),
       category: 'irrigation',
       title: t('gallery.fallback.image7.title'),
@@ -77,7 +77,7 @@ export default function GalleryPage() {
     },
     {
       id: 8,
-      src: 'https://images.unsplash.com/photo-1599685315640-4a9ced4b4c7f',
+      src: '/images/services/garden-design.avif',
       alt: t('gallery.fallback.image8.alt'),
       category: 'residential',
       title: t('gallery.fallback.image8.title'),
@@ -162,11 +162,12 @@ export default function GalleryPage() {
                 >
                   <div className="relative h-64 w-full">
                     <Image
-                      src={`${image.src}?w=600&h=400&fit=crop&auto=format`}
+                      src={image.src}
                       alt={image.alt}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      quality={85}
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity flex items-end">
                       <div className="p-4 w-full text-white opacity-0 group-hover:opacity-100 transition-opacity">

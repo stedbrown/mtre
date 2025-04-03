@@ -15,13 +15,13 @@ export default function HeroSection({
   description,
   height = "h-[50vh]",
   children,
-  backgroundImage = "/images/hero/home-new.avif"
+  backgroundImage = "/images/hero/home-new.jpg"
 }: HeroSectionProps) {
   return (
     <div 
       className={`relative ${height} min-h-[400px] flex items-center overflow-hidden`}
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${backgroundImage}')`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('${backgroundImage}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundColor: '#166534', // Fallback color while image loads

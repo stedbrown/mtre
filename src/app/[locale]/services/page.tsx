@@ -27,7 +27,7 @@ export default function ServicesPage() {
       id: 'garden-design',
       titleKey: 'services.items.gardenDesign.title',
       descriptionKey: 'services.items.gardenDesign.description',
-      image: '/images/services/garden-design.jpg',
+      image: '/images/services/garden-design.avif',
       featuresKeys: {
         consultation: 'services.items.gardenDesign.features.consultation',
         design3d: 'services.items.gardenDesign.features.design3d',
@@ -41,7 +41,7 @@ export default function ServicesPage() {
       id: 'maintenance',
       titleKey: 'services.items.maintenance.title',
       descriptionKey: 'services.items.maintenance.description',
-      image: '/images/services/maintenance.jpg',
+      image: '/images/services/maintenance.avif',
       featuresKeys: {
         lawnCare: 'services.items.maintenance.features.lawnCare',
         diseaseControl: 'services.items.maintenance.features.diseaseControl',
@@ -55,7 +55,7 @@ export default function ServicesPage() {
       id: 'irrigation',
       titleKey: 'services.items.irrigation.title',
       descriptionKey: 'services.items.irrigation.description',
-      image: '/images/services/irrigation.jpg',
+      image: '/images/services/irrigation.avif',
       featuresKeys: {
         design: 'services.items.irrigation.features.design',
         installation: 'services.items.irrigation.features.installation',
@@ -69,7 +69,7 @@ export default function ServicesPage() {
       id: 'green-areas',
       titleKey: 'services.items.greenAreas.title',
       descriptionKey: 'services.items.greenAreas.description',
-      image: '/images/services/green-areas.jpg',
+      image: '/images/services/green-areas.avif',
       featuresKeys: {
         groundPreparation: 'services.items.greenAreas.features.groundPreparation',
         planting: 'services.items.greenAreas.features.planting',
@@ -97,7 +97,7 @@ export default function ServicesPage() {
       id: 'lighting',
       titleKey: 'services.items.lighting.title',
       descriptionKey: 'services.items.lighting.description',
-      image: '/images/services/lighting.jpg',
+      image: '/images/services/lighting.avif',
       featuresKeys: {
         design: 'services.items.lighting.features.design',
         ledInstallation: 'services.items.lighting.features.ledInstallation',

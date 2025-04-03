@@ -43,9 +43,11 @@ module.exports = {
     // Aggiungi sitemap specifica per le immagini
     const imageUrls = [
       // Immagini di servizi
-      { url: '/images/services/garden-design.jpg', title: 'Progettazione Giardini', caption: 'Servizi di progettazione giardini professionali in Ticino' },
-      { url: '/images/services/maintenance.jpg', title: 'Manutenzione Giardini', caption: 'Servizi di manutenzione giardini in Ticino' },
-      { url: '/images/services/irrigation.jpg', title: 'Impianti di Irrigazione', caption: 'Installazione e manutenzione impianti di irrigazione in Ticino' },
+      { url: '/images/services/garden-design.avif', title: 'Progettazione Giardini', caption: 'Servizi di progettazione giardini professionali in Ticino' },
+      { url: '/images/services/maintenance.avif', title: 'Manutenzione Giardini', caption: 'Servizi di manutenzione giardini in Ticino' },
+      { url: '/images/services/irrigation.avif', title: 'Impianti di Irrigazione', caption: 'Installazione e manutenzione impianti di irrigazione in Ticino' },
+      { url: '/images/services/green-areas.avif', title: 'Spazi Verdi', caption: 'Gestione e manutenzione di spazi verdi in Ticino' },
+      { url: '/images/services/lighting.avif', title: 'Illuminazione Giardini', caption: 'Installazione e progettazione illuminazione per giardini in Ticino' },
       { url: '/images/mtregiardinaggio.JPG', title: 'M.T.R.E. Giardinaggio', caption: 'Team di professionisti del giardinaggio in Ticino' },
       { url: '/images/hero/home-new.jpg', title: 'M.T.R.E. Giardinaggio', caption: 'Servizi di giardinaggio professionali in Ticino' },
     ];

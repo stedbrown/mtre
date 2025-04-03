@@ -1,6 +1,7 @@
 "use client";
 
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface HeroSectionProps {
   title: string;
@@ -15,18 +16,46 @@ export default function HeroSection({
   description,
   height = "h-[50vh]",
   children,
-  backgroundImage = "/images/hero/home-new.jpg"
+  backgroundImage = "/images/hero/home-new.avif"
 }: HeroSectionProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    // Precarica l'immagine
+    const img = new window.Image();
+    img.src = backgroundImage;
+    img.onload = () => setImageLoaded(true);
+  }, [backgroundImage]);
+
   return (
-    <div 
-      className={`relative ${height} min-h-[400px] flex items-center overflow-hidden`}
-      style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('${backgroundImage}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#166534', // Fallback color while image loads
-      }}
-    >
+    <div className={`relative ${height} min-h-[400px] flex items-center overflow-hidden`}>
+      {/* Overlay con tinta scura */}
+      <div
+        className={`absolute inset-0 bg-gray-900 transition-opacity duration-700 ${
+          imageLoaded ? 'opacity-70' : 'opacity-100'
+        }`}
+      />
+      
+      {/* Immagine di sfondo */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-1000 ${
+          imageLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <Image
+          src={backgroundImage}
+          alt="Background Image"
+          fill
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          quality={90}
+          className="object-cover"
+          onLoad={() => setImageLoaded(true)}
+        />
+      </div>
+      
+      {/* Contenuto */}
       <div className="container mx-auto px-4 relative z-10 text-white">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">

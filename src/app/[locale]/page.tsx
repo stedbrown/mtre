@@ -14,7 +14,7 @@ export default function Home() {
     "@context": "https://schema.org",
     "@type": "LandscapingBusiness",
     "name": "M.T.R.E. Giardiniere Ticino",
-    "image": "https://mtre.ch/images/hero/home-new.jpg",
+    "image": "https://mtre.ch/images/hero/home-new.avif",
     "url": "https://mtre.ch",
     "telephone": "+41767426736",
     "email": "info@mtre.ch",
@@ -175,7 +175,7 @@ export default function Home() {
         title={t('home.hero.title')}
         description={t('home.hero.subtitle')}
         height="h-[85vh]"
-        backgroundImage="/images/hero/home-new.jpg"
+        backgroundImage="/images/hero/home-new.avif"
       >
         <div className="flex flex-col sm:flex-row gap-5">
           <Link 
@@ -247,12 +247,14 @@ export default function Home() {
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
               <Image
-                src="/images/mtregiardinaggio.JPG"
+                src="/images/mtregiardinaggio.avif"
                 alt="M.T.R.E. Giardiniere Ticino - Team al lavoro"
                 fill
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 priority
+                fetchPriority="high"
+                quality={90}
               />
             </div>
           </div>
@@ -274,12 +276,14 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
               <div className="relative h-48">
                 <Image
-                  src="/images/services/garden-design.jpg"
+                  src="/images/services/garden-design.avif"
                   alt={t('home.services.design.title')}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   priority
+                  fetchPriority="high"
+                  quality={85}
                 />
               </div>
               <div className="p-6">
@@ -301,12 +305,13 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
               <div className="relative h-48">
                 <Image
-                  src="/images/services/maintenance.jpg"
+                  src="/images/services/maintenance.avif"
                   alt={t('home.services.maintenance.title')}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   loading="lazy"
+                  quality={85}
                 />
               </div>
               <div className="p-6">
@@ -328,12 +333,13 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
               <div className="relative h-48">
                 <Image
-                  src="/images/services/irrigation.jpg"
+                  src="/images/services/irrigation.avif"
                   alt={t('home.services.irrigation.title')}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   loading="lazy"
+                  quality={85}
                 />
               </div>
               <div className="p-6">

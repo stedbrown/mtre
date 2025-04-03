@@ -120,7 +120,7 @@ export default function ServicesPage() {
       <HeroSection
         title={t('services.title')}
         description={t('services.description')}
-        backgroundImage="/images/hero/services-new.jpg"
+        backgroundImage="/images/hero/services-new.avif"
       />
 
       {/* Filtri per categoria & Breadcrumbs */}

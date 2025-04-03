@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
       images: [
         {
-          url: `${baseUrl}/images/hero/home-new.jpg`,
+          url: `${baseUrl}/images/hero/home-new.avif`,
           width: 1200,
           height: 630,
           alt: 'M.T.R.E. Giardiniere Ticino - Servizi di giardinaggio professionali',
@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       card: 'summary_large_image',
       title: titles[locale as keyof typeof titles] || titles.it,
       description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
-      images: [`${baseUrl}/images/hero/home-new.jpg`],
+      images: [`${baseUrl}/images/hero/home-new.avif`],
     },
     robots: {
       index: true,

@@ -117,7 +117,7 @@ export default function GalleryPage() {
       <HeroSection
         title={t('gallery.title')}
         description={t('gallery.description')}
-        backgroundImage="/images/hero/gallery-new.jpg"
+        backgroundImage="/images/hero/gallery-new.avif"
       />
       
       <section className="py-16 bg-green-50">

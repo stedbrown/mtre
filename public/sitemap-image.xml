@@ -91,13 +91,13 @@
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://mtre.ch/images/hero/home-new.jpg</image:loc>
+      <image:loc>https://mtre.ch/images/hero/home-new.avif</image:loc>
       <image:title>M.T.R.E. Giardinaggio</image:title>
       <image:caption>Servizi di giardinaggio professionali in Ticino</image:caption>
       <image:geo_location>Ticino, Svizzera</image:geo_location>
     </image:image>
     <image:image>
-      <image:loc>https://mtre.ch/images/mtregiardinaggio.JPG</image:loc>
+      <image:loc>https://mtre.ch/images/mtregiardinaggio.avif</image:loc>
       <image:title>M.T.R.E. Giardinaggio</image:title>
       <image:caption>Team di professionisti del giardinaggio in Ticino</image:caption>
       <image:geo_location>Ticino, Svizzera</image:geo_location>

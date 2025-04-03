@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: { locale: string } 
     openGraph: {
       images: [
         {
-          url: `${baseUrl}/images/hero/gallery-new.jpg`,
+          url: `${baseUrl}/images/hero/gallery-new.avif`,
           width: 1200,
           height: 630,
           alt: t('title'),

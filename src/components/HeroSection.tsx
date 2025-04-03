@@ -15,7 +15,7 @@ export default function HeroSection({
   description,
   height = "h-[50vh]",
   children,
-  backgroundImage = "/images/hero/home-new.jpg"
+  backgroundImage = "/images/hero/home-new.avif"
 }: HeroSectionProps) {
   return (
     <div 
@@ -24,6 +24,7 @@ export default function HeroSection({
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${backgroundImage}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        backgroundColor: '#166534', // Fallback color while image loads
       }}
     >
       <div className="container mx-auto px-4 relative z-10 text-white">

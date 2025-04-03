@@ -86,20 +86,16 @@ const nextConfig = {
   // Ottimizzazione per browser moderni
   webpack: (config) => {
     config.optimization.moduleIds = 'deterministic';
-    // Aggiungi ottimizzazioni per la velocità di bundling
+    // Configurazione splitChunks semplificata per evitare errori
     config.optimization.splitChunks = {
       chunks: 'all',
-      maxInitialRequests: Infinity,
+      maxInitialRequests: 25,
       minSize: 20000,
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            // Ottieni il nome del pacchetto npm
-            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-            // Rimuovi @ simboli e converti punti e trattini in underscore
-            return `npm.${packageName.replace('@', '').replace(/\./g, '_').replace(/-/g, '_')}`;
-          },
+          name: 'vendors',
+          chunks: 'all',
         },
       },
     };

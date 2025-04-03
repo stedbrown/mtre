@@ -203,40 +203,25 @@ export default function Home() {
   return (
     <MainLayout>
       {/* Schema.org markup */}
-      <Script id="schema-local-business" type="application/ld+json">
-        {JSON.stringify(localBusinessSchema)}
-      </Script>
-      <Script id="schema-service" type="application/ld+json">
-        {JSON.stringify(serviceSchema)}
-      </Script>
-      <Script id="schema-faq" type="application/ld+json">
-        {JSON.stringify(faqSchema)}
-      </Script>
+      <Script id="schema-local-business" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+      <Script id="schema-service" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <Script id="schema-faq" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      
+      {/* Precarica l'immagine hero */}
+      <link rel="preload" as="image" href="/images/hero/home-new.avif" />
       
       {/* Hero Section */}
       <HeroSection
         title={t('home.hero.title')}
         description={t('home.hero.subtitle')}
-        height="h-[85vh]"
-        backgroundImage="/images/hero/home-new.avif"
+        height="h-[60vh]"
       >
-        <div className="flex flex-col sm:flex-row gap-5">
-          <Link 
-            href="/contact" 
-            className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-8 rounded-md transition-all duration-300 text-center border border-transparent hover:shadow-lg flex items-center justify-center group"
-          >
-            {t('home.hero.cta')}
-            <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-            </svg>
-          </Link>
-          <Link 
-            href="/services" 
-            className="bg-transparent hover:bg-white/10 text-white font-medium py-3 px-8 rounded-md transition-all duration-300 text-center border border-white hover:border-green-400"
-          >
-            {t('navigation.services')}
-          </Link>
-        </div>
+        <Link
+          href="/contact"
+          className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-block"
+        >
+          {t('home.hero.cta')}
+        </Link>
       </HeroSection>
 
       {/* About Section con immagine */}

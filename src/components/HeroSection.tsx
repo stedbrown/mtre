@@ -18,8 +18,31 @@ export default function HeroSection({
   children,
   backgroundImage = "/images/hero/home-new.avif"
 }: HeroSectionProps) {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    // Precarica l'immagine
+    const img = new window.Image();
+    img.src = backgroundImage;
+    img.onload = () => setLoaded(true);
+    
+    // Fallback se l'immagine è già nella cache
+    const timer = setTimeout(() => {
+      if (!loaded) setLoaded(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [backgroundImage, loaded]);
+  
   return (
-    <div className={`relative ${height} min-h-[400px] flex items-center overflow-hidden bg-gray-900`}>
+    <div 
+      className={`relative ${height} min-h-[400px] flex items-center overflow-hidden bg-green-900`}
+      style={{ 
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
       {/* Immagine di sfondo */}
       <div className="absolute inset-0">
         <Image
@@ -30,9 +53,11 @@ export default function HeroSection({
           fetchPriority="high"
           sizes="100vw"
           quality={90}
-          className="object-cover"
+          className={`object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          style={{ objectFit: 'cover' }}
           placeholder="blur"
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88P/hfwAJtAPJY1BhTQAAAABJRU5ErkJggg=="
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAbEAADAAMBAQAAAAAAAAAAAAAAAQIDBAURIf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8Ar6pXUACAf//Z"
+          onLoadingComplete={() => setLoaded(true)}
         />
         {/* Overlay con tinta scura per migliorare la leggibilità */}
         <div className="absolute inset-0 bg-black opacity-50"></div>

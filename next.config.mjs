@@ -82,13 +82,6 @@ const nextConfig = {
       bodySizeLimit: '2mb',
     },
     webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB', 'INP'],
-    // Ottimizzazioni server-side
-    serverMinification: true,
-    turbotrace: {
-      logLevel: 'error',
-    },
-    // Migliora il tempo di risposta con pre-rendering
-    ppr: true,
   },
   // Ottimizzazione per browser moderni
   webpack: (config) => {
@@ -117,30 +110,9 @@ const nextConfig = {
   compress: true,
   // Ottimizzazioni per le immagini
   reactStrictMode: true,
-  swcMinify: true,
   productionBrowserSourceMaps: false,
   poweredByHeader: false,
-  // Cache delle pagine in produzione
-  cache: {
-    pages: [
-      { 
-        path: '/',
-        mode: 'force-cache',
-        ttl: 3600 // 1 ora in secondi
-      },
-      { 
-        path: '/services',
-        mode: 'force-cache',
-        ttl: 3600
-      },
-      {
-        path: '/gallery',
-        mode: 'force-cache',
-        ttl: 3600
-      }
-    ],
-    assets: true,
-  },
+  
   // Redirect veloci
   async redirects() {
     return [

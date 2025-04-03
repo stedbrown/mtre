@@ -41,10 +41,10 @@ export default function RootLayout({
     <html lang="it">
       <head>
         {/* Precarica l'immagine hero - con attributi ottimizzati */}
-        <link rel="preload" as="image" href="/images/hero/home-new.avif" fetchpriority="high" />
-        <link rel="preload" as="image" href="/images/hero/services-new.avif" fetchpriority="low" />
-        <link rel="preload" as="image" href="/images/hero/gallery-new.avif" fetchpriority="low" />
-        <link rel="preload" as="image" href="/images/hero/contact-new.avif" fetchpriority="low" />
+        <link rel="preload" as="image" href="/images/hero/home-new.avif" fetchPriority="high" />
+        <link rel="preload" as="image" href="/images/hero/services-new.avif" fetchPriority="low" />
+        <link rel="preload" as="image" href="/images/hero/gallery-new.avif" fetchPriority="low" />
+        <link rel="preload" as="image" href="/images/hero/contact-new.avif" fetchPriority="low" />
         
         {/* Precarica i font principali */}
         <link

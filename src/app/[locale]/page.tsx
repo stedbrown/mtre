@@ -202,10 +202,10 @@ export default function Home() {
   
   return (
     <MainLayout>
-      {/* Schema.org markup */}
-      <Script id="schema-local-business" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
-      <Script id="schema-service" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
-      <Script id="schema-faq" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {/* Schema.org markup - Caricamento ottimizzato */}
+      <Script id="schema-local-business" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+      <Script id="schema-service" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <Script id="schema-faq" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       
       {/* Precarica l'immagine hero */}
       <link rel="preload" as="image" href="/images/hero/home-new.avif" />
@@ -284,9 +284,11 @@ export default function Home() {
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                priority
+                loading="eager"
                 fetchPriority="high"
-                quality={90}
+                quality={75}
+                width={800}
+                height={600}
               />
             </div>
           </div>
@@ -313,9 +315,11 @@ export default function Home() {
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                  priority
+                  loading="eager"
                   fetchPriority="high"
-                  quality={85}
+                  quality={70}
+                  width={400}
+                  height={300}
                 />
               </div>
               <div className="p-6">
@@ -343,7 +347,9 @@ export default function Home() {
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   loading="lazy"
-                  quality={85}
+                  quality={70}
+                  width={400}
+                  height={300}
                 />
               </div>
               <div className="p-6">
@@ -371,7 +377,9 @@ export default function Home() {
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   loading="lazy"
-                  quality={85}
+                  quality={70}
+                  width={400}
+                  height={300}
                 />
               </div>
               <div className="p-6">

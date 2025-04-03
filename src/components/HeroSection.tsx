@@ -52,12 +52,14 @@ export default function HeroSection({
           priority
           fetchPriority="high"
           sizes="100vw"
-          quality={90}
+          quality={65}
           className={`object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           style={{ objectFit: 'cover' }}
           placeholder="blur"
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAbEAADAAMBAQAAAAAAAAAAAAAAAQIDBAURIf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8Ar6pXUACAf//Z"
           onLoadingComplete={() => setLoaded(true)}
+          width={1920}
+          height={1080}
         />
         {/* Overlay con tinta scura per migliorare la leggibilità */}
         <div className="absolute inset-0 bg-black opacity-50"></div>

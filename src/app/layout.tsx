@@ -55,11 +55,20 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         
-        {/* Meta tag per viewport */}
+        {/* Meta tag per viewport e performance */}
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=5.0"
         />
+        <meta httpEquiv="x-dns-prefetch-control" content="on" />
+        <link rel="dns-prefetch" href="https://mtre.ch" />
+        <link rel="preconnect" href="https://mtre.ch" />
+        
+        {/* Critical CSS inline */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          body {opacity: 1; transition: opacity 0.5s ease-in-out;}
+          .hero-placeholder {background-color: #166534; height: 60vh; min-height: 400px;}
+        `}} />
       </head>
       <body>
         {children}

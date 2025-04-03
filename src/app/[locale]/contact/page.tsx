@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import MainLayout from '@/components/MainLayout';
 import HeroSection from '@/components/HeroSection';
 import Breadcrumbs from '@/components/navigation/Breadcrumbs';
+import Script from 'next/script';
 
 export default function ContactPage() {
   const t = useTranslations();
@@ -61,6 +62,12 @@ export default function ContactPage() {
   
   return (
     <MainLayout>
+      {/* Google Maps script */}
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=Function.prototype`}
+        strategy="lazyOnload"
+      />
+      
       {/* Hero Section */}
       <HeroSection
         title={t('contact.title')}
@@ -149,9 +156,19 @@ export default function ContactPage() {
                 </div>
               </div>
               
-              {/* Mappa (in una versione più avanzata, questa potrebbe essere una mappa interattiva) */}
-              <div className="mt-8 h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">{t('contact.info.map')}</p>
+              {/* Mappa di Google Maps */}
+              <div className="mt-8 h-64 rounded-lg overflow-hidden">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2757.2116918755173!2d8.965923977173276!3d46.35951797123022!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47844984d8a6fb13%3A0x88dbdf7ce32164f9!2sVia%20Croce%202%2C%206710%20Biasca%2C%20Svizzera!5e0!3m2!1sit!2sit!4v1718057222888!5m2!1sit!2sit" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen={false} 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Sede M.T.R.E. Giardinaggio a Biasca, Ticino"
+                  aria-label="Mappa della sede di M.T.R.E. Giardinaggio a Biasca, Ticino"
+                ></iframe>
               </div>
             </div>
             

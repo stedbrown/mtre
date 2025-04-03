@@ -16,8 +16,17 @@ const messages = {
       cta: 'Demander un devis'
     },
     about: {
-      title: 'Qui Sommes-Nous',
-      description: 'M.T.R.E. est une entreprise spécialisée dans l\'entretien et la maintenance des jardins et espaces verts. Avec des années d\'expérience dans le secteur, nous offrons des services de haute qualité pour les particuliers et les entreprises.'
+      title: 'Jardinier professionnel au Tessin',
+      subtitle: 'Services de jardinage de qualité',
+      description: 'M.T.R.E. est une entreprise spécialisée dans l\'entretien et la maintenance des jardins et espaces verts. Avec des années d\'expérience dans le secteur, nous offrons des services de haute qualité pour les particuliers et les entreprises.',
+      mainDescription: '<strong>M.T.R.E. est le meilleur choix pour votre jardin au Tessin</strong>. Nous sommes une entreprise spécialisée dans <mark>l\'entretien et la maintenance des jardins</mark> et des espaces verts dans tout le canton du Tessin et en Suisse italienne. Avec plus de 15 ans d\'expérience dans le secteur du jardinage, nous offrons des services de haute qualité pour les particuliers et les entreprises, garantissant <em>des résultats excellents et durables, toujours au meilleur prix</em>.',
+      benefitsTitle: 'Pourquoi choisir nos services de jardinage:',
+      benefits: {
+        experience: '<strong>Expérience de longue date</strong> dans l\'entretien des jardins au Tessin',
+        quality: '<strong>Personnel qualifié et professionnel</strong> qui connaît tous les aspects du jardinage',
+        pricing: '<strong>Attention maximale aux détails</strong> pour des jardins impeccables et soignés en toute saison',
+        equipment: '<strong>Solutions durables et écologiques</strong> pour le bien-être de votre espace vert'
+      }
     },
     features: {
       experience: 'Longue expérience dans le secteur',

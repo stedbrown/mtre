@@ -245,37 +245,35 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl font-bold text-green-800 mb-6">
-                <span className="text-green-700">Giardiniere professionista a Ticino</span> - Servizi di giardinaggio di qualità
+                <span className="text-green-700">{t('home.about.title')}</span> - {t('home.about.subtitle')}
               </h1>
-              <p className="text-lg text-gray-700 mb-6">
-                <strong>M.T.R.E. è la scelta migliore per il tuo giardino in Ticino</strong>. Siamo un'azienda specializzata nella <mark>cura e manutenzione di giardini</mark> e spazi verdi in tutto il Canton Ticino e nella Svizzera italiana. Con oltre 15 anni di esperienza nel settore del giardinaggio, offriamo servizi di alta qualità per privati e aziende, garantendo <em>risultati eccellenti e duraturi, sempre al miglior prezzo</em>.
-              </p>
+              <p className="text-lg text-gray-700 mb-6" dangerouslySetInnerHTML={{ __html: t('home.about.mainDescription') }} />
               <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="text-lg font-bold text-green-800 mb-2">Perché scegliere i nostri servizi di giardinaggio:</h3>
+                <h3 className="text-lg font-bold text-green-800 mb-2">{t('home.about.benefitsTitle')}</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
                     <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span className="text-gray-700"><strong>Esperienza pluriennale</strong> nella manutenzione di giardini in Ticino</span>
+                    <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.experience') }} />
                   </li>
                   <li className="flex items-start">
                     <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span className="text-gray-700"><strong>Personale qualificato e professionale</strong> che conosce ogni aspetto del giardinaggio</span>
+                    <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.quality') }} />
                   </li>
                   <li className="flex items-start">
                     <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span className="text-gray-700"><strong>Massima attenzione ai dettagli</strong> per giardini impeccabili e curati in ogni stagione</span>
+                    <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.pricing') }} />
                   </li>
                   <li className="flex items-start">
                     <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span className="text-gray-700"><strong>Soluzioni sostenibili ed eco-friendly</strong> per il benessere del tuo spazio verde</span>
+                    <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.equipment') }} />
                   </li>
                 </ul>
               </div>

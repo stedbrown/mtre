@@ -16,8 +16,17 @@ const messages = {
       cta: 'Angebot anfordern'
     },
     about: {
-      title: 'Über Uns',
-      description: 'M.T.R.E. ist ein Unternehmen, das sich auf die Pflege und Wartung von Gärten und Grünflächen spezialisiert hat. Mit jahrelanger Erfahrung in der Branche bieten wir hochwertige Dienstleistungen für Privatpersonen und Unternehmen an.'
+      title: 'Professioneller Gärtner im Tessin',
+      subtitle: 'Qualitativ hochwertige Gartendienstleistungen',
+      description: 'M.T.R.E. ist ein Unternehmen, das sich auf die Pflege und Wartung von Gärten und Grünflächen spezialisiert hat. Mit jahrelanger Erfahrung in der Branche bieten wir hochwertige Dienstleistungen für Privatpersonen und Unternehmen an.',
+      mainDescription: '<strong>M.T.R.E. ist die beste Wahl für Ihren Garten im Tessin</strong>. Wir sind ein Unternehmen, das sich auf die <mark>Pflege und Wartung von Gärten</mark> und Grünflächen im gesamten Kanton Tessin und in der italienischen Schweiz spezialisiert hat. Mit über 15 Jahren Erfahrung im Gartenbau bieten wir hochwertige Dienstleistungen für Privatpersonen und Unternehmen an und garantieren <em>exzellente und dauerhafte Ergebnisse zum besten Preis</em>.',
+      benefitsTitle: 'Warum Sie unsere Gartendienstleistungen wählen sollten:',
+      benefits: {
+        experience: '<strong>Langjährige Erfahrung</strong> in der Gartenpflege im Tessin',
+        quality: '<strong>Qualifiziertes und professionelles Personal</strong>, das jeden Aspekt des Gartenbaus kennt',
+        pricing: '<strong>Maximale Aufmerksamkeit für Details</strong> für tadellose und gepflegte Gärten in jeder Jahreszeit',
+        equipment: '<strong>Nachhaltige und umweltfreundliche Lösungen</strong> für das Wohlbefinden Ihres Grünraums'
+      }
     },
     features: {
       experience: 'Langjährige Erfahrung in der Branche',

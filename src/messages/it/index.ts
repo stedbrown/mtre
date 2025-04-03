@@ -16,8 +16,17 @@ const messages = {
       cta: 'Richiedi un preventivo'
     },
     about: {
-      title: 'Chi Siamo',
-      description: 'M.T.R.E. è un\'azienda specializzata nella cura e manutenzione di giardini e spazi verdi. Con anni di esperienza nel settore, offriamo servizi di alta qualità per privati e aziende.'
+      title: 'Giardiniere professionista in Ticino',
+      subtitle: 'Servizi di giardinaggio di qualità',
+      description: 'M.T.R.E. è un\'azienda specializzata nella cura e manutenzione di giardini e spazi verdi. Con anni di esperienza nel settore, offriamo servizi di alta qualità per privati e aziende.',
+      mainDescription: '<strong>M.T.R.E. è la scelta migliore per il tuo giardino in Ticino</strong>. Siamo un\'azienda specializzata nella <mark>cura e manutenzione di giardini</mark> e spazi verdi in tutto il Canton Ticino e nella Svizzera italiana. Con oltre 15 anni di esperienza nel settore del giardinaggio, offriamo servizi di alta qualità per privati e aziende, garantendo <em>risultati eccellenti e duraturi, sempre al miglior prezzo</em>.',
+      benefitsTitle: 'Perché scegliere i nostri servizi di giardinaggio:',
+      benefits: {
+        experience: '<strong>Esperienza pluriennale</strong> nella manutenzione di giardini in Ticino',
+        quality: '<strong>Personale qualificato e professionale</strong> che conosce ogni aspetto del giardinaggio',
+        pricing: '<strong>Massima attenzione ai dettagli</strong> per giardini impeccabili e curati in ogni stagione',
+        equipment: '<strong>Soluzioni sostenibili ed eco-friendly</strong> per il benessere del tuo spazio verde'
+      }
     },
     features: {
       experience: 'Esperienza pluriennale nel settore',

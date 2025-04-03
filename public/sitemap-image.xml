@@ -36,6 +36,12 @@
       <image:caption>Installazione e progettazione illuminazione per giardini in Ticino</image:caption>
       <image:geo_location>Ticino, Svizzera</image:geo_location>
     </image:image>
+    <image:image>
+      <image:loc>https://mtre.ch/images/services/tree-care.avif</image:loc>
+      <image:title>Cura degli Alberi</image:title>
+      <image:caption>Servizi di potatura, trattamento e cura degli alberi in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
   </url>
   <url>
     <loc>https://mtre.ch/services</loc>
@@ -70,6 +76,12 @@
       <image:loc>https://mtre.ch/images/services/lighting.avif</image:loc>
       <image:title>Illuminazione Giardini</image:title>
       <image:caption>Installazione e progettazione illuminazione per giardini in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://mtre.ch/images/services/tree-care.avif</image:loc>
+      <image:title>Cura degli Alberi</image:title>
+      <image:caption>Servizi di potatura, trattamento e cura degli alberi in Ticino</image:caption>
       <image:geo_location>Ticino, Svizzera</image:geo_location>
     </image:image>
   </url>

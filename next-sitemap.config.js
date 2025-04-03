@@ -48,6 +48,7 @@ module.exports = {
       { url: '/images/services/irrigation.avif', title: 'Impianti di Irrigazione', caption: 'Installazione e manutenzione impianti di irrigazione in Ticino' },
       { url: '/images/services/green-areas.avif', title: 'Spazi Verdi', caption: 'Gestione e manutenzione di spazi verdi in Ticino' },
       { url: '/images/services/lighting.avif', title: 'Illuminazione Giardini', caption: 'Installazione e progettazione illuminazione per giardini in Ticino' },
+      { url: '/images/services/tree-care.avif', title: 'Cura degli Alberi', caption: 'Servizi di potatura, trattamento e cura degli alberi in Ticino' },
       { url: '/images/mtregiardinaggio.JPG', title: 'M.T.R.E. Giardinaggio', caption: 'Team di professionisti del giardinaggio in Ticino' },
       { url: '/images/hero/home-new.jpg', title: 'M.T.R.E. Giardinaggio', caption: 'Servizi di giardinaggio professionali in Ticino' },
     ];

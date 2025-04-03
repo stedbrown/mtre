@@ -83,7 +83,7 @@ export default function ServicesPage() {
       id: 'tree-care',
       titleKey: 'services.items.treeCare.title',
       descriptionKey: 'services.items.treeCare.description',
-      image: '/images/services/tree-care.jpg',
+      image: '/images/services/tree-care.avif',
       featuresKeys: {
         pruning: 'services.items.treeCare.features.pruning',
         treatment: 'services.items.treeCare.features.treatment',

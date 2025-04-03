@@ -12,11 +12,12 @@ export default function Home() {
   
   const localBusinessSchema = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "LandscapingBusiness",
     "name": "M.T.R.E. Giardiniere Ticino",
     "image": "https://mtre.ch/images/hero/home-new.jpg",
     "url": "https://mtre.ch",
     "telephone": "+41767426736",
+    "email": "info@mtre.ch",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Via Croce 2",
@@ -49,7 +50,26 @@ export default function Home() {
     "sameAs": [
       "https://www.instagram.com/mtre.ch/",
       "https://www.facebook.com/mtre.ch"
-    ]
+    ],
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Biasca"
+      },
+      {
+        "@type": "City",
+        "name": "Bellinzona"
+      },
+      {
+        "@type": "City",
+        "name": "Lugano"
+      },
+      {
+        "@type": "City",
+        "name": "Locarno"
+      }
+    ],
+    "keywords": "giardiniere, giardinaggio, Ticino, manutenzione giardini, potatura, progettazione giardini"
   };
   
   const serviceSchema = {
@@ -57,8 +77,9 @@ export default function Home() {
     "@type": "Service",
     "serviceType": "Servizi di Giardinaggio",
     "provider": {
-      "@type": "LocalBusiness",
-      "name": "M.T.R.E. Giardiniere Ticino"
+      "@type": "LandscapingBusiness",
+      "name": "M.T.R.E. Giardiniere Ticino",
+      "url": "https://mtre.ch"
     },
     "areaServed": {
       "@type": "State",
@@ -72,7 +93,68 @@ export default function Home() {
         "@type": "PriceSpecification",
         "priceCurrency": "CHF"
       }
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Servizi di Giardinaggio",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Progettazione Giardini",
+            "url": "https://mtre.ch/services/garden-design"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Manutenzione Giardini",
+            "url": "https://mtre.ch/services/garden-maintenance"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Potatura",
+            "url": "https://mtre.ch/services/pruning"
+          }
+        }
+      ]
     }
+  };
+  
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quali zone del Ticino coprite con i vostri servizi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Operiamo in tutto il Ticino, con particolare attenzione alle aree di Biasca, Bellinzona, Lugano e Locarno."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Offrite preventivi gratuiti?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sì, offriamo sopralluoghi e preventivi gratuiti e senza impegno per tutti i nostri servizi di giardinaggio."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Che tipo di servizi di giardinaggio offrite?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Offriamo una gamma completa di servizi che include progettazione di giardini, manutenzione ordinaria e straordinaria, potatura di alberi e siepi, impianti di irrigazione, e molto altro."
+        }
+      }
+    ]
   };
   
   return (
@@ -83,6 +165,9 @@ export default function Home() {
       </Script>
       <Script id="schema-service" type="application/ld+json">
         {JSON.stringify(serviceSchema)}
+      </Script>
+      <Script id="schema-faq" type="application/ld+json">
+        {JSON.stringify(faqSchema)}
       </Script>
       
       {/* Hero Section */}

@@ -6,14 +6,19 @@ import { locales } from "@/i18n/navigation";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
+// Ottimizzazione: configuriamo i font con display swap per migliorare CLS
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 // Funzione per generare i metadata in base alla lingua
@@ -118,8 +123,14 @@ export default async function LocaleLayout({
   });
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
+        {/* Preconnect e DNS prefetch per risorse esterne */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
         {/* Meta tag per colore tema browser */}
         <meta name="theme-color" content="#166534" /> 
         
@@ -132,7 +143,7 @@ export default async function LocaleLayout({
         <link rel="android-chrome" href="/images/android-chrome-512x512.png" sizes="512x512" />
         <link rel="shortcut icon" href="/images/favicon.ico" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className="antialiased">
         <GoogleAnalytics />
         <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Rome">
           {children}

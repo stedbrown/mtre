@@ -89,4 +89,81 @@ export function getContrastYIQ(hexColor: string): 'light' | 'dark' {
   const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
   
   return (yiq >= 128) ? 'dark' : 'light';
+}
+
+/**
+ * Genera URL di immagini ottimizzate per dimensioni diverse
+ * @param src - Il percorso dell'immagine
+ * @param width - La larghezza desiderata
+ * @param quality - La qualità dell'immagine (1-100)
+ * @returns URL ottimizzato per l'immagine
+ */
+export function getOptimizedImageUrl(src: string, width: number = 1200, quality: number = 80): string {
+  if (!src) return '';
+  if (src.startsWith('data:') || src.startsWith('blob:')) return src;
+  
+  // Se è già un URL di next/image, non modificarlo
+  if (src.includes('_next/image')) return src;
+  
+  // Se è un URL esterno (Instagram, ecc.)
+  if (src.startsWith('http')) {
+    // Qui si potrebbe implementare un proxy di immagini se necessario
+    return src;
+  }
+  
+  // Per immagini locali, aggiungi i parametri di ottimizzazione
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch';
+  const imagePath = src.startsWith('/') ? src : `/${src}`;
+  
+  // Formato per next/image
+  return `${baseUrl}/_next/image?url=${encodeURIComponent(imagePath)}&w=${width}&q=${quality}`;
+}
+
+/**
+ * Calcola dimensioni responsive per le immagini
+ * @param defaultWidth - La larghezza default dell'immagine
+ * @returns Stringa di sizes per l'attributo sizes di next/image
+ */
+export function getResponsiveImageSizes(defaultWidth: number = 1200): string {
+  return `(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 60vw, ${defaultWidth}px`;
+}
+
+/**
+ * Effettua il debounce di una funzione
+ * @param func - La funzione da eseguire con debounce
+ * @param wait - Il tempo di attesa in millisecond
+ * @returns Funzione con debounce
+ */
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+  
+  return function(...args: Parameters<T>): void {
+    const later = () => {
+      timeout = null;
+      func(...args);
+    };
+    
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+/**
+ * Verifica se il dispositivo è mobile
+ * @returns true se il dispositivo è mobile
+ */
+export function isMobileDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+/**
+ * Genera un ID univoco
+ * @returns Stringa ID
+ */
+export function generateUniqueId(): string {
+  return `id-${Math.random().toString(36).substring(2, 9)}-${Date.now().toString(36)}`;
 } 

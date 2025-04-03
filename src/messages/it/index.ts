@@ -48,7 +48,7 @@ const messages = {
       all: 'Tutti i nostri servizi'
     },
     faq: {
-      title: 'Domande Frequenti sul Giardinaggio a Ticino',
+      title: 'Domande Frequenti sul Giardinaggio in Ticino',
       description: 'Ecco le risposte alle domande più comuni sui nostri servizi di giardinaggio professionale in Ticino',
       contact: 'Hai altre domande? Contattaci',
       questions: {
@@ -61,11 +61,11 @@ const messages = {
           answer: 'Sì, offriamo <strong>sopralluoghi e preventivi completamente gratuiti e senza impegno</strong> per tutti i nostri servizi. Il nostro team di esperti effettuerà un\'analisi dettagliata delle vostre esigenze e vi fornirà un preventivo chiaro e trasparente, calibrato sulle specifiche necessità del vostro spazio verde.'
         },
         q3: {
-          question: 'Che tipo di servizi di giardinaggio offrite a Ticino?',
+          question: 'Che tipo di servizi di giardinaggio offrite in Ticino?',
           answer: 'Offriamo una gamma completa di servizi professionali che include: <ul class="list-disc list-inside mt-2 space-y-1"><li><strong>Progettazione di giardini</strong> - Creazione di spazi verdi personalizzati</li><li><strong>Manutenzione ordinaria e straordinaria</strong> - Cura regolare del tuo giardino</li><li><strong>Potatura di alberi e siepi</strong> - Interventi professionali e sicuri</li><li><strong>Impianti di irrigazione</strong> - Sistemi automatizzati ed efficienti</li><li><strong>Realizzazione di aree verdi</strong> - Creazione di prati, aiuole e spazi naturali</li><li><strong>Illuminazione per giardini</strong> - Soluzioni decorative e funzionali</li></ul>Tutti i nostri servizi sono realizzati con materiali di alta qualità e tecniche professionali per garantire risultati duraturi.'
         },
         q4: {
-          question: 'Quanto costa un servizio di giardinaggio a Ticino?',
+          question: 'Quanto costa un servizio di giardinaggio in Ticino?',
           answer: 'I costi variano in base al tipo di servizio, alle dimensioni dell\'area e alla complessità del lavoro. Offriamo <strong>tariffe competitive</strong> e trasparenti, con possibilità di abbonamenti per manutenzione periodica che garantiscono un risparmio significativo. Contattateci per un preventivo personalizzato gratuito che si adatti perfettamente alle vostre esigenze e al vostro budget.'
         }
       }

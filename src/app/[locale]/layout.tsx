@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const descriptions = {
     it: 'Giardiniere professionista in Ticino con oltre 15 anni di esperienza. Manutenzione giardini, potatura, progettazione e lavori di giardinaggio 100% garantiti. ✓ Preventivi gratuiti ✓ Interventi rapidi ✓ Materiali di qualità.',
     en: 'Professional gardener in Ticino with over 15 years of experience. Garden maintenance, pruning, design and 100% guaranteed gardening work. ✓ Free quotes ✓ Quick interventions ✓ Quality materials.',
-    fr: 'Jardinier professionnel au Tessin avec plus de 15 ans d'expérience. Entretien de jardins, taille, conception et travaux de jardinage garantis à 100%. ✓ Devis gratuits ✓ Interventions rapides ✓ Matériaux de qualité.',
+    fr: 'Jardinier professionnel au Tessin avec plus de 15 ans d\'expérience. Entretien de jardins, taille, conception et travaux de jardinage garantis à 100%. ✓ Devis gratuits ✓ Interventions rapides ✓ Matériaux de qualité.',
     de: 'Professioneller Gärtner im Tessin mit über 15 Jahren Erfahrung. Gartenpflege, Beschneidung, Design und 100% garantierte Gartenarbeit. ✓ Kostenlose Angebote ✓ Schnelle Eingriffe ✓ Qualitätsmaterialien.'
   };
   

@@ -46,6 +46,34 @@ const messages = {
       },
       more: 'Scopri di più',
       all: 'Tutti i nostri servizi'
+    },
+    faq: {
+      title: 'Domande Frequenti sul Giardinaggio a Ticino',
+      description: 'Ecco le risposte alle domande più comuni sui nostri servizi di giardinaggio professionale in Ticino',
+      contact: 'Hai altre domande? Contattaci',
+      questions: {
+        q1: {
+          question: 'Quali zone del Ticino coprite con i vostri servizi?',
+          answer: 'Operiamo in tutto il Canton Ticino, con particolare attenzione alle aree di <strong>Biasca, Bellinzona, Lugano, Locarno, Mendrisio</strong> e tutte le località circostanti. Grazie alla nostra flotta di mezzi moderni, possiamo raggiungere qualsiasi luogo in Ticino per offrire i nostri servizi di giardinaggio di qualità.'
+        },
+        q2: {
+          question: 'Offrite preventivi gratuiti per i lavori di giardinaggio?',
+          answer: 'Sì, offriamo <strong>sopralluoghi e preventivi completamente gratuiti e senza impegno</strong> per tutti i nostri servizi. Il nostro team di esperti effettuerà un\'analisi dettagliata delle vostre esigenze e vi fornirà un preventivo chiaro e trasparente, calibrato sulle specifiche necessità del vostro spazio verde.'
+        },
+        q3: {
+          question: 'Che tipo di servizi di giardinaggio offrite a Ticino?',
+          answer: 'Offriamo una gamma completa di servizi professionali che include: <ul class="list-disc list-inside mt-2 space-y-1"><li><strong>Progettazione di giardini</strong> - Creazione di spazi verdi personalizzati</li><li><strong>Manutenzione ordinaria e straordinaria</strong> - Cura regolare del tuo giardino</li><li><strong>Potatura di alberi e siepi</strong> - Interventi professionali e sicuri</li><li><strong>Impianti di irrigazione</strong> - Sistemi automatizzati ed efficienti</li><li><strong>Realizzazione di aree verdi</strong> - Creazione di prati, aiuole e spazi naturali</li><li><strong>Illuminazione per giardini</strong> - Soluzioni decorative e funzionali</li></ul>Tutti i nostri servizi sono realizzati con materiali di alta qualità e tecniche professionali per garantire risultati duraturi.'
+        },
+        q4: {
+          question: 'Quanto costa un servizio di giardinaggio a Ticino?',
+          answer: 'I costi variano in base al tipo di servizio, alle dimensioni dell\'area e alla complessità del lavoro. Offriamo <strong>tariffe competitive</strong> e trasparenti, con possibilità di abbonamenti per manutenzione periodica che garantiscono un risparmio significativo. Contattateci per un preventivo personalizzato gratuito che si adatti perfettamente alle vostre esigenze e al vostro budget.'
+        }
+      }
+    },
+    seo: {
+      title: 'M.T.R.E. - Il Giardiniere Professionista per il tuo Spazio Verde in Ticino',
+      cta: 'Richiedi un Preventivo Gratuito',
+      content: '<p>Stai cercando un <strong>giardiniere esperto in Ticino</strong> che possa prendersi cura del tuo giardino con professionalità e passione? M.T.R.E. è la risposta alle tue esigenze. Da anni siamo il punto di riferimento per i servizi di <strong>giardinaggio professionale</strong> in tutto il Canton Ticino.</p><p>Il nostro approccio combina <strong>tecniche tradizionali</strong> con <strong>innovazioni moderne</strong> per garantire giardini e spazi verdi rigogliosi e salutari. Che si tratti di <strong>progettare un nuovo giardino</strong>, <strong>rinnovare uno spazio esistente</strong> o <strong>mantenere in perfette condizioni</strong> il verde che già possiedi, il nostro team di esperti è a tua disposizione.</p><h3>Servizi di Giardinaggio Completi in Tutto il Ticino</h3><p>La nostra gamma di servizi copre ogni aspetto della <strong>cura del verde</strong>, dalla <strong>progettazione iniziale</strong> alla <strong>manutenzione continuativa</strong>. Ci occupiamo di <strong>potatura professionale</strong>, <strong>impianti di irrigazione automatica</strong>, <strong>trattamenti fitosanitari</strong>, <strong>creazione di prati</strong> e molto altro ancora.</p><p>Operiamo in tutte le principali località del Ticino: <strong>Lugano, Bellinzona, Locarno, Mendrisio, Biasca</strong> e in tutti i comuni circostanti. La nostra esperienza pluriennale ci permette di conoscere perfettamente il <strong>clima e il terreno ticinese</strong>, garantendo soluzioni su misura per ogni contesto.</p><h3>Perché Scegliere M.T.R.E. come Tuo Giardiniere in Ticino</h3><p>I nostri clienti ci scelgono per la nostra <strong>affidabilità</strong>, <strong>competenza</strong> e <strong>trasparenza</strong>. Ogni progetto, grande o piccolo, riceve la stessa attenzione e cura. Utilizziamo solo <strong>materiali e piante di alta qualità</strong>, selezionati per adattarsi perfettamente al clima locale e alle specifiche esigenze del tuo giardino.</p><p>Il nostro obiettivo è trasformare il tuo spazio verde in un\'oasi di bellezza e tranquillità, rispettando al contempo l\'ambiente e le tue preferenze personali.</p><h3>Preventivi Gratuiti e Consulenza Personalizzata</h3><p>Offriamo <strong>sopralluoghi e preventivi gratuiti</strong> per tutti i nostri servizi. Contattaci oggi stesso per una consulenza senza impegno e scopri come possiamo aiutarti a realizzare il giardino dei tuoi sogni o a mantenere in perfette condizioni il tuo spazio verde esistente.</p>'
     }
   },
   services: {

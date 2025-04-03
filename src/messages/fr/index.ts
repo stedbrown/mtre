@@ -46,6 +46,34 @@ const messages = {
       },
       more: 'En savoir plus',
       all: 'Tous nos services'
+    },
+    faq: {
+      title: 'Questions Fréquentes sur le Jardinage au Tessin',
+      description: 'Voici les réponses aux questions les plus courantes sur nos services de jardinage professionnel au Tessin',
+      contact: 'Vous avez d\'autres questions? Contactez-nous',
+      questions: {
+        q1: {
+          question: 'Quelles zones du Tessin couvrez-vous avec vos services?',
+          answer: 'Nous opérons dans tout le canton du Tessin, avec une attention particulière aux zones de <strong>Biasca, Bellinzone, Lugano, Locarno, Mendrisio</strong> et toutes les localités environnantes. Grâce à notre flotte de véhicules modernes, nous pouvons atteindre n\'importe quel endroit au Tessin pour offrir nos services de jardinage de qualité.'
+        },
+        q2: {
+          question: 'Proposez-vous des devis gratuits pour les travaux de jardinage?',
+          answer: 'Oui, nous offrons <strong>des visites et des devis totalement gratuits et sans engagement</strong> pour tous nos services. Notre équipe d\'experts effectuera une analyse détaillée de vos besoins et vous fournira un devis clair et transparent, adapté aux besoins spécifiques de votre espace vert.'
+        },
+        q3: {
+          question: 'Quels types de services de jardinage offrez-vous au Tessin?',
+          answer: 'Nous offrons une gamme complète de services professionnels qui comprend: <ul class="list-disc list-inside mt-2 space-y-1"><li><strong>Conception de jardins</strong> - Création d\'espaces verts personnalisés</li><li><strong>Entretien ordinaire et extraordinaire</strong> - Soin régulier de votre jardin</li><li><strong>Taille d\'arbres et de haies</strong> - Interventions professionnelles et sécurisées</li><li><strong>Systèmes d\'irrigation</strong> - Systèmes automatisés et efficaces</li><li><strong>Réalisation d\'espaces verts</strong> - Création de pelouses, massifs de fleurs et espaces naturels</li><li><strong>Éclairage de jardin</strong> - Solutions décoratives et fonctionnelles</li></ul>Tous nos services sont réalisés avec des matériaux de haute qualité et des techniques professionnelles pour garantir des résultats durables.'
+        },
+        q4: {
+          question: 'Combien coûte un service de jardinage au Tessin?',
+          answer: 'Les coûts varient selon le type de service, la taille de la zone et la complexité du travail. Nous proposons des <strong>tarifs compétitifs</strong> et transparents, avec la possibilité d\'abonnements pour un entretien périodique qui garantissent des économies significatives. Contactez-nous pour un devis personnalisé gratuit qui s\'adapte parfaitement à vos besoins et à votre budget.'
+        }
+      }
+    },
+    seo: {
+      title: 'M.T.R.E. - Le Jardinier Professionnel pour votre Espace Vert au Tessin',
+      cta: 'Demander un Devis Gratuit',
+      content: '<p>Vous cherchez un <strong>jardinier expérimenté au Tessin</strong> qui puisse prendre soin de votre jardin avec professionnalisme et passion? M.T.R.E. est la réponse à vos besoins. Depuis des années, nous sommes la référence pour les services de <strong>jardinage professionnel</strong> dans tout le canton du Tessin.</p><p>Notre approche combine <strong>techniques traditionnelles</strong> avec <strong>innovations modernes</strong> pour garantir des jardins et des espaces verts luxuriants et sains. Qu\'il s\'agisse de <strong>concevoir un nouveau jardin</strong>, <strong>rénover un espace existant</strong> ou <strong>maintenir en parfait état</strong> l\'espace vert que vous possédez déjà, notre équipe d\'experts est à votre disposition.</p><h3>Services de Jardinage Complets dans Tout le Tessin</h3><p>Notre gamme de services couvre tous les aspects de <strong>l\'entretien des espaces verts</strong>, de la <strong>conception initiale</strong> à <strong>l\'entretien continu</strong>. Nous nous occupons de <strong>taille professionnelle</strong>, <strong>systèmes d\'irrigation automatique</strong>, <strong>traitements phytosanitaires</strong>, <strong>création de pelouses</strong> et bien plus encore.</p><p>Nous opérons dans toutes les principales localités du Tessin: <strong>Lugano, Bellinzone, Locarno, Mendrisio, Biasca</strong> et dans toutes les communes environnantes. Notre expérience pluriannuelle nous permet de connaître parfaitement le <strong>climat et le sol tessinois</strong>, garantissant des solutions sur mesure pour chaque contexte.</p><h3>Pourquoi Choisir M.T.R.E. comme Votre Jardinier au Tessin</h3><p>Nos clients nous choisissent pour notre <strong>fiabilité</strong>, <strong>compétence</strong> et <strong>transparence</strong>. Chaque projet, grand ou petit, reçoit la même attention et le même soin. Nous utilisons uniquement <strong>des matériaux et des plantes de haute qualité</strong>, sélectionnés pour s\'adapter parfaitement au climat local et aux besoins spécifiques de votre jardin.</p><p>Notre objectif est de transformer votre espace vert en une oasis de beauté et de tranquillité, tout en respectant l\'environnement et vos préférences personnelles.</p><h3>Devis Gratuits et Consultation Personnalisée</h3><p>Nous offrons <strong>des visites et des devis gratuits</strong> pour tous nos services. Contactez-nous dès aujourd\'hui pour une consultation sans engagement et découvrez comment nous pouvons vous aider à réaliser le jardin de vos rêves ou à maintenir en parfait état votre espace vert existant.</p>'
     }
   },
   services: {

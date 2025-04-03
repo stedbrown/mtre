@@ -38,9 +38,9 @@ export default function LanguageSwitcher({ isScrolled }: LanguageSwitcherProps) 
 
   // Nomi nativi delle lingue
   const nativeNames: Record<Locale, string> = {
-    it: 'Italiano',
-    fr: 'Français',
-    de: 'Deutsch',
+    it: 'IT',
+    fr: 'FR',
+    de: 'DE',
   };
 
   return (
@@ -56,7 +56,7 @@ export default function LanguageSwitcher({ isScrolled }: LanguageSwitcherProps) 
         aria-haspopup="true"
       >
         <span className="mr-1">{flags[currentLocale]}</span>
-        <span className="hidden sm:inline">{nativeNames[currentLocale]}</span>
+        <span>{nativeNames[currentLocale]}</span>
         <svg
           className={`w-3.5 h-3.5 ml-1 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"

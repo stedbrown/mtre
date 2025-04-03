@@ -446,10 +446,10 @@ export default function Home() {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-green-800 mb-8">
-            Domande Frequenti sul Giardinaggio a Ticino
+            {t('home.faq.title')}
           </h2>
           <p className="text-lg text-center text-gray-700 max-w-3xl mx-auto mb-12">
-            Ecco le risposte alle domande più comuni sui nostri servizi di giardinaggio professionale in Ticino
+            {t('home.faq.description')}
           </p>
           
           <div className="max-w-4xl mx-auto divide-y divide-gray-200 rounded-xl border border-gray-200 bg-white overflow-hidden">
@@ -457,7 +457,7 @@ export default function Home() {
             <details className="group p-6" open>
               <summary className="flex cursor-pointer items-center justify-between">
                 <h3 className="text-lg font-medium text-gray-900">
-                  Quali zone del Ticino coprite con i vostri servizi?
+                  {t('home.faq.questions.q1.question')}
                 </h3>
                 <span className="relative ml-1.5 h-5 w-5 flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 opacity-100 group-open:opacity-0 h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -468,16 +468,14 @@ export default function Home() {
                   </svg>
                 </span>
               </summary>
-              <p className="mt-4 text-gray-700">
-                Operiamo in tutto il Canton Ticino, con particolare attenzione alle aree di <strong>Biasca, Bellinzona, Lugano, Locarno, Mendrisio</strong> e tutte le località circostanti. Grazie alla nostra flotta di mezzi moderni, possiamo raggiungere qualsiasi luogo in Ticino per offrire i nostri servizi di giardinaggio di qualità.
-              </p>
+              <p className="mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.faq.questions.q1.answer') }} />
             </details>
 
             {/* FAQ Item 2 */}
             <details className="group p-6">
               <summary className="flex cursor-pointer items-center justify-between">
                 <h3 className="text-lg font-medium text-gray-900">
-                  Offrite preventivi gratuiti per i lavori di giardinaggio?
+                  {t('home.faq.questions.q2.question')}
                 </h3>
                 <span className="relative ml-1.5 h-5 w-5 flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 opacity-100 group-open:opacity-0 h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -488,16 +486,14 @@ export default function Home() {
                   </svg>
                 </span>
               </summary>
-              <p className="mt-4 text-gray-700">
-                Sì, offriamo <strong>sopralluoghi e preventivi completamente gratuiti e senza impegno</strong> per tutti i nostri servizi. Il nostro team di esperti effettuerà un'analisi dettagliata delle vostre esigenze e vi fornirà un preventivo chiaro e trasparente, calibrato sulle specifiche necessità del vostro spazio verde.
-              </p>
+              <p className="mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.faq.questions.q2.answer') }} />
             </details>
 
             {/* FAQ Item 3 */}
             <details className="group p-6">
               <summary className="flex cursor-pointer items-center justify-between">
                 <h3 className="text-lg font-medium text-gray-900">
-                  Che tipo di servizi di giardinaggio offrite a Ticino?
+                  {t('home.faq.questions.q3.question')}
                 </h3>
                 <span className="relative ml-1.5 h-5 w-5 flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 opacity-100 group-open:opacity-0 h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -508,25 +504,14 @@ export default function Home() {
                   </svg>
                 </span>
               </summary>
-              <p className="mt-4 text-gray-700">
-                Offriamo una gamma completa di servizi professionali che include:
-                <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li><strong>Progettazione di giardini</strong> - Creazione di spazi verdi personalizzati</li>
-                  <li><strong>Manutenzione ordinaria e straordinaria</strong> - Cura regolare del tuo giardino</li>
-                  <li><strong>Potatura di alberi e siepi</strong> - Interventi professionali e sicuri</li>
-                  <li><strong>Impianti di irrigazione</strong> - Sistemi automatizzati ed efficienti</li>
-                  <li><strong>Realizzazione di aree verdi</strong> - Creazione di prati, aiuole e spazi naturali</li>
-                  <li><strong>Illuminazione per giardini</strong> - Soluzioni decorative e funzionali</li>
-                </ul>
-                Tutti i nostri servizi sono realizzati con materiali di alta qualità e tecniche professionali per garantire risultati duraturi.
-              </p>
+              <div className="mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.faq.questions.q3.answer') }} />
             </details>
 
             {/* FAQ Item 4 */}
             <details className="group p-6">
               <summary className="flex cursor-pointer items-center justify-between">
                 <h3 className="text-lg font-medium text-gray-900">
-                  Quanto costa un servizio di giardinaggio a Ticino?
+                  {t('home.faq.questions.q4.question')}
                 </h3>
                 <span className="relative ml-1.5 h-5 w-5 flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 opacity-100 group-open:opacity-0 h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -537,9 +522,7 @@ export default function Home() {
                   </svg>
                 </span>
               </summary>
-              <p className="mt-4 text-gray-700">
-                I costi variano in base al tipo di servizio, alle dimensioni dell'area e alla complessità del lavoro. Offriamo <strong>tariffe competitive</strong> e trasparenti, con possibilità di abbonamenti per manutenzione periodica che garantiscono un risparmio significativo. Contattateci per un preventivo personalizzato gratuito che si adatti perfettamente alle vostre esigenze e al vostro budget.
-              </p>
+              <p className="mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.faq.questions.q4.answer') }} />
             </details>
           </div>
 
@@ -548,7 +531,7 @@ export default function Home() {
               href="/contact" 
               className="inline-flex items-center text-green-600 hover:text-green-800 font-semibold"
             >
-              Hai altre domande? Contattaci
+              {t('home.faq.contact')}
               <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
               </svg>
@@ -561,38 +544,15 @@ export default function Home() {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-green-800 mb-6">M.T.R.E. - Il Giardiniere Professionista per il tuo Spazio Verde in Ticino</h2>
+            <h2 className="text-2xl font-bold text-green-800 mb-6">{t('home.seo.title')}</h2>
             <div className="prose prose-lg text-gray-700">
-              <p>
-                Stai cercando un <strong>giardiniere esperto in Ticino</strong> che possa prendersi cura del tuo giardino con professionalità e passione? M.T.R.E. è la risposta alle tue esigenze. Da anni siamo il punto di riferimento per i servizi di <strong>giardinaggio professionale</strong> in tutto il Canton Ticino.
-              </p>
-              <p>
-                Il nostro approccio combina <strong>tecniche tradizionali</strong> con <strong>innovazioni moderne</strong> per garantire giardini e spazi verdi rigogliosi e salutari. Che si tratti di <strong>progettare un nuovo giardino</strong>, <strong>rinnovare uno spazio esistente</strong> o <strong>mantenere in perfette condizioni</strong> il verde che già possiedi, il nostro team di esperti è a tua disposizione.
-              </p>
-              <h3>Servizi di Giardinaggio Completi in Tutto il Ticino</h3>
-              <p>
-                La nostra gamma di servizi copre ogni aspetto della <strong>cura del verde</strong>, dalla <strong>progettazione iniziale</strong> alla <strong>manutenzione continuativa</strong>. Ci occupiamo di <strong>potatura professionale</strong>, <strong>impianti di irrigazione automatica</strong>, <strong>trattamenti fitosanitari</strong>, <strong>creazione di prati</strong> e molto altro ancora.
-              </p>
-              <p>
-                Operiamo in tutte le principali località del Ticino: <strong>Lugano, Bellinzona, Locarno, Mendrisio, Biasca</strong> e in tutti i comuni circostanti. La nostra esperienza pluriennale ci permette di conoscere perfettamente il <strong>clima e il terreno ticinese</strong>, garantendo soluzioni su misura per ogni contesto.
-              </p>
-              <h3>Perché Scegliere M.T.R.E. come Tuo Giardiniere in Ticino</h3>
-              <p>
-                I nostri clienti ci scelgono per la nostra <strong>affidabilità</strong>, <strong>competenza</strong> e <strong>trasparenza</strong>. Ogni progetto, grande o piccolo, riceve la stessa attenzione e cura. Utilizziamo solo <strong>materiali e piante di alta qualità</strong>, selezionati per adattarsi perfettamente al clima locale e alle specifiche esigenze del tuo giardino.
-              </p>
-              <p>
-                Il nostro obiettivo è trasformare il tuo spazio verde in un'oasi di bellezza e tranquillità, rispettando al contempo l'ambiente e le tue preferenze personali.
-              </p>
-              <h3>Preventivi Gratuiti e Consulenza Personalizzata</h3>
-              <p>
-                Offriamo <strong>sopralluoghi e preventivi gratuiti</strong> per tutti i nostri servizi. Contattaci oggi stesso per una consulenza senza impegno e scopri come possiamo aiutarti a realizzare il giardino dei tuoi sogni o a mantenere in perfette condizioni il tuo spazio verde esistente.
-              </p>
+              <div dangerouslySetInnerHTML={{ __html: t('home.seo.content') }} />
               <div className="text-center mt-8">
                 <Link 
                   href="/contact" 
                   className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg inline-block transition duration-300"
                 >
-                  Richiedi un Preventivo Gratuito
+                  {t('home.seo.cta')}
                 </Link>
               </div>
             </div>

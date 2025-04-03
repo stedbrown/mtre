@@ -46,6 +46,34 @@ const messages = {
       },
       more: 'Mehr erfahren',
       all: 'Alle unsere Dienstleistungen'
+    },
+    faq: {
+      title: 'Häufig gestellte Fragen zu Gartenbau im Tessin',
+      description: 'Hier finden Sie Antworten auf die häufigsten Fragen zu unseren professionellen Gartenbaudienstleistungen im Tessin',
+      contact: 'Weitere Fragen? Kontaktieren Sie uns',
+      questions: {
+        q1: {
+          question: 'Welche Gebiete im Tessin decken Sie mit Ihren Dienstleistungen ab?',
+          answer: 'Wir sind im gesamten Kanton Tessin tätig, mit besonderem Fokus auf die Gebiete <strong>Biasca, Bellinzona, Lugano, Locarno, Mendrisio</strong> und alle umliegenden Ortschaften. Dank unserer modernen Fahrzeugflotte können wir jeden Ort im Tessin erreichen, um unsere hochwertigen Gartenbaudienstleistungen anzubieten.'
+        },
+        q2: {
+          question: 'Bieten Sie kostenlose Angebote für Gartenarbeiten an?',
+          answer: 'Ja, wir bieten <strong>völlig kostenlose und unverbindliche Begehungen und Angebote</strong> für alle unsere Dienstleistungen an. Unser Expertenteam führt eine detaillierte Analyse Ihrer Bedürfnisse durch und erstellt ein klares und transparentes Angebot, das auf die spezifischen Anforderungen Ihrer Grünfläche zugeschnitten ist.'
+        },
+        q3: {
+          question: 'Welche Arten von Gartenbaudienstleistungen bieten Sie im Tessin an?',
+          answer: 'Wir bieten eine umfassende Palette professioneller Dienstleistungen an, darunter: <ul class="list-disc list-inside mt-2 space-y-1"><li><strong>Gartenplanung</strong> - Gestaltung personalisierter Grünflächen</li><li><strong>Regelmäßige und außerordentliche Wartung</strong> - Regelmäßige Pflege Ihres Gartens</li><li><strong>Baum- und Heckenschnitt</strong> - Professionelle und sichere Eingriffe</li><li><strong>Bewässerungsanlagen</strong> - Automatisierte und effiziente Systeme</li><li><strong>Gestaltung von Grünflächen</strong> - Anlage von Rasenflächen, Blumenbeeten und Naturräumen</li><li><strong>Gartenbeleuchtung</strong> - Dekorative und funktionale Lösungen</li></ul>Alle unsere Dienstleistungen werden mit hochwertigen Materialien und professionellen Techniken durchgeführt, um dauerhafte Ergebnisse zu garantieren.'
+        },
+        q4: {
+          question: 'Was kostet ein Gartenbauservice im Tessin?',
+          answer: 'Die Kosten variieren je nach Art der Dienstleistung, Größe der Fläche und Komplexität der Arbeit. Wir bieten <strong>wettbewerbsfähige</strong> und transparente Tarife an, mit der Möglichkeit von Abonnements für regelmäßige Wartung, die erhebliche Einsparungen garantieren. Kontaktieren Sie uns für ein kostenloses, maßgeschneidertes Angebot, das perfekt auf Ihre Bedürfnisse und Ihr Budget abgestimmt ist.'
+        }
+      }
+    },
+    seo: {
+      title: 'M.T.R.E. - Der professionelle Gärtner für Ihre Grünfläche im Tessin',
+      cta: 'Kostenloses Angebot anfordern',
+      content: '<p>Suchen Sie einen <strong>erfahrenen Gärtner im Tessin</strong>, der sich mit Professionalität und Leidenschaft um Ihren Garten kümmert? M.T.R.E. ist die Antwort auf Ihre Bedürfnisse. Seit Jahren sind wir der Ansprechpartner für <strong>professionelle Gartendienstleistungen</strong> im gesamten Kanton Tessin.</p><p>Unser Ansatz kombiniert <strong>traditionelle Techniken</strong> mit <strong>modernen Innovationen</strong>, um üppige und gesunde Gärten und Grünflächen zu gewährleisten. Ob es darum geht, <strong>einen neuen Garten zu gestalten</strong>, <strong>einen bestehenden Raum zu renovieren</strong> oder <strong>Ihre vorhandene Grünfläche in perfektem Zustand zu halten</strong>, unser Expertenteam steht Ihnen zur Verfügung.</p><h3>Umfassende Gartenbaudienstleistungen im gesamten Tessin</h3><p>Unser Dienstleistungsspektrum deckt jeden Aspekt der <strong>Grünflächenpflege</strong> ab, von der <strong>Erstplanung</strong> bis zur <strong>kontinuierlichen Wartung</strong>. Wir kümmern uns um <strong>professionellen Baumschnitt</strong>, <strong>automatische Bewässerungssysteme</strong>, <strong>Pflanzenschutzbehandlungen</strong>, <strong>Rasenanlage</strong> und vieles mehr.</p><p>Wir sind in allen wichtigen Ortschaften des Tessins tätig: <strong>Lugano, Bellinzona, Locarno, Mendrisio, Biasca</strong> und in allen umliegenden Gemeinden. Unsere langjährige Erfahrung ermöglicht es uns, das <strong>Klima und den Boden des Tessins</strong> perfekt zu kennen und maßgeschneiderte Lösungen für jeden Kontext zu gewährleisten.</p><h3>Warum Sie M.T.R.E. als Ihren Gärtner im Tessin wählen sollten</h3><p>Unsere Kunden wählen uns wegen unserer <strong>Zuverlässigkeit</strong>, <strong>Kompetenz</strong> und <strong>Transparenz</strong>. Jedes Projekt, ob groß oder klein, erhält die gleiche Aufmerksamkeit und Sorgfalt. Wir verwenden nur <strong>hochwertige Materialien und Pflanzen</strong>, die speziell ausgewählt werden, um sich perfekt an das lokale Klima und die spezifischen Bedürfnisse Ihres Gartens anzupassen.</p><p>Unser Ziel ist es, Ihre Grünfläche in eine Oase der Schönheit und Ruhe zu verwandeln und dabei gleichzeitig die Umwelt und Ihre persönlichen Vorlieben zu respektieren.</p><h3>Kostenlose Angebote und persönliche Beratung</h3><p>Wir bieten <strong>kostenlose Besichtigungen und Angebote</strong> für alle unsere Dienstleistungen an. Kontaktieren Sie uns noch heute für eine unverbindliche Beratung und erfahren Sie, wie wir Ihnen helfen können, den Garten Ihrer Träume zu verwirklichen oder Ihre bestehende Grünfläche in perfektem Zustand zu erhalten.</p>'
     }
   },
   services: {

@@ -1,4 +1,4 @@
-import './globals.css';
+import './[locale]/globals.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {

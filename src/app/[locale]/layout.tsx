@@ -4,7 +4,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { locales } from "@/i18n/navigation";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -138,7 +137,6 @@ export default async function LocaleLayout({
         <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Rome">
           {children}
         </NextIntlClientProvider>
-        <SpeedInsights />
       </body>
     </html>
   );

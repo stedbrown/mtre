@@ -68,7 +68,7 @@ export default function ContactPage() {
       <HeroSection
         title={t('contact.title')}
         description={t('contact.description')}
-        backgroundImage="/images/hero/contact-new.avif"
+        imageSrc="/images/hero/contact-new.avif"
       />
       
       <section className="py-16 bg-green-50">

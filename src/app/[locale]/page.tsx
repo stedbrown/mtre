@@ -235,7 +235,7 @@ export default function Home() {
               </ul>
               <div className="mt-8">
                 <Link 
-                  href="/about" 
+                  href="/services" 
                   className="text-green-600 hover:text-green-800 font-semibold flex items-center transition-colors"
                 >
                   {t('home.services.more')}

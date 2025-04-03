@@ -1,83 +1,86 @@
 "use client";
 
-import { ReactNode, useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useEffect, useState, memo } from "react";
+import Image from "next/image";
 
-interface HeroSectionProps {
+type HeroSectionProps = {
   title: string;
-  description: string;
+  description?: string;
+  children?: React.ReactNode;
   height?: string;
-  children?: ReactNode;
-  backgroundImage?: string;
-}
+  imageSrc?: string;
+  overlay?: boolean;
+};
 
-export default function HeroSection({
+// Componente ottimizzato con memo per prevenire re-render inutili
+const HeroSection = memo(function HeroSection({
   title,
   description,
-  height = "h-[50vh]",
   children,
-  backgroundImage = "/images/hero/home-new.avif"
+  height = "h-[60vh]",
+  imageSrc = "/images/hero/home-new.avif",
+  overlay = true,
 }: HeroSectionProps) {
-  const [loaded, setLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // Ottimizza la visualizzazione dell'immagine hero
   useEffect(() => {
-    // Precarica l'immagine
-    const img = new window.Image();
-    img.src = backgroundImage;
-    img.onload = () => setLoaded(true);
-    
-    // Fallback se l'immagine è già nella cache
-    const timer = setTimeout(() => {
-      if (!loaded) setLoaded(true);
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, [backgroundImage, loaded]);
-  
+    // Segna l'immagine come caricata dopo che è stata renderizzata
+    setIsLoaded(true);
+  }, []);
+
   return (
-    <div 
-      className={`relative ${height} min-h-[400px] flex items-center overflow-hidden bg-green-900`}
-      style={{ 
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}
+    <section 
+      className={`relative ${height} min-h-[400px] flex items-center overflow-hidden hero-section`}
+      aria-labelledby="hero-heading"
     >
-      {/* Immagine di sfondo */}
-      <div className="absolute inset-0">
-        <Image
-          src={backgroundImage}
-          alt="Background Image"
-          fill
-          priority
-          fetchPriority="high"
-          sizes="100vw"
-          quality={65}
-          className={`object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-          style={{ objectFit: 'cover' }}
-          placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAbEAADAAMBAQAAAAAAAAAAAAAAAQIDBAURIf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8Ar6pXUACAf//Z"
-          onLoadingComplete={() => setLoaded(true)}
-          width={1920}
-          height={1080}
+      {/* Placeholder di background per migliorare LCP */}
+      <div 
+        className="absolute inset-0 bg-green-800 z-0" 
+        aria-hidden="true"
+      />
+
+      {/* Immagine hero con priorità alta e dimensioni esplicite */}
+      <Image
+        src={imageSrc}
+        alt=""
+        fill
+        className={`object-cover transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        priority={true}
+        quality={75}
+        sizes="100vw"
+        aria-hidden="true"
+      />
+
+      {/* Overlay scuro per aumentare il contrasto del testo */}
+      {overlay && (
+        <div
+          className="absolute inset-0 bg-black/40 z-10"
+          aria-hidden="true"
         />
-        {/* Overlay con tinta scura per migliorare la leggibilità */}
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-      </div>
-      
-      {/* Contenuto */}
-      <div className="container mx-auto px-4 relative z-10 text-white">
+      )}
+
+      {/* Contenuto hero con heading principale */}
+      <div className="container mx-auto px-4 relative z-20 hero-content">
         <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+          <h1 
+            id="hero-heading"
+            className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
+          >
             {title}
           </h1>
-          <div className="w-20 h-1 bg-green-500 mb-6"></div>
-          <p className="text-xl md:text-2xl font-light mb-8 max-w-2xl">
-            {description}
-          </p>
-          {children && <div className="mt-6">{children}</div>}
+          
+          {description && (
+            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl">
+              {description}
+            </p>
+          )}
+          
+          {children}
         </div>
       </div>
-    </div>
+    </section>
   );
-} 
+});
+
+export default HeroSection; 

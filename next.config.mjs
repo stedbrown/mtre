@@ -71,7 +71,6 @@ const nextConfig = {
   },
   // Ottimizzazioni per le prestazioni
   experimental: {
-    // Rimuoviamo optimizeCss perché non è supportato in Next.js 15.2.2
     optimizePackageImports: [
       'next-intl',
       'react-icons',
@@ -83,24 +82,45 @@ const nextConfig = {
     },
     webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB', 'INP'],
   },
-  // Ottimizzazione per browser moderni
-  webpack: (config, { isServer }) => {
+  // Configurazione webpack migliorata per PageSpeed
+  webpack: (config, { dev, isServer }) => {
+    // Manteniamo moduleIds deterministici per caching migliore
     config.optimization.moduleIds = 'deterministic';
     
-    // Disabilita il code splitting sul server per evitare errori "self is not defined"
-    if (isServer) {
-      config.optimization.splitChunks = false;
-    } else {
-      // Configurazione splitChunks solo per il client
+    if (!dev && !isServer) {
+      // Ottimizzazioni solo per la build di produzione lato client
+      
+      // Attiva il tree shaking per ridurre dimensioni bundle
+      config.optimization.usedExports = true;
+      
+      // Configurazione splitChunks ottimizzata per LCP
       config.optimization.splitChunks = {
         chunks: 'all',
-        maxInitialRequests: 25,
-        minSize: 20000,
+        maxInitialRequests: 10,
+        maxAsyncRequests: 10,
+        minSize: 15000,
         cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
+          framework: {
+            name: 'framework',
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
+            priority: 40,
             chunks: 'all',
+          },
+          commons: {
+            name: 'commons',
+            minChunks: 3,
+            priority: 20,
+            chunks: 'all',
+            reuseExistingChunk: true,
+          },
+          lib: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10,
+            chunks: 'async',
+            name(module) {
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)?.[1] || 'vendors';
+              return `lib.${packageName.replace('@', '')}`;
+            },
           },
         },
       };
@@ -148,11 +168,15 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=3600, must-revalidate',
+            value: 'public, max-age=3600, stale-while-revalidate=86400',
           },
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
           },
         ],
       },
@@ -167,6 +191,15 @@ const nextConfig = {
       },
       {
         source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
         headers: [
           {
             key: 'Cache-Control',

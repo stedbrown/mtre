@@ -5,12 +5,86 @@ import MainLayout from '@/components/MainLayout';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
+import Script from 'next/script';
 
 export default function Home() {
   const t = useTranslations();
   
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "M.T.R.E. Giardiniere Ticino",
+    "image": "https://mtre.ch/images/hero/home-new.jpg",
+    "url": "https://mtre.ch",
+    "telephone": "+41767426736",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Via Croce 2",
+      "addressLocality": "Biasca",
+      "postalCode": "6710",
+      "addressRegion": "Ticino",
+      "addressCountry": "CH"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 46.3588,
+      "longitude": 8.9687
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "08:00",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "09:00",
+        "closes": "13:00"
+      }
+    ],
+    "priceRange": "$$",
+    "description": "Giardiniere professionista in Ticino. Servizi di giardinaggio, manutenzione del verde, progettazione giardini in tutta la Svizzera italiana.",
+    "sameAs": [
+      "https://www.instagram.com/mtre.ch/",
+      "https://www.facebook.com/mtre.ch"
+    ]
+  };
+  
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Servizi di Giardinaggio",
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "M.T.R.E. Giardiniere Ticino"
+    },
+    "areaServed": {
+      "@type": "State",
+      "name": "Ticino, Svizzera"
+    },
+    "description": "Servizi professionali di giardinaggio, progettazione e manutenzione di giardini in Ticino",
+    "offers": {
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "priceCurrency": "CHF"
+      }
+    }
+  };
+  
   return (
     <MainLayout>
+      {/* Schema.org markup */}
+      <Script id="schema-local-business" type="application/ld+json">
+        {JSON.stringify(localBusinessSchema)}
+      </Script>
+      <Script id="schema-service" type="application/ld+json">
+        {JSON.stringify(serviceSchema)}
+      </Script>
+      
       {/* Hero Section */}
       <HeroSection
         title={t('home.hero.title')}
@@ -43,10 +117,10 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-bold text-green-800 mb-6">
-                {t('home.about.title')}
+                <span className="text-green-700">Giardiniere professionista</span> in Ticino
               </h2>
               <p className="text-lg text-gray-700 mb-6">
-                {t('home.about.description')}
+                M.T.R.E. è un'azienda specializzata nella cura e manutenzione di giardini e spazi verdi in Ticino e in tutta la Svizzera italiana. Con anni di esperienza nel settore del giardinaggio, offriamo servizi di alta qualità per privati e aziende, garantendo risultati eccellenti e duraturi.
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start">
@@ -89,10 +163,11 @@ export default function Home() {
             <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
               <Image
                 src="/images/mtregiardinaggio.JPG"
-                alt="M.T.R.E. Giardinaggio - Team al lavoro"
+                alt="M.T.R.E. Giardiniere Ticino - Team al lavoro"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                priority
               />
             </div>
           </div>

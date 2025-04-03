@@ -4,7 +4,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { locales } from "@/i18n/navigation";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import SpeedInsights from "@vercel/speed-insights";
 import "./globals.css";
 
 const geistSans = Geist({

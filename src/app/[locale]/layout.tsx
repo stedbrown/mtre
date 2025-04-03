@@ -29,24 +29,24 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch';
   
   const titles = {
-    it: 'M.T.R.E. Giardinaggio - Giardiniere professionista in Ticino, Svizzera | Servizi di giardinaggio',
-    en: 'M.T.R.E. Gardening - Professional gardener in Ticino, Switzerland | Gardening services',
-    fr: 'M.T.R.E. Jardinage - Jardinier professionnel au Tessin, Suisse | Services de jardinage',
-    de: 'M.T.R.E. Gartenbau - Professioneller Gärtner im Tessin, Schweiz | Gartenbauleistungen'
+    it: 'Giardiniere Ticino | M.T.R.E. Professionista Giardinaggio | Preventivo Gratuito',
+    en: 'Professional Gardener in Ticino | M.T.R.E. Garden Services | Free Quote',
+    fr: 'Jardinier Professionnel au Tessin | M.T.R.E. Services | Devis Gratuit',
+    de: 'Professioneller Gärtner im Tessin | M.T.R.E. Gartenservice | Gratis Angebot'
   };
   
   const descriptions = {
-    it: 'Giardiniere professionista in Ticino. Servizi di giardinaggio, manutenzione del verde, progettazione giardini e spazi verdi in tutta la Svizzera italiana. Preventivi gratuiti e soluzioni personalizzate.',
-    en: 'Professional gardener in Ticino. Gardening services, green maintenance, garden design and green spaces throughout Italian Switzerland. Free quotes and customized solutions.',
-    fr: 'Jardinier professionnel au Tessin. Services de jardinage, entretien des espaces verts, conception de jardins dans toute la Suisse italienne. Devis gratuits et solutions personnalisées.',
-    de: 'Professioneller Gärtner im Tessin. Gartenbauleistungen, Grünflächenpflege, Gartengestaltung in der gesamten italienischen Schweiz. Kostenlose Angebote und maßgeschneiderte Lösungen.'
+    it: 'Giardiniere professionista in Ticino con oltre 15 anni di esperienza. Manutenzione giardini, potatura, progettazione e lavori di giardinaggio 100% garantiti. ✓ Preventivi gratuiti ✓ Interventi rapidi ✓ Materiali di qualità.',
+    en: 'Professional gardener in Ticino with over 15 years of experience. Garden maintenance, pruning, design and 100% guaranteed gardening work. ✓ Free quotes ✓ Quick interventions ✓ Quality materials.',
+    fr: 'Jardinier professionnel au Tessin avec plus de 15 ans d'expérience. Entretien de jardins, taille, conception et travaux de jardinage garantis à 100%. ✓ Devis gratuits ✓ Interventions rapides ✓ Matériaux de qualité.',
+    de: 'Professioneller Gärtner im Tessin mit über 15 Jahren Erfahrung. Gartenpflege, Beschneidung, Design und 100% garantierte Gartenarbeit. ✓ Kostenlose Angebote ✓ Schnelle Eingriffe ✓ Qualitätsmaterialien.'
   };
   
   const keywords = {
-    it: 'giardiniere, giardiniere ticino, giardiniere svizzera, giardinaggio, servizi giardinaggio, manutenzione verde, progettazione giardini, potatura, prato, irrigazione, Ticino, Svizzera, Biasca, Bellinzona, Lugano, Locarno',
-    en: 'gardener, gardener ticino, gardener switzerland, gardening, gardening services, green maintenance, garden design, pruning, lawn, irrigation, Ticino, Switzerland, Biasca, Bellinzona, Lugano, Locarno',
-    fr: 'jardinier, jardinier tessin, jardinier suisse, jardinage, services jardinage, entretien des espaces verts, conception de jardins, taille, pelouse, irrigation, Tessin, Suisse, Biasca, Bellinzone, Lugano, Locarno',
-    de: 'gärtner, gärtner tessin, gärtner schweiz, gartenbau, gartenbauservice, grünflächenpflege, gartengestaltung, beschneidung, rasen, bewässerung, Tessin, Schweiz, Biasca, Bellinzona, Lugano, Locarno'
+    it: 'giardiniere ticino, giardinaggio ticino, manutenzione giardini, potatura alberi, progettazione giardini, preventivo giardiniere, giardiniere professionista svizzera, aiuola, siepe, taglio erba, diserbo, irrigazione automatica, prezzi giardiniere, costo manutenzione giardino',
+    en: 'gardener ticino, gardening ticino, garden maintenance, tree pruning, garden design, gardener quote, professional gardener switzerland, flower bed, hedge, grass cutting, weeding, automatic irrigation, gardener prices, garden maintenance cost',
+    fr: 'jardinier tessin, jardinage tessin, entretien jardins, taille arbres, conception jardins, devis jardinier, jardinier professionnel suisse, parterre, haie, tonte pelouse, désherbage, irrigation automatique, prix jardinier, coût entretien jardin',
+    de: 'gärtner tessin, gartenbau tessin, gartenpflege, baumbeschneidung, gartengestaltung, gärtner angebot, professioneller gärtner schweiz, blumenbeet, hecke, grasschnitt, unkrautbekämpfung, automatische bewässerung, gärtnerpreise, gartenpflegekosten'
   };
   
   return {
@@ -72,10 +72,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
       images: [
         {
-          url: `${baseUrl}/images/hero/home-new.jpg`,
+          url: `${baseUrl}/images/hero/home-new.avif`,
           width: 1200,
           height: 630,
-          alt: 'M.T.R.E. Giardiniere Ticino - Servizi di giardinaggio professionali',
+          alt: 'M.T.R.E. Giardinaggio Ticino - Servizi professionali di giardinaggio',
         },
       ],
     },
@@ -83,18 +83,23 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       card: 'summary_large_image',
       title: titles[locale as keyof typeof titles] || titles.it,
       description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
-      images: [`${baseUrl}/images/hero/home-new.jpg`],
+      images: [`${baseUrl}/images/hero/home-new.avif`],
     },
     robots: {
       index: true,
       follow: true,
+      notranslate: false,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
       googleBot: {
         index: true,
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
         'max-snippet': -1,
-      },
+        noimageindex: false
+      }
     },
     other: {
       "google-site-verification": "YOUR_VERIFICATION_CODE", // Aggiungi il tuo codice di verifica Google

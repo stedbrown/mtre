@@ -29,12 +29,8 @@ export default function ContactPage() {
     setFormStatus('submitting');
 
     try {
-      // IMPORTANTE: Sostituisci 'YOUR_FORMSPREE_ID' con l'ID del tuo form Formspree
-      // Per ottenere un ID:
-      // 1. Registrati su https://formspree.io/
-      // 2. Crea un nuovo form
-      // 3. Copia l'ID del form (es. xrgpzlkj) e sostituiscilo qui sotto
-      const response = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
+      // Sostituisco il placeholder con l'ID Formspree fornito dall'utente
+      const response = await fetch('https://formspree.io/f/xyylngnz', { // ID SOSTITUITO
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -208,7 +204,7 @@ export default function ContactPage() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                       required
                     />
                   </div>
@@ -223,7 +219,7 @@ export default function ContactPage() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                       required
                     />
                   </div>
@@ -240,7 +236,7 @@ export default function ContactPage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                       required
                     />
                   </div>
@@ -255,7 +251,7 @@ export default function ContactPage() {
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                 </div>
@@ -269,7 +265,7 @@ export default function ContactPage() {
                     name="service"
                     value={formData.service}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                   >
                     <option value="">{t('contact.form.selectService')}</option>
                     <option value="garden-design">{t('contact.form.services.gardenDesign')}</option>
@@ -290,7 +286,7 @@ export default function ContactPage() {
                     rows={5}
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                     required
                   ></textarea>
                 </div>

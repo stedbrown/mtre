@@ -71,7 +71,7 @@ const nextConfig = {
   },
   // Ottimizzazioni per le prestazioni
   experimental: {
-    optimizeCss: true,
+    // Rimuoviamo optimizeCss perché non è supportato in Next.js 15.2.2
     optimizePackageImports: [
       'next-intl',
       'react-icons',

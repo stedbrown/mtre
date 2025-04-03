@@ -18,30 +18,10 @@ export default function HeroSection({
   children,
   backgroundImage = "/images/hero/home-new.avif"
 }: HeroSectionProps) {
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    // Precarica l'immagine
-    const img = new window.Image();
-    img.src = backgroundImage;
-    img.onload = () => setImageLoaded(true);
-  }, [backgroundImage]);
-
   return (
-    <div className={`relative ${height} min-h-[400px] flex items-center overflow-hidden`}>
-      {/* Overlay con tinta scura */}
-      <div
-        className={`absolute inset-0 bg-gray-900 transition-opacity duration-700 ${
-          imageLoaded ? 'opacity-70' : 'opacity-100'
-        }`}
-      />
-      
+    <div className={`relative ${height} min-h-[400px] flex items-center overflow-hidden bg-gray-900`}>
       {/* Immagine di sfondo */}
-      <div
-        className={`absolute inset-0 transition-opacity duration-1000 ${
-          imageLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
+      <div className="absolute inset-0">
         <Image
           src={backgroundImage}
           alt="Background Image"
@@ -51,8 +31,11 @@ export default function HeroSection({
           sizes="100vw"
           quality={90}
           className="object-cover"
-          onLoad={() => setImageLoaded(true)}
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88P/hfwAJtAPJY1BhTQAAAABJRU5ErkJggg=="
         />
+        {/* Overlay con tinta scura per migliorare la leggibilità */}
+        <div className="absolute inset-0 bg-black opacity-50"></div>
       </div>
       
       {/* Contenuto */}

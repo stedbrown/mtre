@@ -120,6 +120,9 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
+        {/* Meta tag per colore tema browser */}
+        <meta name="theme-color" content="#166534" /> 
+        
         {/* Favicon tags pointing to files in public/images/ */}
         <link rel="icon" href="/images/favicon.ico" sizes="any" />
         <link rel="icon" href="/images/favicon-16x16.png" type="image/png" sizes="16x16" />

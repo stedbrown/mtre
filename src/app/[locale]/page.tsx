@@ -189,11 +189,12 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
               <div className="relative h-48">
                 <Image
-                  src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae"
+                  src="/images/services/garden-design.jpg"
                   alt={t('home.services.design.title')}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 768px) 100vw, 33vw"
+                  priority
                 />
               </div>
               <div className="p-6">
@@ -215,11 +216,12 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
               <div className="relative h-48">
                 <Image
-                  src="https://images.unsplash.com/photo-1611843467160-25afb8df1074"
+                  src="/images/services/maintenance.jpg"
                   alt={t('home.services.maintenance.title')}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 768px) 100vw, 33vw"
+                  loading="lazy"
                 />
               </div>
               <div className="p-6">
@@ -241,11 +243,12 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
               <div className="relative h-48">
                 <Image
-                  src="https://images.unsplash.com/photo-1598902108854-10e335adac99"
+                  src="/images/services/irrigation.jpg"
                   alt={t('home.services.irrigation.title')}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 768px) 100vw, 33vw"
+                  loading="lazy"
                 />
               </div>
               <div className="p-6">

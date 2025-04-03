@@ -6,7 +6,82 @@ import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
 import Script from 'next/script';
+import { memo } from 'react';
 
+// Componenti ottimizzati con memo per evitare re-render inutili
+const AboutSection = memo(({ t }: { t: any }) => (
+  <section className="py-20 bg-white">
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h1 className="text-4xl font-bold text-green-800 mb-6">
+            <span className="text-green-700">{t('home.about.title')}</span> - {t('home.about.subtitle')}
+          </h1>
+          <p className="text-lg text-gray-700 mb-6" dangerouslySetInnerHTML={{ __html: t('home.about.mainDescription') }} />
+          <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
+            <h3 className="text-lg font-bold text-green-800 mb-2">{t('home.about.benefitsTitle')}</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.experience') }} />
+              </li>
+              <li className="flex items-start">
+                <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.quality') }} />
+              </li>
+              <li className="flex items-start">
+                <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.pricing') }} />
+              </li>
+              <li className="flex items-start">
+                <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.equipment') }} />
+              </li>
+            </ul>
+          </div>
+          <div className="mb-6">
+            <p className="text-green-800 font-semibold">Operiamo in tutte le zone del Ticino: Bellinzona, Lugano, Locarno, Mendrisio, Biasca e dintorni.</p>
+          </div>
+          <div className="mt-8">
+            <Link 
+              href="/services" 
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-md transition-all duration-300 inline-flex items-center"
+            >
+              Scopri tutti i nostri servizi di giardinaggio
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </Link>
+          </div>
+        </div>
+        <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
+          <Image
+            src="/images/mtregiardinaggio.avif"
+            alt="M.T.R.E. Giardiniere Ticino - Professionisti del giardinaggio al lavoro"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            loading="eager"
+            fetchPriority="high"
+            quality={75}
+            width={800}
+            height={600}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+));
+
+// Componente principale ottimizzato
 export default function Home() {
   const t = useTranslations();
   
@@ -224,76 +299,8 @@ export default function Home() {
         </Link>
       </HeroSection>
 
-      {/* About Section con immagine */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl font-bold text-green-800 mb-6">
-                <span className="text-green-700">{t('home.about.title')}</span> - {t('home.about.subtitle')}
-              </h1>
-              <p className="text-lg text-gray-700 mb-6" dangerouslySetInnerHTML={{ __html: t('home.about.mainDescription') }} />
-              <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="text-lg font-bold text-green-800 mb-2">{t('home.about.benefitsTitle')}</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.experience') }} />
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.quality') }} />
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.pricing') }} />
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="w-6 h-6 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: t('home.about.benefits.equipment') }} />
-                  </li>
-                </ul>
-              </div>
-              <div className="mb-6">
-                <p className="text-green-800 font-semibold">Operiamo in tutte le zone del Ticino: Bellinzona, Lugano, Locarno, Mendrisio, Biasca e dintorni.</p>
-              </div>
-              <div className="mt-8">
-                <Link 
-                  href="/services" 
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-md transition-all duration-300 inline-flex items-center"
-                >
-                  Scopri tutti i nostri servizi di giardinaggio
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </Link>
-              </div>
-            </div>
-            <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
-              <Image
-                src="/images/mtregiardinaggio.avif"
-                alt="M.T.R.E. Giardiniere Ticino - Professionisti del giardinaggio al lavoro"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                loading="eager"
-                fetchPriority="high"
-                quality={75}
-                width={800}
-                height={600}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Sezione About ottimizzata */}
+      <AboutSection t={t} />
 
       {/* Servizi Preview con immagini */}
       <section className="py-20 bg-green-50">

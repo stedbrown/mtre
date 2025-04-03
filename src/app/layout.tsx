@@ -40,11 +40,11 @@ export default function RootLayout({
   return (
     <html lang="it">
       <head>
-        {/* Precarica l'immagine hero */}
-        <link rel="preload" as="image" href="/images/hero/home-new.avif" />
-        <link rel="preload" as="image" href="/images/hero/services-new.avif" />
-        <link rel="preload" as="image" href="/images/hero/gallery-new.avif" />
-        <link rel="preload" as="image" href="/images/hero/contact-new.avif" />
+        {/* Precarica l'immagine hero - con attributi ottimizzati */}
+        <link rel="preload" as="image" href="/images/hero/home-new.avif" fetchpriority="high" />
+        <link rel="preload" as="image" href="/images/hero/services-new.avif" fetchpriority="low" />
+        <link rel="preload" as="image" href="/images/hero/gallery-new.avif" fetchpriority="low" />
+        <link rel="preload" as="image" href="/images/hero/contact-new.avif" fetchpriority="low" />
         
         {/* Precarica i font principali */}
         <link
@@ -63,11 +63,26 @@ export default function RootLayout({
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
         <link rel="dns-prefetch" href="https://mtre.ch" />
         <link rel="preconnect" href="https://mtre.ch" />
+        <link rel="preconnect" href="https://vercel.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://vitals.vercel-insights.com" crossOrigin="anonymous" />
         
         {/* Critical CSS inline */}
         <style dangerouslySetInnerHTML={{ __html: `
           body {opacity: 1; transition: opacity 0.5s ease-in-out;}
           .hero-placeholder {background-color: #166534; height: 60vh; min-height: 400px;}
+          
+          /* Stili critici per il rendering iniziale */
+          .container {width: 100%; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;}
+          @media (min-width: 640px) {.container {max-width: 640px;}}
+          @media (min-width: 768px) {.container {max-width: 768px;}}
+          @media (min-width: 1024px) {.container {max-width: 1024px;}}
+          @media (min-width: 1280px) {.container {max-width: 1280px;}}
+          h1, h2, h3 {margin: 0; font-weight: bold;}
+          .relative {position: relative;}
+          .text-white {color: white;}
+          .text-green-800 {color: #166534;}
+          .bg-green-700 {background-color: #15803d;}
+          .bg-green-600 {background-color: #16a34a;}
         `}} />
       </head>
       <body>

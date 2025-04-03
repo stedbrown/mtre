@@ -82,10 +82,35 @@ const nextConfig = {
       bodySizeLimit: '2mb',
     },
     webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB', 'INP'],
+    // Ottimizzazioni server-side
+    serverMinification: true,
+    turbotrace: {
+      logLevel: 'error',
+    },
+    // Migliora il tempo di risposta con pre-rendering
+    ppr: true,
   },
   // Ottimizzazione per browser moderni
   webpack: (config) => {
     config.optimization.moduleIds = 'deterministic';
+    // Aggiungi ottimizzazioni per la velocità di bundling
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      maxInitialRequests: Infinity,
+      minSize: 20000,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module) {
+            // Ottieni il nome del pacchetto npm
+            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+            // Rimuovi @ simboli e converti punti e trattini in underscore
+            return `npm.${packageName.replace('@', '').replace(/\./g, '_').replace(/-/g, '_')}`;
+          },
+        },
+      },
+    };
+    
     return config;
   },
   // Compress JS/HTML
@@ -95,6 +120,88 @@ const nextConfig = {
   swcMinify: true,
   productionBrowserSourceMaps: false,
   poweredByHeader: false,
+  // Cache delle pagine in produzione
+  cache: {
+    pages: [
+      { 
+        path: '/',
+        mode: 'force-cache',
+        ttl: 3600 // 1 ora in secondi
+      },
+      { 
+        path: '/services',
+        mode: 'force-cache',
+        ttl: 3600
+      },
+      {
+        path: '/gallery',
+        mode: 'force-cache',
+        ttl: 3600
+      }
+    ],
+    assets: true,
+  },
+  // Redirect veloci
+  async redirects() {
+    return [
+      {
+        source: '/giardiniere-ticino',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/servizi',
+        destination: '/services',
+        permanent: true,
+      },
+      {
+        source: '/galleria',
+        destination: '/gallery',
+        permanent: true,
+      },
+      {
+        source: '/contatti',
+        destination: '/contact',
+        permanent: true,
+      },
+    ];
+  },
+  // Headers per ottimizzare le performance
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, must-revalidate',
+          },
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+        ],
+      },
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig); 

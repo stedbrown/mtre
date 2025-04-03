@@ -32,13 +32,11 @@ module.exports = {
     { href: 'https://mtre.ch/en', hreflang: 'en' },
     { href: 'https://mtre.ch/de', hreflang: 'de' },
     { href: 'https://mtre.ch/fr', hreflang: 'fr' },
-    { href: 'https://mtre.ch', hreflang: 'it' },
-    { href: 'https://mtre.ch', hreflang: 'x-default' }, // Default per i browser che non supportano le lingue specificate
+    { href: 'https://mtre.ch/it', hreflang: 'it' },
+    { href: 'https://mtre.ch', hreflang: 'x-default' },
   ],
   transform: (config, url) => {
     // Forza il dominio mtre.ch se necessario
-    // Questa è una soluzione più robusta che sostituisce tutti i domini
-    
     const correctDomain = 'https://mtre.ch';
     const oldDomain = /https?:\/\/mtre-giardinaggio\.it/g;
     
@@ -91,7 +89,7 @@ module.exports = {
       priority = 0.8;
       changefreq = 'monthly';
     } 
-    // Pagina contatti - priorità alta (importante per conversioni)
+    // Pagina contatti - alta priorità (importante per conversioni)
     else if(cleanUrl.includes('/contact')) {
       priority = 0.9;
       changefreq = 'weekly';
@@ -111,23 +109,66 @@ module.exports = {
 
     // Verifica finale: assicurati che l'URL inizi con il dominio corretto
     if (!cleanUrl.startsWith(correctDomain)) {
-      // Se per qualche motivo l'URL non inizia con il dominio corretto, lo correggiamo
       console.warn(`URL non corretto rilevato: ${cleanUrl}, verrà corretto`);
       return {
         loc: correctDomain + (cleanUrl.startsWith('/') ? cleanUrl : '/' + cleanUrl),
         changefreq: changefreq,
         priority: priority,
         lastmod: new Date().toISOString(),
-        alternateRefs: config.alternateRefs ? [...config.alternateRefs] : [],
+        alternateRefs: generateCorrectAlternateRefs(cleanUrl),
       };
     }
-
+    
+    // Genera riferimenti hreflang corretti per ogni URL
+    const alternateRefs = generateCorrectAlternateRefs(cleanUrl);
+    
     return {
       loc: cleanUrl,
       changefreq: changefreq,
       priority: priority,
       lastmod: new Date().toISOString(),
-      alternateRefs: config.alternateRefs ? [...config.alternateRefs] : [],
+      alternateRefs: alternateRefs,
     };
   },
+};
+
+// Funzione per generare riferimenti alternativi corretti basati sul percorso
+function generateCorrectAlternateRefs(url) {
+  const baseUrl = 'https://mtre.ch';
+  
+  // Estrai il percorso relativo dall'URL completo
+  const relativePath = url.replace(/^https?:\/\/[^\/]+/i, '');
+  
+  // Determina il percorso senza il prefisso della lingua (se presente)
+  let pathWithoutLocale = relativePath;
+  const localeMatch = relativePath.match(/^\/+(it|en|de|fr)\//);
+  
+  if (localeMatch) {
+    // Rimuovi il prefisso della lingua dal percorso
+    pathWithoutLocale = relativePath.substring(localeMatch[0].length - 1);
+  } else if (relativePath === '/it' || relativePath === '/en' || 
+            relativePath === '/de' || relativePath === '/fr') {
+    // Se è solo un prefisso di lingua, il percorso senza locale è la radice
+    pathWithoutLocale = '/';
+  }
+  
+  // Se è la pagina radice, gestiscila in modo speciale
+  if (pathWithoutLocale === '/' || pathWithoutLocale === '') {
+    return [
+      { href: `${baseUrl}/en`, hreflang: 'en' },
+      { href: `${baseUrl}/de`, hreflang: 'de' },
+      { href: `${baseUrl}/fr`, hreflang: 'fr' },
+      { href: `${baseUrl}/it`, hreflang: 'it' },
+      { href: baseUrl, hreflang: 'x-default' }
+    ];
+  }
+  
+  // Altrimenti, genera versioni per ogni lingua
+  return [
+    { href: `${baseUrl}/en${pathWithoutLocale}`, hreflang: 'en' },
+    { href: `${baseUrl}/de${pathWithoutLocale}`, hreflang: 'de' },
+    { href: `${baseUrl}/fr${pathWithoutLocale}`, hreflang: 'fr' },
+    { href: `${baseUrl}/it${pathWithoutLocale}`, hreflang: 'it' },
+    { href: `${baseUrl}${pathWithoutLocale}`, hreflang: 'x-default' }
+  ];
 } 

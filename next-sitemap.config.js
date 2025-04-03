@@ -43,14 +43,18 @@ module.exports = {
     // Aggiungi sitemap specifica per le immagini
     const imageUrls = [
       // Immagini di servizi
-      { url: '/images/services/garden-design.avif', title: 'Progettazione Giardini', caption: 'Servizi di progettazione giardini professionali in Ticino' },
-      { url: '/images/services/maintenance.avif', title: 'Manutenzione Giardini', caption: 'Servizi di manutenzione giardini in Ticino' },
-      { url: '/images/services/irrigation.avif', title: 'Impianti di Irrigazione', caption: 'Installazione e manutenzione impianti di irrigazione in Ticino' },
-      { url: '/images/services/green-areas.avif', title: 'Spazi Verdi', caption: 'Gestione e manutenzione di spazi verdi in Ticino' },
+      { url: '/images/services/garden-design.avif', title: 'Progettazione Giardini', caption: 'Servizi di progettazione giardini in Ticino' },
+      { url: '/images/services/maintenance.avif', title: 'Manutenzione Giardini', caption: 'Servizi di manutenzione ordinaria e straordinaria in Ticino' },
+      { url: '/images/services/irrigation.avif', title: 'Impianti di Irrigazione', caption: 'Sistemi di irrigazione automatizzati in Ticino' },
+      { url: '/images/services/green-areas.avif', title: 'Aree Verdi', caption: 'Creazione e manutenzione di aree verdi in Ticino' },
       { url: '/images/services/lighting.avif', title: 'Illuminazione Giardini', caption: 'Installazione e progettazione illuminazione per giardini in Ticino' },
       { url: '/images/services/tree-care.avif', title: 'Cura degli Alberi', caption: 'Servizi di potatura, trattamento e cura degli alberi in Ticino' },
-      { url: '/images/mtregiardinaggio.avif', title: 'M.T.R.E. Giardinaggio', caption: 'Team di professionisti del giardinaggio in Ticino' },
+      { url: '/images/mtregiardinaggio.avif', title: 'M.T.R.E. Giardinaggio - Team', caption: 'Team di professionisti del giardinaggio in Ticino' },
       { url: '/images/hero/home-new.avif', title: 'M.T.R.E. Giardinaggio', caption: 'Servizi di giardinaggio professionali in Ticino' },
+      { url: '/images/hero/gallery-new.avif', title: 'Galleria M.T.R.E. Giardinaggio', caption: 'Galleria fotografica dei nostri progetti in Ticino' },
+      { url: '/images/hero/testimonials-new.avif', title: 'Testimonianze M.T.R.E. Giardinaggio', caption: 'Cosa dicono i nostri clienti dei nostri servizi' },
+      { url: '/images/hero/contact-new.avif', title: 'Contatta M.T.R.E. Giardinaggio', caption: 'Informazioni di contatto per i nostri servizi di giardinaggio' },
+      { url: '/images/hero/services-new.avif', title: 'Servizi M.T.R.E. Giardinaggio', caption: 'I nostri servizi di giardinaggio in Ticino' },
     ];
     
     // Crea URL per la sitemap delle immagini

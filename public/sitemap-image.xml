@@ -2,93 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://mtre.ch/gallery</loc>
-    <lastmod>2025-04-03T13:39:09.532Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/garden-design.avif</image:loc>
-      <image:title>Progettazione Giardini</image:title>
-      <image:caption>Servizi di progettazione giardini professionali in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/maintenance.avif</image:loc>
-      <image:title>Manutenzione Giardini</image:title>
-      <image:caption>Servizi di manutenzione giardini in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/irrigation.avif</image:loc>
-      <image:title>Impianti di Irrigazione</image:title>
-      <image:caption>Installazione e manutenzione impianti di irrigazione in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/green-areas.avif</image:loc>
-      <image:title>Spazi Verdi</image:title>
-      <image:caption>Gestione e manutenzione di spazi verdi in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/lighting.avif</image:loc>
-      <image:title>Illuminazione Giardini</image:title>
-      <image:caption>Installazione e progettazione illuminazione per giardini in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/tree-care.avif</image:loc>
-      <image:title>Cura degli Alberi</image:title>
-      <image:caption>Servizi di potatura, trattamento e cura degli alberi in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://mtre.ch/services</loc>
-    <lastmod>2025-04-03T13:39:09.532Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/garden-design.avif</image:loc>
-      <image:title>Progettazione Giardini</image:title>
-      <image:caption>Servizi di progettazione giardini professionali in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/maintenance.avif</image:loc>
-      <image:title>Manutenzione Giardini</image:title>
-      <image:caption>Servizi di manutenzione giardini in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/irrigation.avif</image:loc>
-      <image:title>Impianti di Irrigazione</image:title>
-      <image:caption>Installazione e manutenzione impianti di irrigazione in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/green-areas.avif</image:loc>
-      <image:title>Spazi Verdi</image:title>
-      <image:caption>Gestione e manutenzione di spazi verdi in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/lighting.avif</image:loc>
-      <image:title>Illuminazione Giardini</image:title>
-      <image:caption>Installazione e progettazione illuminazione per giardini in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://mtre.ch/images/services/tree-care.avif</image:loc>
-      <image:title>Cura degli Alberi</image:title>
-      <image:caption>Servizi di potatura, trattamento e cura degli alberi in Ticino</image:caption>
-      <image:geo_location>Ticino, Svizzera</image:geo_location>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://mtre.ch</loc>
-    <lastmod>2025-04-03T13:39:09.531Z</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://mtre.ch/</loc>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://mtre.ch/images/hero/home-new.avif</image:loc>
@@ -98,9 +12,79 @@
     </image:image>
     <image:image>
       <image:loc>https://mtre.ch/images/mtregiardinaggio.avif</image:loc>
-      <image:title>M.T.R.E. Giardinaggio</image:title>
+      <image:title>M.T.R.E. Giardinaggio - Team</image:title>
       <image:caption>Team di professionisti del giardinaggio in Ticino</image:caption>
       <image:geo_location>Ticino, Svizzera</image:geo_location>
     </image:image>
   </url>
-</urlset> 
+  <url>
+    <loc>https://mtre.ch/services</loc>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://mtre.ch/images/services/garden-design.avif</image:loc>
+      <image:title>Progettazione Giardini</image:title>
+      <image:caption>Servizi di progettazione giardini in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://mtre.ch/images/services/maintenance.avif</image:loc>
+      <image:title>Manutenzione Giardini</image:title>
+      <image:caption>Servizi di manutenzione ordinaria e straordinaria in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://mtre.ch/images/services/irrigation.avif</image:loc>
+      <image:title>Impianti di Irrigazione</image:title>
+      <image:caption>Sistemi di irrigazione automatizzati in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://mtre.ch/images/services/green-areas.avif</image:loc>
+      <image:title>Aree Verdi</image:title>
+      <image:caption>Creazione e manutenzione di aree verdi in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://mtre.ch/images/services/tree-care.avif</image:loc>
+      <image:title>Cura degli Alberi</image:title>
+      <image:caption>Servizi di potatura e cura degli alberi in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://mtre.ch/images/services/lighting.avif</image:loc>
+      <image:title>Illuminazione Giardini</image:title>
+      <image:caption>Progettazione e installazione di illuminazione per giardini in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://mtre.ch/gallery</loc>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://mtre.ch/images/hero/gallery-new.avif</image:loc>
+      <image:title>Galleria M.T.R.E. Giardinaggio</image:title>
+      <image:caption>Galleria fotografica dei nostri progetti in Ticino</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://mtre.ch/testimonials</loc>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://mtre.ch/images/hero/testimonials-new.avif</image:loc>
+      <image:title>Testimonianze M.T.R.E. Giardinaggio</image:title>
+      <image:caption>Cosa dicono i nostri clienti dei nostri servizi</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://mtre.ch/contact</loc>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://mtre.ch/images/hero/contact-new.avif</image:loc>
+      <image:title>Contatta M.T.R.E. Giardinaggio</image:title>
+      <image:caption>Informazioni di contatto per i nostri servizi di giardinaggio</image:caption>
+      <image:geo_location>Ticino, Svizzera</image:geo_location>
+    </image:image>
+  </url>
+</urlset>

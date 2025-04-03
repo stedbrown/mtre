@@ -14,6 +14,7 @@ module.exports = {
   robotsTxtOptions: {
     additionalSitemaps: [
       'https://mtre.ch/sitemap.xml',
+      'https://mtre.ch/sitemap-image.xml',  // Aggiungiamo sitemap delle immagini
     ],
     policies: [
       {
@@ -35,6 +36,40 @@ module.exports = {
     { href: 'https://mtre.ch/it', hreflang: 'it' },
     { href: 'https://mtre.ch', hreflang: 'x-default' },
   ],
+  // Configurazione per generare sitemap delle immagini
+  additionalPaths: async (config) => {
+    const result = [];
+    
+    // Aggiungi sitemap specifica per le immagini
+    const imageUrls = [
+      // Immagini di servizi
+      { url: '/images/services/garden-design.jpg', title: 'Progettazione Giardini', caption: 'Servizi di progettazione giardini professionali in Ticino' },
+      { url: '/images/services/maintenance.jpg', title: 'Manutenzione Giardini', caption: 'Servizi di manutenzione giardini in Ticino' },
+      { url: '/images/services/irrigation.jpg', title: 'Impianti di Irrigazione', caption: 'Installazione e manutenzione impianti di irrigazione in Ticino' },
+      { url: '/images/mtregiardinaggio.JPG', title: 'M.T.R.E. Giardinaggio', caption: 'Team di professionisti del giardinaggio in Ticino' },
+      { url: '/images/hero/home-new.jpg', title: 'M.T.R.E. Giardinaggio', caption: 'Servizi di giardinaggio professionali in Ticino' },
+    ];
+    
+    // Crea URL per la sitemap delle immagini
+    for (const imgUrl of imageUrls) {
+      result.push({
+        loc: `https://mtre.ch/gallery`, // Link alla pagina della galleria
+        lastmod: new Date().toISOString(),
+        changefreq: 'monthly',
+        priority: 0.8,
+        alternateRefs: config.alternateRefs ?? [],
+        img: [{
+          url: `https://mtre.ch${imgUrl.url}`,
+          title: imgUrl.title,
+          caption: imgUrl.caption,
+          geoLocation: 'Ticino, Svizzera',
+          license: 'https://mtre.ch/license' // URL fittizio per la licenza
+        }]
+      });
+    }
+    
+    return result;
+  },
   transform: (config, url) => {
     // Forza il dominio mtre.ch se necessario
     const correctDomain = 'https://mtre.ch';
@@ -70,8 +105,13 @@ module.exports = {
     }
     
     // Homepage in tutte le lingue - massima priorità
-    if(cleanUrl === correctDomain || cleanUrl.match(new RegExp(`${correctDomain}/[a-z]{2}$`))) {
+    if(cleanUrl === correctDomain) {
       priority = 1.0;
+      changefreq = 'daily';
+    }
+    // Pagine in lingua specifiche
+    else if(cleanUrl.match(new RegExp(`${correctDomain}/[a-z]{2}$`))) {
+      priority = 0.9;
       changefreq = 'daily';
     } 
     // Pagine principali dei servizi - alta priorità
@@ -100,6 +140,11 @@ module.exports = {
       changefreq = 'monthly';
     }
     
+    // Gestisci le priorità in base alla lingua (inglese e italiano più importanti)
+    if(cleanUrl.includes('/en/') || cleanUrl.includes('/it/')) {
+      priority = Math.min(priority + 0.05, 1.0); // Aumenta ma massimo 1.0
+    }
+    
     // Aggiusta le priorità in base alla profondità dell'URL (pagine più profonde hanno meno priorità)
     const urlDepth = (cleanUrl.match(/\//g) || []).length;
     if (urlDepth > 2 && priority > 0.5) {
@@ -122,6 +167,7 @@ module.exports = {
     // Genera riferimenti hreflang corretti per ogni URL
     const alternateRefs = generateCorrectAlternateRefs(cleanUrl);
     
+    // Output con informazioni complete e ottimizzate
     return {
       loc: cleanUrl,
       changefreq: changefreq,

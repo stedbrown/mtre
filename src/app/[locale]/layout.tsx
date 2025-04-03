@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { locales } from "@/i18n/navigation";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import SpeedInsights from "@vercel/speed-insights";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -137,6 +138,22 @@ export default async function LocaleLayout({
         <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Rome">
           {children}
         </NextIntlClientProvider>
+        {/* Speed Insights script sarà caricato automaticamente da Vercel in produzione */}
+        <script 
+          dangerouslySetInnerHTML={{
+            __html: `
+              setTimeout(() => {
+                try {
+                  if (window._vercel) {
+                    window._vercel.insights.load();
+                  }
+                } catch (err) {
+                  console.error('Error loading speed insights:', err);
+                }
+              }, 100);
+            `
+          }} 
+        />
       </body>
     </html>
   );

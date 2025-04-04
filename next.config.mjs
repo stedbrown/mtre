@@ -86,7 +86,7 @@ const nextConfig = {
     webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB', 'INP'],
   },
   // Configurazione webpack migliorata per PageSpeed
-  webpack: (config, { dev, isServer }) => {
+  webpack: async (config, { dev, isServer }) => {
     // Manteniamo moduleIds deterministici per caching migliore
     config.optimization.moduleIds = 'deterministic';
     
@@ -99,8 +99,10 @@ const nextConfig = {
       // Aumenta il livello di compressione
       config.optimization.minimize = true;
       
+      // Importazione dinamica di TerserPlugin per ESM
+      const TerserPlugin = (await import('terser-webpack-plugin')).default;
+      
       // Configurazione del Terser per minimizzazione più aggressiva
-      const TerserPlugin = require('terser-webpack-plugin');
       config.optimization.minimizer = [
         new TerserPlugin({
           terserOptions: {
@@ -183,7 +185,7 @@ const nextConfig = {
       
       // Aggiungi plugin per analizzare la dimensione del bundle (solo durante lo sviluppo locale)
       if (process.env.ANALYZE === 'true') {
-        const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+        const { BundleAnalyzerPlugin } = (await import('webpack-bundle-analyzer'));
         config.plugins.push(
           new BundleAnalyzerPlugin({
             analyzerMode: 'server',

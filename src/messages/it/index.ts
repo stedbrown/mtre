@@ -6,6 +6,11 @@ const messages = {
     testimonials: 'Testimonianze',
     contact: 'Contatti'
   },
+  metadata: {
+    siteName: 'M.T.R.E. Giardinaggio',
+    ogImageAlt: 'M.T.R.E. Giardinaggio Professionale in Ticino',
+    title: 'M.T.R.E. Giardinaggio | Servizi Professionali in Ticino'
+  },
   Breadcrumbs: {
     home: 'Home'
   },

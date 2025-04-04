@@ -9,6 +9,11 @@ const messages = {
   Breadcrumbs: {
     home: 'Home'
   },
+  metadata: {
+    title: 'M.T.R.E. Gardening - Professional Gardening Services in Ticino',
+    description: 'Professional gardening services in Ticino. Design, maintenance, irrigation systems and much more for private individuals and companies.',
+    keywords: 'gardening, gardener, Ticino, garden maintenance, garden design, irrigation systems'
+  },
   contact: {
     title: 'Contact Us',
     description: 'We are here to help. Contact us for any questions or requests.',
@@ -44,6 +49,16 @@ const messages = {
       message: 'Message',
       service: 'Service of interest',
       selectService: 'Select a service',
+      serviceOptions: {
+        choose: 'Choose a service',
+        gardenDesign: 'Garden Design',
+        maintenance: 'Maintenance',
+        irrigation: 'Irrigation Systems',
+        treeCare: 'Tree Care',
+        greenAreas: 'Green Areas',
+        lighting: 'Lighting',
+        other: 'Other'
+      },
       services: {
         gardenDesign: 'Garden Design',
         maintenance: 'Maintenance',
@@ -56,6 +71,10 @@ const messages = {
       sending: 'Sending...',
       success: 'Your message has been sent successfully. We will contact you soon!',
       error: 'There was an error sending your message. Please try again later.'
+    },
+    social: {
+      title: 'Follow Us on Social Media',
+      description: 'Stay updated with our latest projects and news by following us on social media'
     }
   }
 };

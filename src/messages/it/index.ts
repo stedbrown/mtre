@@ -9,6 +9,11 @@ const messages = {
   Breadcrumbs: {
     home: 'Home'
   },
+  metadata: {
+    title: 'M.T.R.E. Giardinaggio - Servizi di Giardinaggio Professionali in Ticino',
+    description: 'Servizi di giardinaggio professionali in Ticino. Progettazione, manutenzione, impianti di irrigazione e molto altro per privati e aziende.',
+    keywords: 'giardinaggio, giardiniere, Ticino, manutenzione giardini, progettazione giardini, impianti irrigazione'
+  },
   home: {
     hero: {
       title: 'M.T.R.E. Giardinaggio',
@@ -398,6 +403,16 @@ const messages = {
       subject: 'Oggetto',
       service: 'Servizio di interesse',
       selectService: 'Seleziona un servizio',
+      serviceOptions: {
+        choose: 'Scegli un servizio',
+        gardenDesign: 'Progettazione Giardini',
+        maintenance: 'Manutenzione',
+        irrigation: 'Impianti di Irrigazione',
+        treeCare: 'Cura degli Alberi',
+        greenAreas: 'Aree Verdi',
+        lighting: 'Illuminazione',
+        other: 'Altro'
+      },
       services: {
         gardenDesign: 'Progettazione Giardini',
         maintenance: 'Manutenzione',
@@ -411,6 +426,10 @@ const messages = {
       success: 'Messaggio inviato con successo! Ti contatteremo presto.',
       error: 'Si è verificato un errore. Riprova o contattaci direttamente.',
       requiredFields: '* I campi contrassegnati sono obbligatori'
+    },
+    social: {
+      title: 'Seguici sui Social',
+      description: 'Resta aggiornato con le nostre ultime realizzazioni e novità seguendoci sui social media'
     }
   },
   footer: {

@@ -13,13 +13,7 @@ const Footer = dynamic(() => import('./Footer'), {
   loading: () => <div className="h-64 bg-green-900" aria-label="Caricamento footer in corso" />,
 });
 
-const CookieConsent = dynamic(() => import('@/components/CookieConsent'), {
-  ssr: false,
-});
-
-const WhatsAppButton = dynamic(() => import('@/components/WhatsAppButton'), { 
-  ssr: false,
-});
+// Rimossi i componenti che causano errori
 
 // Componente ottimizzato con memo
 const MainLayout = memo(function MainLayout({ 

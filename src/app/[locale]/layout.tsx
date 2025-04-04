@@ -1,16 +1,9 @@
-import dynamic from 'next/dynamic';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { locales } from "@/i18n/navigation";
 import "./globals.css";
-
-// Caricamento dinamico di componenti non critici
-const GoogleAnalytics = dynamic(() => import("@/components/GoogleAnalytics"), {
-  ssr: false,
-  loading: () => null
-});
 
 // Ottimizzazione: configuriamo i font con display swap per migliorare CLS
 const geistSans = Geist({
@@ -125,8 +118,21 @@ export default async function LocaleLayout({
             {children}
           </main>
           
-          {/* Carica GA solo quando necessario */}
-          <GoogleAnalytics />
+          {/* Google Analytics verrà caricato come script globale */}
+          <script 
+            async 
+            src="https://www.googletagmanager.com/gtag/js?id=G-YOUR-ID"
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-YOUR-ID');
+              `,
+            }}
+          />
         </NextIntlClientProvider>
       </body>
     </html>

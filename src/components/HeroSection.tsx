@@ -46,19 +46,29 @@ const HeroSection = memo(function HeroSection({
         </div>
       </div>
 
+      {/* Background placeholder per LCP immediato */}
+      <div 
+        className="absolute inset-0 bg-green-800 z-0" 
+        aria-hidden="true"
+      />
+
       {/* Immagine hero con attributi ottimizzati per LCP */}
       <Image
         src={imageSrc}
         alt=""
         fill
         priority={true}
-        quality={60}
+        quality={55}
         sizes="100vw"
         className="object-cover"
         style={{position: 'absolute'}}
         fetchPriority="high"
         aria-hidden="true"
         loading="eager"
+        placeholder="blur"
+        blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxNjY1MzQiLz48L3N2Zz4="
+        width={1920}
+        height={1080}
       />
 
       {/* Overlay scuro per aumentare il contrasto del testo */}

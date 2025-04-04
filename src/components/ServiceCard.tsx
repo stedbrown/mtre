@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 
@@ -16,7 +16,8 @@ type ServiceCardProps = {
   featuresLabel: string;
 };
 
-export default function ServiceCard({
+// Utilizzo di memo per prevenire rerenders inutili
+const ServiceCard = memo(function ServiceCard({
   id,
   title,
   description,
@@ -41,7 +42,13 @@ export default function ServiceCard({
           alt={title}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+          width={400}
+          height={300}
+          quality={60}
+          loading="lazy"
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMjI3MDNmIi8+PC9zdmc+"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
           <h2 className="text-2xl font-bold text-white">{title}</h2>
@@ -84,4 +91,6 @@ export default function ServiceCard({
       </div>
     </div>
   );
-} 
+});
+
+export default ServiceCard; 

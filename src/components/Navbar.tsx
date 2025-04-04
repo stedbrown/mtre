@@ -26,6 +26,11 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu when pathname changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   // Array di oggetti per i link del menu
   const menuItems = [
     { href: '/', label: 'home' },
@@ -126,11 +131,12 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-gray-900">
-            <div className="flex justify-end p-4">
+          <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-gray-900 pt-16">
+            <div className="flex justify-end p-4 absolute top-0 right-0">
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-gray-800 dark:text-gray-200 hover:text-green-600 transition-colors"
+                aria-label="Close menu"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -149,25 +155,33 @@ export default function Navbar() {
               </button>
             </div>
             
-            <div className="flex flex-col space-y-4 p-8">
+            <div className="flex flex-col p-8">
               {mounted ? (
                 <>
                   {menuItems.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-2 px-4 text-lg text-gray-800 dark:text-gray-200 hover:text-green-600 transition-colors"
+                      className={`block py-3 px-4 text-lg ${
+                        pathname === item.href
+                          ? 'text-green-600 font-bold'
+                          : 'text-gray-800 dark:text-gray-200'
+                      } hover:text-green-600 transition-colors border-b border-gray-100`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {item.label}
+                      {t(item.label)}
                     </Link>
                   ))}
+                  
+                  <div className="mt-6 pt-4 border-t border-gray-100">
+                    <LanguageSwitcher isScrolled={true} />
+                  </div>
                 </>
               ) : (
                 <>
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse mb-3"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse mb-3"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse mb-3"></div>
                 </>
               )}
             </div>

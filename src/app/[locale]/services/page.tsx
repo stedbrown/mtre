@@ -6,6 +6,7 @@ import MainLayout from '@/components/MainLayout';
 import ServiceCard from '@/components/ServiceCard';
 import HeroSection from '@/components/HeroSection';
 import Breadcrumbs from '@/components/navigation/Breadcrumbs';
+import ActionButton from '@/components/ActionButton';
 import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 
@@ -147,114 +148,117 @@ export default function ServicesPage() {
 
       {/* Filtri per categoria & Breadcrumbs */}
       <section className="py-8 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto">
           <Breadcrumbs />
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            <button
-              className={`px-4 py-2 rounded-full transition-colors ${
-                activeCategory === 'all'
-                  ? 'bg-green-600 text-white' 
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+            <FilterButton 
+              active={activeCategory === 'all'} 
               onClick={() => setActiveCategory('all')}
-            >
-              {t('services.filters.all')}
-            </button>
-            <button
-              className={`px-4 py-2 rounded-full transition-colors ${
-                activeCategory === 'residential'
-                  ? 'bg-green-600 text-white' 
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
+              label={t('services.filters.all')}
+            />
+            <FilterButton 
+              active={activeCategory === 'residential'} 
               onClick={() => setActiveCategory('residential')}
-            >
-              {t('services.filters.residential')}
-            </button>
-            <button
-              className={`px-4 py-2 rounded-full transition-colors ${
-                activeCategory === 'commercial'
-                  ? 'bg-green-600 text-white' 
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
+              label={t('services.filters.residential')}
+            />
+            <FilterButton 
+              active={activeCategory === 'commercial'} 
               onClick={() => setActiveCategory('commercial')}
-            >
-              {t('services.filters.commercial')}
-            </button>
-            <button
-              className={`px-4 py-2 rounded-full transition-colors ${
-                activeCategory === 'maintenance'
-                  ? 'bg-green-600 text-white' 
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
+              label={t('services.filters.commercial')}
+            />
+            <FilterButton 
+              active={activeCategory === 'maintenance'} 
               onClick={() => setActiveCategory('maintenance')}
-            >
-              {t('services.filters.maintenance')}
-            </button>
+              label={t('services.filters.maintenance')}
+            />
           </div>
         </div>
       </section>
 
       {/* Elenco dei servizi */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {filteredServices.map((service) => (
-              <div key={service.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                {/* Preview del servizio */}
-                <div className="relative h-48">
-                  <Image
-                    src={service.image}
-                    alt={t(service.titleKey)}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    loading="lazy"
-                  />
-                </div>
-                
-                {/* Contenuto del servizio */}
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-green-800 mb-3">{t(service.titleKey)}</h3>
-                  <p className="text-gray-600 mb-4">{t(service.descriptionKey)}</p>
-                  
-                  {/* Lista di caratteristiche */}
-                  <div className="mt-4">
-                    <h4 className="text-lg font-semibold text-green-700 mb-2">
-                      {t('services.serviceDetails.features')}
-                    </h4>
-                    <ul className="space-y-2 mb-4">
-                      {Object.values(service.featuresKeys).map((key, index) => (
-                        <li key={index} className="flex items-start">
-                          <svg className="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                          </svg>
-                          <span className="text-gray-700">{t(key)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  {/* Pulsanti di azione */}
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <Link 
-                      href="/contact" 
-                      className="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
-                    >
-                      {t('services.serviceDetails.contact')}
-                    </Link>
-                    <Link 
-                      href={`/services/${service.id}`} 
-                      className="inline-block bg-white border border-green-600 text-green-600 hover:bg-green-50 font-medium py-2 px-4 rounded-md transition-colors"
-                    >
-                      {t('services.serviceDetails.showMore')}
-                    </Link>
-                  </div>
-                </div>
-              </div>
+      <section className="py-12 md:py-16 bg-gray-50">
+        <div className="container mx-auto">
+          <div className="card-grid">
+            {filteredServices.map((service, index) => (
+              <ServiceCard
+                key={service.id}
+                title={t(service.titleKey)}
+                description={t(service.descriptionKey)}
+                imageSrc={service.image}
+                moreText={t('common.readMore')}
+                linkHref={`/services/${service.id}`}
+                priority={index < 3}
+              />
             ))}
+          </div>
+          
+          {filteredServices.length === 0 && (
+            <div className="text-center py-8">
+              <div className="text-gray-500 mb-4">
+                {t('services.noResults')}
+              </div>
+              <ActionButton 
+                variant="outline" 
+                onClick={() => setActiveCategory('all')}
+              >
+                {t('services.showAll')}
+              </ActionButton>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Call to action */}
+      <section className="py-12 md:py-16 bg-green-800 text-white">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            {t('services.cta.title')}
+          </h2>
+          <p className="text-lg text-green-100 mb-8 max-w-2xl mx-auto">
+            {t('services.cta.description')}
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <ActionButton 
+              href="/contact" 
+              variant="primary"
+              size="lg"
+              className="bg-white text-green-800 hover:bg-green-100"
+            >
+              {t('services.cta.contact')}
+            </ActionButton>
+            <ActionButton 
+              href="/gallery" 
+              variant="outline"
+              size="lg"
+              className="border-white text-white hover:bg-green-700/50"
+            >
+              {t('services.cta.gallery')}
+            </ActionButton>
           </div>
         </div>
       </section>
     </MainLayout>
+  );
+}
+
+// Componente per i pulsanti di filtro
+interface FilterButtonProps {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+}
+
+function FilterButton({ active, onClick, label }: FilterButtonProps) {
+  return (
+    <button
+      className={`px-4 py-2 rounded-full text-sm md:text-base font-medium transition-colors ${
+        active
+          ? 'bg-green-600 text-white' 
+          : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+      }`}
+      onClick={onClick}
+    >
+      {label}
+    </button>
   );
 }

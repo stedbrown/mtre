@@ -29,15 +29,15 @@ const ServiceCard = memo(function ServiceCard({
   const mobileImageSrc = `${basePath.replace('/services/', '/services/mobile/')}${extension}`;
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group h-full flex flex-col">
       <div className="relative h-48">
         {/* Immagine mobile ottimizzata */}
         <Image
-          src={mobileImageSrc}
+          src={imageSrc} // Fallback to main image if mobile version doesn't exist
           alt={title}
           width={320}
           height={240}
-          className="object-cover group-hover:scale-105 transition-transform duration-300 md:hidden"
+          className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-300 md:hidden"
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
           quality={50}
@@ -52,7 +52,7 @@ const ServiceCard = memo(function ServiceCard({
           alt={title}
           width={400}
           height={300}
-          className="object-cover group-hover:scale-105 transition-transform duration-300 hidden md:block"
+          className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-300 hidden md:block"
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
           quality={60}
@@ -61,12 +61,12 @@ const ServiceCard = memo(function ServiceCard({
           blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjdmN2Y3Ii8+PC9zdmc+"
         />
       </div>
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-grow">
         <h3 className="text-xl font-semibold text-green-800 mb-3">{title}</h3>
-        <p className="text-gray-600 mb-4">{description}</p>
+        <p className="text-gray-600 mb-4 flex-grow">{description}</p>
         <Link 
           href={linkHref} 
-          className="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors"
+          className="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors mt-auto"
         >
           {moreText}
           <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

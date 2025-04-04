@@ -17,9 +17,11 @@ const Footer = dynamic(() => import('./Footer'), {
 
 // Componente ottimizzato con memo
 const MainLayout = memo(function MainLayout({ 
-  children 
+  children,
+  showBreadcrumbs = false,
 }: { 
   children: React.ReactNode;
+  showBreadcrumbs?: boolean;
 }) {
   const params = useParams();
   const locale = params.locale as string;
@@ -108,12 +110,24 @@ const MainLayout = memo(function MainLayout({
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      
+      {/* Navbar fissa in alto */}
       <Navbar />
-      <main className="flex-grow">
+      
+      {/* Spazio per compensare la navbar fissa */}
+      <div className="h-16 md:h-20"></div>
+      
+      {/* Contenuto principale */}
+      <main className="flex-grow flex flex-col">
+        {showBreadcrumbs && (
+          <div className="container mx-auto px-4 py-4">
+            <Breadcrumbs />
+          </div>
+        )}
         {children}
       </main>
       
-      {/* Componenti non critici caricati dinamicamente */}
+      {/* Footer caricato dinamicamente */}
       {mounted && (
         <Footer />
       )}

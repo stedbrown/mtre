@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, memo } from "react";
+import { memo } from "react";
 import Image from "next/image";
 
 type HeroSectionProps = {
@@ -12,7 +12,7 @@ type HeroSectionProps = {
   overlay?: boolean;
 };
 
-// Componente ottimizzato con memo per prevenire re-render inutili
+// Ottimizzato per ridurre LCP da 11 secondi
 const HeroSection = memo(function HeroSection({
   title,
   description,
@@ -21,47 +21,13 @@ const HeroSection = memo(function HeroSection({
   imageSrc = "/images/hero/home-new.avif",
   overlay = true,
 }: HeroSectionProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  // Ottimizza la visualizzazione dell'immagine hero
-  useEffect(() => {
-    // Segna l'immagine come caricata dopo che è stata renderizzata
-    setIsLoaded(true);
-  }, []);
-
   return (
     <section 
-      className={`relative ${height} min-h-[400px] flex items-center overflow-hidden hero-section`}
+      className={`relative ${height} min-h-[400px] flex items-center overflow-hidden bg-green-800`}
       aria-labelledby="hero-heading"
     >
-      {/* Placeholder di background per migliorare LCP */}
-      <div 
-        className="absolute inset-0 bg-green-800 z-0" 
-        aria-hidden="true"
-      />
-
-      {/* Immagine hero con priorità alta e dimensioni esplicite */}
-      <Image
-        src={imageSrc}
-        alt=""
-        fill
-        className={`object-cover transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-        priority={true}
-        quality={75}
-        sizes="100vw"
-        aria-hidden="true"
-      />
-
-      {/* Overlay scuro per aumentare il contrasto del testo */}
-      {overlay && (
-        <div
-          className="absolute inset-0 bg-black/40 z-10"
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Contenuto hero con heading principale */}
-      <div className="container mx-auto px-4 relative z-20 hero-content">
+      {/* Contenuto hero posizionato sopra per renderizzare subito il testo */}
+      <div className="container mx-auto px-4 relative z-20">
         <div className="max-w-3xl">
           <h1 
             id="hero-heading"
@@ -79,6 +45,29 @@ const HeroSection = memo(function HeroSection({
           {children}
         </div>
       </div>
+
+      {/* Immagine hero con attributi ottimizzati per LCP */}
+      <Image
+        src={imageSrc}
+        alt=""
+        fill
+        priority={true}
+        quality={60}
+        sizes="100vw"
+        className="object-cover"
+        style={{position: 'absolute'}}
+        fetchPriority="high"
+        aria-hidden="true"
+        loading="eager"
+      />
+
+      {/* Overlay scuro per aumentare il contrasto del testo */}
+      {overlay && (
+        <div
+          className="absolute inset-0 bg-black/40 z-10"
+          aria-hidden="true"
+        />
+      )}
     </section>
   );
 });

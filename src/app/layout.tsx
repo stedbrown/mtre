@@ -40,8 +40,23 @@ export default function RootLayout({
   return (
     <html lang="it">
       <head>
-        {/* Precarica solo l'immagine hero principale con alta priorità */}
-        <link rel="preload" as="image" href="/images/hero/home-new.avif" fetchPriority="high" />
+        {/* Preload dell'immagine principale con priorità alta */}
+        <link 
+          rel="preload" 
+          as="image" 
+          href="/images/hero/home-new.avif" 
+          fetchPriority="high" 
+        />
+        
+        {/* Inserimento inline dell'immagine hero come base64 per instant display */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .hero-placeholder {
+            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAAXACQDAREAAhEBAxEB/8QAGwAAAgEFAAAAAAAAAAAAAAAAAAYHCAkCAwX/xAAxEAABAwMDAgUBBwUAAAAAAAABAgMEBQYRACExBxIIE0FRYRQiI0JxgZGhFSQyY+H/xAAXAQEBAQEAAAAAAAAAAAAAAAAACwAK/8QAKBEAAQIEAwcFAAAAAAAAAAAAAQACAwQFESEUFTEGEjJBUWGBkaHR8f/aAAwDAQACEQMRAD8AoEpWCa08k2PBIWHoTu2yAv6Vx1jEYlxEqUgdnYSSclPoE5J5xiP3NnA0H+5w6UeFcnvR3KmLqahoWxR3q1XFUOiwVuxqvFRGkTYsVKiAYiZLyEuSUggg9qADgkLAONL1LarZ2oLW7VcAKWlvGRWNnDR2d4XTH2PqwJQSU7XhA4YG+iQTyoiLqXEpSUhLbi0nBIPJOw39NR4Tw4WPytljXNJa7DxZEPSanNSpmmKJJiVOjzFkqMeZGffioWR3HsQsJQrIOdxuPUYjYMRsJ4ewG6cdCpurMkpzZ+YksAHEuAbcWxAv5V9ot21QF1Rl1OFZdCDgVAjLa6S8g/iGSnACgfxoB2B5IxsR0b8y5pwnrPTHb2M37q+qLbVOdoLKaXIuKOW+lTjzyUw0rVnzUo7VKAQCvB25BOMah5naMmkJDLbPTGj4cXfp3r9KxejbIS85PQ9rYMJksZeNEJAs0fEX8NW8NP3qgqtyJMnuolqU+p+K2UJLCnFKJIBJJIIUR94Z3IPxpE1c+dqHCTzOm65d75kNTHssnT+wbQwzDMXG+OKy+i5FaeSUJU4AEqIUhIJI7gnlPcOR7nBzq+XmGTDBEbct7/a5oYWuF0zqXYt+NE7IXVsVGQ2JKWKeh0LlAOokvnuAZXlPmJQsFQBACSFDtOYGbq+Xgw3PLc1TRuN0GlrqrTbMSVajgzbS86KyRumcYAafnmpzCQpLwkknKQgLPbntAA+5x6aar1d1ImjLZYnvotYtw3MwZQg1RKNk5JUXXW9uw4O6ARnff07tdmrSrNnR7+qlGQXmZFPoLAcU6Q13SqwErbKAckKQkLKuMErJwBpc1U2e5uWt6WRmSXmQw8Lr6IpCVpV9S2AlwpUk532yMjGcHG58a61SZ0yB0Gt14p1kU4kX3CuCqFDaQtPnD6RJQkpHcMnBxnYjPrjURHqcaJ+oW6arTVAp4FpZvnH4/i//9k=');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+          }
+        `}} />
         
         {/* Precarica i font critici */}
         <link

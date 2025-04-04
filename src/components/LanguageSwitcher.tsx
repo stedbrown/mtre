@@ -55,7 +55,10 @@ export default function LanguageSwitcher({ isScrolled }: LanguageSwitcherProps) 
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <span>{nativeNames[currentLocale]}</span>
+        <span className="flex items-center">
+          <span className="mr-1.5">{flags[currentLocale]}</span>
+          <span>{nativeNames[currentLocale]}</span>
+        </span>
         <svg
           className={`w-3.5 h-3.5 ml-1 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"

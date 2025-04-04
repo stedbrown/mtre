@@ -11,6 +11,12 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Assicurarsi che il componente sia montato lato client prima di mostrare le traduzioni
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +25,15 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Array di oggetti per i link del menu
+  const menuItems = [
+    { href: '/', label: 'home' },
+    { href: '/services', label: 'services' },
+    { href: '/gallery', label: 'gallery' },
+    { href: '/testimonials', label: 'testimonials' },
+    { href: '/contact', label: 'contact' }
+  ];
 
   return (
     <nav
@@ -44,13 +59,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            {[
-              { href: '/', label: t('home') },
-              { href: '/services', label: t('services') },
-              { href: '/gallery', label: t('gallery') },
-              { href: '/testimonials', label: t('testimonials') },
-              { href: '/contact', label: t('contact') }
-            ].map((item) => (
+            {mounted && menuItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -64,7 +73,7 @@ export default function Navbar() {
                     : 'text-gray-100 hover:text-white hover:bg-green-600/20'
                 }`}
               >
-                {item.label}
+                {t(item.label)}
               </Link>
             ))}
             
@@ -109,13 +118,7 @@ export default function Navbar() {
         {isMobileMenuOpen && (
           <div className="md:hidden mt-2 pb-2 border-t border-gray-200 dark:border-gray-700">
             <div className="pt-2 pb-2 space-y-1">
-              {[
-                { href: '/', label: t('home') },
-                { href: '/services', label: t('services') },
-                { href: '/gallery', label: t('gallery') },
-                { href: '/testimonials', label: t('testimonials') },
-                { href: '/contact', label: t('contact') }
-              ].map((item) => (
+              {mounted && menuItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -130,7 +133,7 @@ export default function Navbar() {
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item.label}
+                  {t(item.label)}
                 </Link>
               ))}
             </div>

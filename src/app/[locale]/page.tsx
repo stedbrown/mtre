@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
 import Script from 'next/script';
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import ServiceCard from '@/components/ServiceCard';
 
 // Componenti ottimizzati con memo per evitare re-render inutili
@@ -130,6 +130,12 @@ const DesktopHeroImage = memo(() => (
 // Componente principale ottimizzato
 export default function Home() {
   const t = useTranslations();
+  const [mounted, setMounted] = useState(false);
+  
+  // Assicurarsi che il componente sia montato lato client prima di usare le traduzioni
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const localBusinessSchema = {
     "@context": "https://schema.org",
@@ -320,6 +326,20 @@ export default function Home() {
       }
     ]
   };
+  
+  // Se non è montato, mostra un placeholder di caricamento
+  if (!mounted) {
+    return (
+      <MainLayout>
+        <div className="min-h-screen flex items-center justify-center bg-green-50">
+          <div className="animate-pulse text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-green-600 rounded-full"></div>
+            <div className="h-6 bg-green-200 rounded w-48 mx-auto"></div>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
   
   return (
     <MainLayout>

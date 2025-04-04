@@ -21,6 +21,11 @@ const HeroSection = memo(function HeroSection({
   imageSrc = "/images/hero/home-new.avif",
   overlay = true,
 }: HeroSectionProps) {
+  // Determina l'immagine mobile estraendo il nome del file
+  const baseName = imageSrc.substring(0, imageSrc.lastIndexOf('.'));
+  const extension = imageSrc.substring(imageSrc.lastIndexOf('.'));
+  const mobileImageSrc = `${baseName}-mobile${extension}`;
+
   return (
     <section 
       className={`relative ${height} min-h-[400px] flex items-center overflow-hidden bg-green-800`}
@@ -52,15 +57,34 @@ const HeroSection = memo(function HeroSection({
         aria-hidden="true"
       />
 
-      {/* Immagine hero con attributi ottimizzati per LCP */}
+      {/* Immagine mobile per dispositivi mobili */}
       <Image
         src={imageSrc}
         alt=""
         fill
         priority={true}
-        quality={55}
+        quality={45}
+        sizes="(max-width: 768px) 100vw, 100vw"
+        className="object-cover md:hidden"
+        style={{position: 'absolute'}}
+        fetchPriority="high"
+        aria-hidden="true"
+        loading="eager"
+        placeholder="blur"
+        blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iOTYwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTY2NTM0Ii8+PC9zdmc+"
+        width={640}
+        height={960}
+      />
+      
+      {/* Immagine desktop per dispositivi più grandi */}
+      <Image
+        src={imageSrc}
+        alt=""
+        fill
+        priority={true}
+        quality={50}
         sizes="100vw"
-        className="object-cover"
+        className="object-cover hidden md:block"
         style={{position: 'absolute'}}
         fetchPriority="high"
         aria-hidden="true"

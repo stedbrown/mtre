@@ -69,9 +69,8 @@ const AboutSection = memo(({ t }: { t: any }) => (
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            loading="eager"
-            fetchPriority="high"
-            quality={75}
+            loading="lazy"
+            quality={65}
             width={800}
             height={600}
           />
@@ -79,6 +78,52 @@ const AboutSection = memo(({ t }: { t: any }) => (
       </div>
     </div>
   </section>
+));
+
+// Versione mobile ottimizzata dell'immagine hero per LCP
+const MobileHeroImage = memo(() => (
+  <Image
+    src="/images/hero/home-mobile.avif"
+    alt="M.T.R.E. Giardinaggio"
+    width={640}
+    height={960}
+    priority={true}
+    quality={50}
+    className="object-cover"
+    sizes="100vw"
+    style={{
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+    }}
+  />
+));
+
+// Versione desktop dell'immagine hero
+const DesktopHeroImage = memo(() => (
+  <Image
+    src="/images/hero/home-new.avif"
+    alt="M.T.R.E. Giardinaggio"
+    width={1920}
+    height={1080}
+    priority={true}
+    quality={50}
+    className="object-cover hidden md:block"
+    sizes="100vw"
+    style={{
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+    }}
+  />
 ));
 
 // Componente principale ottimizzato
@@ -286,18 +331,46 @@ export default function Home() {
       <link rel="preload" as="image" href="/images/hero/home-new.avif" />
       
       {/* Hero Section */}
-      <HeroSection
-        title={t('home.hero.title')}
-        description={t('home.hero.subtitle')}
-        height="h-[60vh]"
-      >
-        <Link
-          href="/contact"
-          className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-block"
-        >
-          {t('home.hero.cta')}
-        </Link>
-      </HeroSection>
+      <section className="relative h-[80vh] md:h-[70vh] flex items-center overflow-hidden bg-green-800">
+        {/* Background solid per LCP immediato */}
+        <div className="absolute inset-0 bg-green-800 z-0" aria-hidden="true" />
+        
+        {/* Immagini responsive */}
+        <MobileHeroImage />
+        <DesktopHeroImage />
+        
+        {/* Overlay scuro */}
+        <div className="absolute inset-0 bg-black/40 z-10" aria-hidden="true" />
+        
+        {/* Contenuto hero */}
+        <div className="container mx-auto px-4 relative z-20">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+              {t('home.hero.title')}
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl">
+              {t('home.hero.description')}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/contact"
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-md transition-all duration-300 inline-flex items-center"
+              >
+                {t('home.hero.cta.contact')}
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </Link>
+              <Link
+                href="/services"
+                className="bg-white/20 hover:bg-white/30 text-white font-semibold py-3 px-6 rounded-md transition-all duration-300 backdrop-blur-sm inline-flex items-center"
+              >
+                {t('home.hero.cta.services')}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Sezione About ottimizzata */}
       <AboutSection t={t} />

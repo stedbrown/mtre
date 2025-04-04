@@ -74,7 +74,7 @@ export default function TestimonialsPage() {
       <HeroSection
         title={t('testimonials.title')}
         description={t('testimonials.description')}
-        backgroundImage="/images/hero/testimonials-new.avif"
+        imageSrc="/images/hero/testimonials-new.avif"
       />
       
       <section className="py-16 bg-green-50">

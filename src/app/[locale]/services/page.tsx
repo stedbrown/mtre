@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import MainLayout from '@/components/MainLayout';
 import ServiceCard from '@/components/ServiceCard';
 import HeroSection from '@/components/HeroSection';
 import Breadcrumbs from '@/components/navigation/Breadcrumbs';
+import { Link } from '@/i18n/navigation';
+import Image from 'next/image';
 
 // Definizione del tipo per i servizi
 type Service = {
@@ -20,6 +22,12 @@ type Service = {
 export default function ServicesPage() {
   const t = useTranslations();
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [mounted, setMounted] = useState(false);
+  
+  // Assicurarsi che il componente sia montato lato client prima di usare le traduzioni
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Definizione dei servizi
   const services: Service[] = [
@@ -114,6 +122,20 @@ export default function ServicesPage() {
     ? services
     : services.filter(service => service.category.includes(activeCategory));
   
+  // Se non è montato, mostra un placeholder di caricamento
+  if (!mounted) {
+    return (
+      <MainLayout>
+        <div className="min-h-screen flex items-center justify-center bg-green-50">
+          <div className="animate-pulse text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-green-600 rounded-full"></div>
+            <div className="h-6 bg-green-200 rounded w-48 mx-auto"></div>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+  
   return (
     <MainLayout>
       {/* Hero Section */}
@@ -177,18 +199,58 @@ export default function ServicesPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {filteredServices.map((service) => (
-              <ServiceCard
-                key={service.id}
-                id={service.id}
-                title={t(service.titleKey)}
-                description={t(service.descriptionKey)}
-                image={service.image}
-                features={Object.values(service.featuresKeys).map(key => t(key))}
-                contactLabel={t('services.serviceDetails.contact')}
-                showMoreLabel={t('services.serviceDetails.showMore')}
-                showLessLabel={t('services.serviceDetails.showLess')}
-                featuresLabel={t('services.serviceDetails.features')}
-              />
+              <div key={service.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                {/* Preview del servizio */}
+                <div className="relative h-48">
+                  <Image
+                    src={service.image}
+                    alt={t(service.titleKey)}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading="lazy"
+                  />
+                </div>
+                
+                {/* Contenuto del servizio */}
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-green-800 mb-3">{t(service.titleKey)}</h3>
+                  <p className="text-gray-600 mb-4">{t(service.descriptionKey)}</p>
+                  
+                  {/* Lista di caratteristiche */}
+                  <div className="mt-4">
+                    <h4 className="text-lg font-semibold text-green-700 mb-2">
+                      {t('services.serviceDetails.features')}
+                    </h4>
+                    <ul className="space-y-2 mb-4">
+                      {Object.values(service.featuresKeys).map((key, index) => (
+                        <li key={index} className="flex items-start">
+                          <svg className="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                          </svg>
+                          <span className="text-gray-700">{t(key)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  {/* Pulsanti di azione */}
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <Link 
+                      href="/contact" 
+                      className="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                    >
+                      {t('services.serviceDetails.contact')}
+                    </Link>
+                    <Link 
+                      href={`/services/${service.id}`} 
+                      className="inline-block bg-white border border-green-600 text-green-600 hover:bg-green-50 font-medium py-2 px-4 rounded-md transition-colors"
+                    >
+                      {t('services.serviceDetails.showMore')}
+                    </Link>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>

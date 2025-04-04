@@ -59,27 +59,37 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            {mounted && menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
-                  pathname === item.href
-                    ? isScrolled
-                      ? 'text-green-700 bg-green-50'
-                      : 'text-white bg-green-600/30'
-                    : isScrolled
-                    ? 'text-gray-700 hover:text-green-700 hover:bg-green-50'
-                    : 'text-gray-100 hover:text-white hover:bg-green-600/20'
-                }`}
-              >
-                {t(item.label)}
-              </Link>
-            ))}
-            
-            <div className="ml-2 pl-2 border-l border-gray-300 dark:border-gray-700">
-              <LanguageSwitcher isScrolled={isScrolled} />
-            </div>
+            {mounted ? (
+              <>
+                {menuItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
+                      pathname === item.href
+                        ? isScrolled
+                          ? 'text-green-700 bg-green-50'
+                          : 'text-white bg-green-600/30'
+                        : isScrolled
+                        ? 'text-gray-700 hover:text-green-700 hover:bg-green-50'
+                        : 'text-gray-100 hover:text-white hover:bg-green-600/20'
+                    }`}
+                  >
+                    {t(item.label)}
+                  </Link>
+                ))}
+                
+                <div className="ml-2 pl-2 border-l border-gray-300 dark:border-gray-700">
+                  <LanguageSwitcher isScrolled={isScrolled} />
+                </div>
+              </>
+            ) : (
+              <div className="flex space-x-4">
+                <div className="h-5 bg-gray-200 rounded w-16 animate-pulse"></div>
+                <div className="h-5 bg-gray-200 rounded w-16 animate-pulse"></div>
+                <div className="h-5 bg-gray-200 rounded w-16 animate-pulse"></div>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -116,29 +126,50 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-2 pb-2 border-t border-gray-200 dark:border-gray-700">
-            <div className="pt-2 pb-2 space-y-1">
-              {mounted && menuItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block px-3 py-1.5 rounded-md text-base font-medium ${
-                    pathname === item.href
-                      ? isScrolled
-                        ? 'text-green-700 bg-green-50'
-                        : 'text-white bg-green-600/30'
-                      : isScrolled
-                      ? 'text-gray-700 hover:text-green-700 hover:bg-green-50'
-                      : 'text-gray-100 hover:text-white hover:bg-green-600/20'
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
+          <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-gray-900">
+            <div className="flex justify-end p-4">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-gray-800 dark:text-gray-200 hover:text-green-600 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  {t(item.label)}
-                </Link>
-              ))}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
             </div>
-            <div className="pt-3 pb-2 border-t border-gray-200 dark:border-gray-700">
-              <LanguageSwitcher isScrolled={isScrolled} />
+            
+            <div className="flex flex-col space-y-4 p-8">
+              {mounted ? (
+                <>
+                  {menuItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="block py-2 px-4 text-lg text-gray-800 dark:text-gray-200 hover:text-green-600 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
+                </>
+              )}
             </div>
           </div>
         )}

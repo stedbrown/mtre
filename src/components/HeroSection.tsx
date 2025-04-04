@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import Image from "next/image";
 
 type HeroSectionProps = {
@@ -21,6 +21,13 @@ const HeroSection = memo(function HeroSection({
   imageSrc = "/images/hero/home-new.avif",
   overlay = true,
 }: HeroSectionProps) {
+  const [mounted, setMounted] = useState(false);
+  
+  // Assicurarsi che il componente sia montato lato client prima di mostrare contenuti
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Determina l'immagine mobile estraendo il nome del file
   const baseName = imageSrc.substring(0, imageSrc.lastIndexOf('.'));
   const extension = imageSrc.substring(imageSrc.lastIndexOf('.'));
@@ -38,12 +45,12 @@ const HeroSection = memo(function HeroSection({
             id="hero-heading"
             className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
           >
-            {title}
+            {mounted ? title : <div className="h-12 bg-white/20 rounded animate-pulse mx-auto max-w-md"></div>}
           </h1>
           
           {description && (
             <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl">
-              {description}
+              {mounted ? description : <div className="h-6 bg-white/20 rounded animate-pulse mx-auto max-w-lg mt-4"></div>}
             </p>
           )}
           

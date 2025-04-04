@@ -137,6 +137,20 @@ export default function Home() {
     setMounted(true);
   }, []);
   
+  // Mostro un placeholder durante il caricamento
+  if (!mounted) {
+    return (
+      <MainLayout>
+        <div className="min-h-screen flex items-center justify-center bg-green-50">
+          <div className="animate-pulse text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-green-600 rounded-full"></div>
+            <div className="h-6 bg-green-200 rounded w-48 mx-auto"></div>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+  
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LandscapingBusiness",
@@ -326,20 +340,6 @@ export default function Home() {
       }
     ]
   };
-  
-  // Se non è montato, mostra un placeholder di caricamento
-  if (!mounted) {
-    return (
-      <MainLayout>
-        <div className="min-h-screen flex items-center justify-center bg-green-50">
-          <div className="animate-pulse text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-green-600 rounded-full"></div>
-            <div className="h-6 bg-green-200 rounded w-48 mx-auto"></div>
-          </div>
-        </div>
-      </MainLayout>
-    );
-  }
   
   return (
     <MainLayout>

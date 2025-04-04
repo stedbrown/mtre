@@ -1,10 +1,16 @@
+import dynamic from 'next/dynamic';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { locales } from "@/i18n/navigation";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
+
+// Caricamento dinamico di componenti non critici
+const GoogleAnalytics = dynamic(() => import("@/components/GoogleAnalytics"), {
+  ssr: false,
+  loading: () => null
+});
 
 // Ottimizzazione: configuriamo i font con display swap per migliorare CLS
 const geistSans = Geist({
@@ -36,73 +42,52 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
   
   const descriptions = {
-    it: 'Giardiniere professionista in Ticino con oltre 15 anni di esperienza. Manutenzione giardini, potatura, progettazione e lavori di giardinaggio 100% garantiti. ✓ Preventivi gratuiti ✓ Interventi rapidi ✓ Materiali di qualità.',
-    en: 'Professional gardener in Ticino with over 15 years of experience. Garden maintenance, pruning, design and 100% guaranteed gardening work. ✓ Free quotes ✓ Quick interventions ✓ Quality materials.',
-    fr: 'Jardinier professionnel au Tessin avec plus de 15 ans d\'expérience. Entretien de jardins, taille, conception et travaux de jardinage garantis à 100%. ✓ Devis gratuits ✓ Interventions rapides ✓ Matériaux de qualité.',
-    de: 'Professioneller Gärtner im Tessin mit über 15 Jahren Erfahrung. Gartenpflege, Beschneidung, Design und 100% garantierte Gartenarbeit. ✓ Kostenlose Angebote ✓ Schnelle Eingriffe ✓ Qualitätsmaterialien.'
+    it: 'Servizi di giardinaggio professionali in Ticino. Manutenzione, progettazione, potatura alberi e cura del verde per privati e aziende. Preventivi gratuiti!',
+    en: 'Professional gardening services in Ticino. Maintenance, design, tree pruning and green care for private clients and businesses. Free quotes!',
+    fr: 'Services professionnels de jardinage au Tessin. Entretien, conception, élagage d\'arbres et soins des espaces verts pour particuliers et entreprises. Devis gratuits!',
+    de: 'Professionelle Gartenservice im Tessin. Pflege, Gestaltung, Baumpflege und Grünpflege für Privat- und Geschäftskunden. Kostenlose Angebote!'
   };
   
   const keywords = {
-    it: 'giardiniere ticino, giardinaggio ticino, manutenzione giardini, potatura alberi, progettazione giardini, preventivo giardiniere, giardiniere professionista svizzera, aiuola, siepe, taglio erba, diserbo, irrigazione automatica, prezzi giardiniere, costo manutenzione giardino',
-    en: 'gardener ticino, gardening ticino, garden maintenance, tree pruning, garden design, gardener quote, professional gardener switzerland, flower bed, hedge, grass cutting, weeding, automatic irrigation, gardener prices, garden maintenance cost',
-    fr: 'jardinier tessin, jardinage tessin, entretien jardins, taille arbres, conception jardins, devis jardinier, jardinier professionnel suisse, parterre, haie, tonte pelouse, désherbage, irrigation automatique, prix jardinier, coût entretien jardin',
-    de: 'gärtner tessin, gartenbau tessin, gartenpflege, baumbeschneidung, gartengestaltung, gärtner angebot, professioneller gärtner schweiz, blumenbeet, hecke, grasschnitt, unkrautbekämpfung, automatische bewässerung, gärtnerpreise, gartenpflegekosten'
+    it: 'giardiniere, giardinaggio, Ticino, cura del verde, potatura, manutenzione giardini, progettazione giardini, preventivo gratuito',
+    en: 'gardener, gardening, Ticino, green care, pruning, garden maintenance, garden design, free quote',
+    fr: 'jardinier, jardinage, Tessin, entretien des espaces verts, élagage, entretien de jardins, conception de jardins, devis gratuit',
+    de: 'Gärtner, Gartenarbeit, Tessin, Grünpflege, Beschneidung, Gartenpflege, Gartengestaltung, kostenloses Angebot'
   };
   
   return {
+    metadataBase: new URL(baseUrl),
     title: titles[locale as keyof typeof titles] || titles.it,
     description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
     keywords: keywords[locale as keyof typeof keywords] || keywords.it,
-    metadataBase: new URL(baseUrl),
-    alternates: {
-      canonical: '/',
-      languages: {
-        'it': '/it',
-        'en': '/en',
-        'fr': '/fr',
-        'de': '/de',
-      },
-    },
     openGraph: {
-      type: 'website',
-      locale: locale,
-      url: baseUrl,
-      siteName: 'M.T.R.E. Giardiniere Ticino',
       title: titles[locale as keyof typeof titles] || titles.it,
       description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
+      url: baseUrl,
+      siteName: 'M.T.R.E. Giardinaggio',
+      locale: locale,
+      type: 'website',
       images: [
         {
-          url: `${baseUrl}/images/hero/home-new.avif`,
+          url: `/images/og-image-${locale}.jpg`,
           width: 1200,
           height: 630,
-          alt: 'M.T.R.E. Giardinaggio Ticino - Servizi professionali di giardinaggio',
-        },
-      ],
+          alt: 'M.T.R.E. Giardinaggio'
+        }
+      ]
     },
-    twitter: {
-      card: 'summary_large_image',
-      title: titles[locale as keyof typeof titles] || titles.it,
-      description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
-      images: [`${baseUrl}/images/hero/home-new.avif`],
+    alternates: {
+      canonical: `${baseUrl}/${locale === 'it' ? '' : locale}`,
+      languages: {
+        'it': `${baseUrl}/`,
+        'en': `${baseUrl}/en`,
+        'fr': `${baseUrl}/fr`,
+        'de': `${baseUrl}/de`
+      }
     },
     robots: {
       index: true,
-      follow: true,
-      notranslate: false,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-      'max-video-preview': -1,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-        noimageindex: false
-      }
-    },
-    other: {
-      "google-site-verification": "YOUR_VERIFICATION_CODE", // Aggiungi il tuo codice di verifica Google
+      follow: true
     }
   };
 }
@@ -117,58 +102,32 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }) {
   // In Next.js 15, params è una Promise che deve essere attesa
-  const { locale } = await params;
+  const locale = params.locale;
   
-  // Carica i messaggi per la lingua corrente
-  const messages = await getMessages({
-    locale
-  });
-
+  // Recupera i messaggi per l'internazionalizzazione
+  const messages = await getMessages();
+  
   return (
     <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
-        {/* Preconnect e DNS prefetch per risorse esterne */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        {/* Meta tag per colore tema browser */}
-        <meta name="theme-color" content="#166534" /> 
-        
-        {/* Favicon tags pointing to files in public/images/ */}
-        <link rel="icon" href="/images/favicon.ico" sizes="any" />
-        <link rel="icon" href="/images/favicon-16x16.png" type="image/png" sizes="16x16" />
-        <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32" />
-        <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" type="image/png" sizes="180x180" />
-        <link rel="android-chrome" href="/images/android-chrome-192x192.png" sizes="192x192" />
-        <link rel="android-chrome" href="/images/android-chrome-512x512.png" sizes="512x512" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
         <link rel="shortcut icon" href="/images/favicon.ico" />
       </head>
-      <body className="antialiased">
-        <GoogleAnalytics />
-        <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Rome">
-          {children}
+      <body className="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <main>
+            {children}
+          </main>
+          
+          {/* Carica GA solo quando necessario */}
+          <GoogleAnalytics />
         </NextIntlClientProvider>
-        {/* Speed Insights script sarà caricato automaticamente da Vercel in produzione */}
-        <script 
-          dangerouslySetInnerHTML={{
-            __html: `
-              setTimeout(() => {
-                try {
-                  if (window._vercel) {
-                    window._vercel.insights.load();
-                  }
-                } catch (err) {
-                  console.error('Error loading speed insights:', err);
-                }
-              }, 100);
-            `
-          }} 
-        />
       </body>
     </html>
   );

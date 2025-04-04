@@ -93,37 +93,102 @@ const nextConfig = {
       // Attiva il tree shaking per ridurre dimensioni bundle
       config.optimization.usedExports = true;
       
-      // Configurazione splitChunks ottimizzata per LCP
+      // Aumenta il livello di compressione
+      config.optimization.minimize = true;
+      
+      // Configurazione del Terser per minimizzazione più aggressiva
+      const TerserPlugin = require('terser-webpack-plugin');
+      config.optimization.minimizer = [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true,        // Rimuove console.log
+              pure_funcs: ['console.info', 'console.debug', 'console.warn'],
+              passes: 2,                 // Esegue più passaggi di ottimizzazione
+              unsafe_arrows: true,      // Ottimizza le arrow functions
+              reduce_vars: true,        // Ottimizza l'uso delle variabili
+              booleans_as_integers: true // Ottimizza i boolean
+            },
+            mangle: true,
+            output: {
+              comments: false,          // Rimuove tutti i commenti
+            }
+          }
+        }),
+      ];
+      
+      // Configurazione splitChunks ottimizzata per ridurre vendors.js
       config.optimization.splitChunks = {
         chunks: 'all',
         maxInitialRequests: 10,
         maxAsyncRequests: 10,
-        minSize: 15000,
+        minSize: 10000,    // Ridotto per creare chunk più piccoli
+        maxSize: 150000,   // Limite massimo di 150KB per chunk
         cacheGroups: {
-          framework: {
-            name: 'framework',
-            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
+          // Separa React in un chunk specifico
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-sync-external-store|next\/dist\/compiled\/react)[\\/]/,
+            name: 'react',
             priority: 40,
             chunks: 'all',
           },
+          // Separa gli strumenti di internazionalizzazione
+          intl: {
+            test: /[\\/]node_modules[\\/](next-intl|intl-messageformat|@formatjs)[\\/]/,
+            name: 'intl',
+            priority: 35,
+            chunks: 'all',
+          },
+          // Pacchetti UI comuni
+          ui: {
+            test: /[\\/]node_modules[\\/](react-icons|tailwindcss)[\\/]/,
+            name: 'ui',
+            priority: 30,
+            chunks: 'all',
+          },
+          // Librerie utility
+          utils: {
+            test: /[\\/]node_modules[\\/](lodash|date-fns|uuid)[\\/]/,
+            name: 'utils',
+            priority: 25,
+            chunks: 'all', 
+          },
+          // Altri node_modules divisi in chunk più piccoli
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module) {
+              // Estrai il nome del pacchetto da node_modules
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)?.[1] || 'misc';
+              // Usa solo il nome principale del pacchetto per evitare troppi chunk
+              const mainPackage = packageName.split('/')[0].replace('@', '');
+              return `vendor.${mainPackage}`;
+            },
+            priority: 20,
+            chunks: 'async', // Solo per chunk asincroni (non critici)
+            minSize: 15000,
+            maxSize: 100000,
+          },
+          // Codice riutilizzato in più pagine
           commons: {
             name: 'commons',
-            minChunks: 3,
-            priority: 20,
-            chunks: 'all',
-            reuseExistingChunk: true,
-          },
-          lib: {
-            test: /[\\/]node_modules[\\/]/,
+            minChunks: 2,        // Minimo numero di chunk che usano il codice
             priority: 10,
-            chunks: 'async',
-            name(module) {
-              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)?.[1] || 'vendors';
-              return `lib.${packageName.replace('@', '')}`;
-            },
-          },
+            reuseExistingChunk: true,
+          }
         },
       };
+      
+      // Aggiungi plugin per analizzare la dimensione del bundle (solo durante lo sviluppo locale)
+      if (process.env.ANALYZE === 'true') {
+        const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+        config.plugins.push(
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'server',
+            analyzerPort: 8888,
+            openAnalyzer: true,
+          })
+        );
+      }
     }
     
     return config;

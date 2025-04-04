@@ -1,138 +1,131 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import { locales } from "@/i18n/navigation";
-import "./globals.css";
+import './globals.css';
+import type { Metadata } from 'next';
+import { Open_Sans } from 'next/font/google';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getTranslations } from 'next-intl/server';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
-// Ottimizzazione: configuriamo i font con display swap per migliorare CLS
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
+// Configurazione del font
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-open-sans',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
-});
-
-// Funzione per generare i metadata in base alla lingua
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
-  const { locale } = await params;
-  
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mtre.ch';
-  
-  const titles = {
-    it: 'Giardiniere Ticino | M.T.R.E. Professionista Giardinaggio | Preventivo Gratuito',
-    en: 'Professional Gardener in Ticino | M.T.R.E. Garden Services | Free Quote',
-    fr: 'Jardinier Professionnel au Tessin | M.T.R.E. Services | Devis Gratuit',
-    de: 'Professioneller Gärtner im Tessin | M.T.R.E. Gartenservice | Gratis Angebot'
-  };
-  
-  const descriptions = {
-    it: 'Servizi di giardinaggio professionali in Ticino. Manutenzione, progettazione, potatura alberi e cura del verde per privati e aziende. Preventivi gratuiti!',
-    en: 'Professional gardening services in Ticino. Maintenance, design, tree pruning and green care for private clients and businesses. Free quotes!',
-    fr: 'Services professionnels de jardinage au Tessin. Entretien, conception, élagage d\'arbres et soins des espaces verts pour particuliers et entreprises. Devis gratuits!',
-    de: 'Professionelle Gartenservice im Tessin. Pflege, Gestaltung, Baumpflege und Grünpflege für Privat- und Geschäftskunden. Kostenlose Angebote!'
-  };
-  
-  const keywords = {
-    it: 'giardiniere, giardinaggio, Ticino, cura del verde, potatura, manutenzione giardini, progettazione giardini, preventivo gratuito',
-    en: 'gardener, gardening, Ticino, green care, pruning, garden maintenance, garden design, free quote',
-    fr: 'jardinier, jardinage, Tessin, entretien des espaces verts, élagage, entretien de jardins, conception de jardins, devis gratuit',
-    de: 'Gärtner, Gartenarbeit, Tessin, Grünpflege, Beschneidung, Gartenpflege, Gartengestaltung, kostenloses Angebot'
-  };
+// Metadata dinamiche con traduzioni
+export async function generateMetadata({
+  params: { locale }
+}: {
+  params: { locale: string }
+}) {
+  const t = await getTranslations({locale, namespace: 'metadata'});
   
   return {
-    metadataBase: new URL(baseUrl),
-    title: titles[locale as keyof typeof titles] || titles.it,
-    description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
-    keywords: keywords[locale as keyof typeof keywords] || keywords.it,
+    title: t('title'),
+    description: t('description'),
+    keywords: t('keywords'),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mtre.it'), 
     openGraph: {
-      title: titles[locale as keyof typeof titles] || titles.it,
-      description: descriptions[locale as keyof typeof descriptions] || descriptions.it,
-      url: baseUrl,
-      siteName: 'M.T.R.E. Giardinaggio',
+      title: t('title'),
+      description: t('description'),
+      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://mtre.it',
+      siteName: t('siteName'),
       locale: locale,
       type: 'website',
       images: [
         {
-          url: `/images/og-image-${locale}.jpg`,
+          url: '/images/og-image.jpg',
           width: 1200,
           height: 630,
-          alt: 'M.T.R.E. Giardinaggio'
+          alt: t('ogImageAlt'),
         }
-      ]
+      ],
     },
-    alternates: {
-      canonical: `${baseUrl}/${locale === 'it' ? '' : locale}`,
-      languages: {
-        'it': `${baseUrl}/`,
-        'en': `${baseUrl}/en`,
-        'fr': `${baseUrl}/fr`,
-        'de': `${baseUrl}/de`
-      }
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title'),
+      description: t('description'),
+      images: ['/images/og-image.jpg'],
     },
     robots: {
       index: true,
-      follow: true
-    }
-  };
+      follow: true,
+    },
+  } as Metadata;
 }
 
-// Genera i parametri statici per le lingue supportate
+// Configurazione delle pagine localizzate
 export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
+  return [{ locale: 'it' }, { locale: 'en' }];
 }
 
-export default async function LocaleLayout({
+export default async function RootLayout({
   children,
-  params,
+  params: { locale }
 }: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  // In Next.js 15, params è una Promise che deve essere attesa
-  const locale = params.locale;
-  
-  // Recupera i messaggi per l'internazionalizzazione
   const messages = await getMessages();
-  
+
   return (
-    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang={locale} className={openSans.variable}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
-        <link rel="shortcut icon" href="/images/favicon.ico" />
+        {/* Precaricamento del font critico */}
+        <link
+          rel="preload"
+          href={openSans.style.fontFamily.split(',')[0].replace(/["']/g, '')}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        
+        {/* Precaricamento immagine hero */}
+        <link
+          rel="preload"
+          href="/images/hero.jpg"
+          as="image"
+          fetchPriority="high"
+        />
+        
+        {/* Meta tag per prestazioni */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#15803d" />
+        
+        {/* Inserisco CSS critico inline */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .hero-placeholder-loading {
+            background-color: #f0f9ff;
+            background-image: linear-gradient(90deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%);
+            animation: placeholderShimmer 2s infinite linear;
+          }
+          @keyframes placeholderShimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+          }
+          .hero-section {
+            min-height: 75vh;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+          }
+          .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+          }
+        `}} />
       </head>
-      <body className="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <body className="bg-gray-50 text-gray-900">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <main>
+          <Navbar />
+          <main className="min-h-screen pt-16">
             {children}
           </main>
-          
-          {/* Google Analytics verrà caricato come script globale */}
-          <script 
-            async 
-            src="https://www.googletagmanager.com/gtag/js?id=G-YOUR-ID"
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-YOUR-ID');
-              `,
-            }}
-          />
+          <Footer />
+          <SpeedInsights />
         </NextIntlClientProvider>
       </body>
     </html>

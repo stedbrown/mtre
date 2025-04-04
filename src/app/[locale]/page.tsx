@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
 import Script from 'next/script';
 import { memo } from 'react';
+import ServiceCard from '@/components/ServiceCard';
 
 // Componenti ottimizzati con memo per evitare re-render inutili
 const AboutSection = memo(({ t }: { t: any }) => (
@@ -386,96 +387,35 @@ export default function Home() {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Servizio 1 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
-              <div className="relative h-48">
-                <Image
-                  src="/images/services/garden-design.avif"
-                  alt={t('home.services.design.title')}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                  loading="eager"
-                  fetchPriority="high"
-                  quality={70}
-                  width={400}
-                  height={300}
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-green-800 mb-3">{t('home.services.design.title')}</h3>
-                <p className="text-gray-600 mb-4">{t('home.services.design.description')}</p>
-                <Link 
-                  href="/services" 
-                  className="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors"
-                >
-                  {t('home.services.more')}
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </Link>
-              </div>
-            </div>
+            {/* Servizio 1 - Progettazione Giardini */}
+            <ServiceCard
+              title={t('home.services.design.title')}
+              description={t('home.services.design.description')}
+              imageSrc="/images/services/garden-design.avif"
+              moreText={t('home.services.more')}
+              linkHref="/services"
+              priority={true}
+            />
             
-            {/* Servizio 2 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
-              <div className="relative h-48">
-                <Image
-                  src="/images/services/maintenance.avif"
-                  alt={t('home.services.maintenance.title')}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                  loading="lazy"
-                  quality={70}
-                  width={400}
-                  height={300}
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-green-800 mb-3">{t('home.services.maintenance.title')}</h3>
-                <p className="text-gray-600 mb-4">{t('home.services.maintenance.description')}</p>
-                <Link 
-                  href="/services" 
-                  className="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors"
-                >
-                  {t('home.services.more')}
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </Link>
-              </div>
-            </div>
+            {/* Servizio 2 - Manutenzione */}
+            <ServiceCard
+              title={t('home.services.maintenance.title')}
+              description={t('home.services.maintenance.description')}
+              imageSrc="/images/services/maintenance.avif"
+              moreText={t('home.services.more')}
+              linkHref="/services"
+              priority={false}
+            />
             
-            {/* Servizio 3 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
-              <div className="relative h-48">
-                <Image
-                  src="/images/services/irrigation.avif"
-                  alt={t('home.services.irrigation.title')}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                  loading="lazy"
-                  quality={70}
-                  width={400}
-                  height={300}
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-green-800 mb-3">{t('home.services.irrigation.title')}</h3>
-                <p className="text-gray-600 mb-4">{t('home.services.irrigation.description')}</p>
-                <Link 
-                  href="/services" 
-                  className="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors"
-                >
-                  {t('home.services.more')}
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </Link>
-              </div>
-            </div>
+            {/* Servizio 3 - Irrigazione */}
+            <ServiceCard
+              title={t('home.services.irrigation.title')}
+              description={t('home.services.irrigation.description')}
+              imageSrc="/images/services/irrigation.avif"
+              moreText={t('home.services.more')}
+              linkHref="/services"
+              priority={false}
+            />
           </div>
           
           <div className="text-center mt-12">

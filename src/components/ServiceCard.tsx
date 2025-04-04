@@ -1,93 +1,78 @@
 "use client";
 
-import { useState, memo } from 'react';
-import Image from 'next/image';
-import { Link } from '@/i18n/navigation';
+import { memo } from "react";
+import Image from "next/image";
+import { Link } from "@/i18n/navigation";
 
 type ServiceCardProps = {
-  id: string;
   title: string;
   description: string;
-  image: string;
-  features: string[];
-  contactLabel: string;
-  showMoreLabel: string;
-  showLessLabel: string;
-  featuresLabel: string;
+  imageSrc: string;
+  moreText: string;
+  linkHref: string;
+  priority?: boolean;
 };
 
-// Utilizzo di memo per prevenire rerenders inutili
+// Componente ottimizzato per immagini di dimensione adeguata e migliori performance
 const ServiceCard = memo(function ServiceCard({
-  id,
   title,
   description,
-  image,
-  features,
-  contactLabel,
-  showMoreLabel,
-  showLessLabel,
-  featuresLabel
+  imageSrc,
+  moreText,
+  linkHref,
+  priority = false,
 }: ServiceCardProps) {
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleExpansion = () => {
-    setExpanded(!expanded);
-  };
+  // Estrai la parte del percorso che non include l'estensione
+  const basePath = imageSrc.substring(0, imageSrc.lastIndexOf('.'));
+  const extension = imageSrc.substring(imageSrc.lastIndexOf('.'));
+  // Costruisci il percorso per l'immagine mobile
+  const mobileImageSrc = `${basePath.replace('/services/', '/services/mobile/')}${extension}`;
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md">
-      <div className="relative h-64">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
+      <div className="relative h-48">
+        {/* Immagine mobile ottimizzata */}
         <Image
-          src={image}
+          src={mobileImageSrc}
           alt={title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+          width={320}
+          height={240}
+          className="object-cover group-hover:scale-105 transition-transform duration-300 md:hidden"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
+          quality={50}
+          sizes="100vw"
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMjQwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjdmN2Y3Ii8+PC9zdmc+"
+        />
+        
+        {/* Immagine desktop */}
+        <Image
+          src={imageSrc}
+          alt={title}
           width={400}
           height={300}
+          className="object-cover group-hover:scale-105 transition-transform duration-300 hidden md:block"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
           quality={60}
-          loading="lazy"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
           placeholder="blur"
-          blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMjI3MDNmIi8+PC9zdmc+"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjdmN2Y3Ii8+PC9zdmc+"
         />
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-          <h2 className="text-2xl font-bold text-white">{title}</h2>
-        </div>
       </div>
-      
       <div className="p-6">
-        <p className="text-gray-800 mb-6">
-          {description}
-        </p>
-        
-        {expanded && (
-          <div className="mt-4 mb-6">
-            <h3 className="font-semibold text-lg mb-3 text-green-600">{featuresLabel}</h3>
-            <ul className="list-disc list-inside text-gray-800 space-y-2 mb-6">
-              {features.map((feature, index) => (
-                <li key={index}>{feature}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-        
-        <div className="flex justify-between items-center">
-          <button 
-            onClick={toggleExpansion}
-            className="text-green-600 hover:text-green-700 font-medium flex items-center transition-colors"
-          >
-            {expanded ? showLessLabel : showMoreLabel}
-            <svg className={`w-5 h-5 ml-1 transition-transform ${expanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
-          <Link 
-            href="/contact" 
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
-          >
-            {contactLabel}
-          </Link>
-        </div>
+        <h3 className="text-xl font-semibold text-green-800 mb-3">{title}</h3>
+        <p className="text-gray-600 mb-4">{description}</p>
+        <Link 
+          href={linkHref} 
+          className="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors"
+        >
+          {moreText}
+          <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </Link>
       </div>
     </div>
   );
